@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="serviceMapper">
+
+	<!-- 타입별 게시물 번호들 불러오기 (sv_type) -->
+	<select id="board_bno_All" resultType="ArrayList">
+		SELECT bno 
+		FROM sv_board 
+		WHERE sv_type = #{sv_type}
+	</select>
+	
+	<!-- 특정 게시물 불러오기 - 번호 (bno) -->
+	<select id="board_one" resultType="eunbin.DTO.ServiceDTO">
+		SELECT * 
+		FROM sv_board 
+		WHERE bno = #{bno}
+	</select>
+	
+	<!-- 게시물 번호 가져오기 - 개별 -->
+	<select id="board_bno" resultType="int">
+		SELECT bno 
+		FROM sv_board 
+		WHERE sv_type = #{sv_type}
+		AND group_origin = #{group_origin}
+	</select>
+	
+	<!-- 글 작성 - 최초 -->
+	<insert id="board_write">
+		INSERT INTO sv_board 
+		(bno
+		, sv_type
+		, group_origin
+		, group_order
+		, admin_type
+		, nickname
+		, title
+		, description
+		, create_time
+		, heart
+		, view_no
+		, member_no
+		)
+		VALUES
+		(sv_bno_SEQUENCE.NEXTVAL
+		, #{sv_type}
+		, 1
+		, 1
+		, #{admin_type}
+		, #{nickname}
+		, #{title}
+		, #{description}
+		, #{create_time}
+		, 0
+		, 0
+		, #{member_no}
+		)
+	</insert>
+	
+	<!-- 글 삭제 -->
+	<delete id="board_delete">
+		DELETE
+		FROM sv_board 
+		WHERE bno = #{bno}
+	</delete>
+	
+	<!-- 글 수정 -->
+	<update id="board_fix">
+		UPDATE sv_board
+		SET title = #{title},
+		description = #{description},
+		WHERE bno = #{bno}
+	</update>
+	
+</mapper>
