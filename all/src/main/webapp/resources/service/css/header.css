@@ -21,7 +21,7 @@ body{
 }
 
 /*버튼 묶음*/
-#j_nav, #e_nav {
+#j_nav {
     height:  110px;
     display: flex;
     width: 450px;
@@ -30,7 +30,7 @@ body{
 }
 
 /*버튼*/
-.j_btn, .e_btn {
+.j_btn {
     width: 100px;
     height: 30px;
     border: none ;
@@ -43,8 +43,7 @@ body{
                 color 0.5s ease-in-out;
 }
 
-.j_btn:hover,
-.e_btn:hover {
+.j_btn:hover{
     background: white;
     color: rgb(92, 107, 192);
 }
@@ -64,8 +63,6 @@ body{
 
 #j_list li {
     float: left;
-    margin: 5px;
-    padding: 5px;
 }
 
 .j_menu{
@@ -81,7 +78,8 @@ body{
 
 #j_wrap {
     text-align: center;
-    width: 1263px;
+	display:flex;
+	justify-content: space-around;
     padding-left: 0px;
 }
 
@@ -93,9 +91,4 @@ body{
     margin-bottom: 30px;
     margin-top: 20px;
     padding-left: 0px;
-}
-
-#e_welcome {
-	font-size: 13px;
-	color:white;
 }

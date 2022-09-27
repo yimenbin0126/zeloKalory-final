@@ -1,16 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
-	import="eunbin.DTO.MemberDTO, eunbin.DTO.ServiceDTO,
-	eunbin.service.ServiceService, eunbin.service.ServiceServiceimpl,
+	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO,
+	eunbin.service.e_ServiceService, eunbin.service.e_ServiceServiceimpl,
 	java.util.List, java.util.ArrayList" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>고객센터</title>
-<link rel="stylesheet" href="./css/header.css">
-<link rel="stylesheet" href="./css/question-detail.css">
-<script src="./js/question-detail.js"></script>
+<link href="/all/resources/service/css/header.css" rel="stylesheet">
+<link href="/all/resources/service/css/question-detail.css" rel="stylesheet">
+<script src="/all/resources/service/js/question-detail.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
@@ -20,21 +20,20 @@
 	<!-- 헤더 시작 -->
     <div id="j_hi">
         <!-- <img src="./img/logo.png" id="j_logo"> -->
-        
-        <ul id="j_list">
-            <li class="j_menu1 j_menu">캘린더</li>
-            <li class="j_menu2 j_menu">커뮤니티</li>
+
+		<%
+       		e_MemberDTO m_dto = new e_MemberDTO();
+        		
+        	// 로그인 유무
+           	if((e_MemberDTO)session.getAttribute("user") !=null){
+           		m_dto = (e_MemberDTO)session.getAttribute("user");
+        %>
+		<ul id="j_list">
+            <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
+            <li class="j_menu2 j_menu" onclick="location.href='/all/community/listArticles.do'">커뮤니티</li>
             <li class="j_menu3 j_menu">공지사항</li>
-            <li class="j_menu4 j_menu">운동</li>
             <li class="j_menu5 j_menu" onclick="location.href='/all/service/allService'">고객센터</li>
         </ul>
-        <%
-             		MemberDTO m_dto = new MemberDTO();
-             		
-             		// 로그인 유무
-                	if((MemberDTO)session.getAttribute("user") !=null){
-                		m_dto = (MemberDTO)session.getAttribute("user");
-        %>
         <div id = e_nav>
         	<div id="e_welcome">
         		<%=m_dto.getNickname()%>님 환영합니다.
@@ -48,16 +47,22 @@
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
             <input type ='button' class = "e_btn e_btn" onclick="location.href='/all/logout'" value="로그아웃">
-            <input type ='button' class = "e_btn2 e_btn" onclick="location.href='../mypage/mypage.html'" value="마이페이지">
+            <input type ='button' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
         	} else {
         %>
+        <ul id="j_list">
+            <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
+            <li class="j_menu2 j_menu" onclick="location.href='/all/community/listArticles.do'">커뮤니티</li>
+            <li class="j_menu3 j_menu">공지사항</li>
+            <li class="j_menu5 j_menu" onclick="location.href='/all/service/allService'">고객센터</li>
+        </ul>
         <div id = j_nav>
         	<!-- null 오류 방지용 시작 -->
             <input type ='hidden' class = "e_btn e_btn" onclick="location.href='/all/logout'" value="로그아웃">
-            <input type ='hidden' class = "e_btn2 e_btn" onclick="location.href='../mypage/mypage.html'" value="마이페이지">               
+            <input type ='hidden' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">               
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
             <input type ='button' class = "j_btn1 j_btn" onclick="location.href='/all/login'" value="로그인">
@@ -83,7 +88,7 @@
 						<!-- 자주하는 질문 -->
 						<div class="e_nav_question"
 							onclick="location.href='/all/service/question-member'">
-							<span>자주하는 질문</span> <img src="./img/category_click.png">
+							<span>자주하는 질문</span> <img src="/all/resources/service/img/category_click.png">
 						</div>
 						<!-- 1:1 문의 -->
 						<div class="e_nav_onebyone"
@@ -95,7 +100,8 @@
 						<!-- 상단 -->
 						<%
 							// 게시판 객체
-							ServiceDTO s_dto = new ServiceDTO();
+							e_ServiceDTO s_dto = new e_ServiceDTO();
+							s_dto = (e_ServiceDTO)request.getAttribute("s_dto");
 							if (s_dto.getSv_type()!=null && s_dto.getSv_type().equals("question_member")) {
 						%>
 						<!-- 회원 정보 관리 -->
@@ -114,7 +120,7 @@
 						<%
 							}
 						%>
-
+						
 						<!-- 내용 -->
 						<div class="e_hd_top_con">
 							<div class="e_con_title"><%=s_dto.getTitle()%></div>
@@ -139,11 +145,11 @@
 						<div class="e_button">
 						<%
 							// 게시판 관련 메서드 불러오기
-							ServiceService s_service = new ServiceServiceimpl();
+							e_ServiceService s_service = new e_ServiceServiceimpl();
 							// 관리자 여부
-							if ((MemberDTO)session.getAttribute("user") !=null
+							if ((e_MemberDTO)session.getAttribute("user") !=null
 							&& s_service.board_admin_type(m_dto.getId()).equals("Y")){
-								// 게시물 수정, 삭제 버튼 보이기 여부
+							// 게시물 수정, 삭제 버튼 보이기 여부
 						%>
 							<input type="hidden" id="e_hidden_YN" value="Y">
 						<%

@@ -63,8 +63,6 @@ body{
 
 #j_list li {
     float: left;
-    margin: 5px;
-    padding: 5px;
 }
 
 .j_menu{
@@ -80,7 +78,8 @@ body{
 
 #j_wrap {
     text-align: center;
-    width: 1263px;
+	display:flex;
+	justify-content: space-around;
     padding-left: 0px;
 }
 

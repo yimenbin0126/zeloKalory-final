@@ -5,14 +5,14 @@
 <mapper namespace="serviceMapper">
 
 	<!-- 타입별 게시물 번호들 불러오기 (sv_type) -->
-	<select id="board_bno_All" resultType="ArrayList">
+	<select id="board_bno_All" resultType="int">
 		SELECT bno 
 		FROM sv_board 
 		WHERE sv_type = #{sv_type}
 	</select>
 	
 	<!-- 특정 게시물 불러오기 - 번호 (bno) -->
-	<select id="board_one" resultType="eunbin.DTO.ServiceDTO">
+	<select id="board_one" resultType="eunbin.DTO.e_ServiceDTO">
 		SELECT * 
 		FROM sv_board 
 		WHERE bno = #{bno}

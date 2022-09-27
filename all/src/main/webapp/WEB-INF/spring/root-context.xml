@@ -7,10 +7,9 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<context:component-scan base-package="eunbin.controller" />
-	<context:component-scan base-package="eunbin.serivce" />
+	<context:component-scan base-package="eunbin.service" />
 	<context:component-scan base-package="eunbin.DAO" />
 	<context:component-scan base-package="eunbin.DTO" />
-	<context:component-scan base-package="yoo" />
 	
 	<!-- 오라클 접속. username(사용자이름) password(패스워드) -->
     <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
