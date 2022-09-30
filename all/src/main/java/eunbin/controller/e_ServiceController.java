@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import eunbin.DTO.e_MemberDTO;
 import eunbin.DTO.e_ServiceDTO;
+import eunbin.DTO.e_SvViewcheckDTO;
 import eunbin.service.e_MemberService;
 import eunbin.service.e_ServiceService;
 
@@ -106,6 +107,8 @@ public class e_ServiceController {
 	// 자주하는 질문 - 상세보기
 	@GetMapping("/question-detail")
 	public ModelAndView getQuestion_detail(
+			HttpServletRequest request,
+			HttpServletResponse response,
 			@RequestParam int bno,
 			ModelAndView mv)
 			throws Exception {
@@ -115,19 +118,74 @@ public class e_ServiceController {
 		e_ServiceDTO s_dto = new e_ServiceDTO();
 		// 게시물 대표번호로 게시물 정보 가져오기
 		s_dto = s_service.board_one(bno);
+		// 게시물 조회수 증가
+		// 로그인한 경우 (작성자와 같은 아이디 아닐시 증가)
+		HttpSession session = request.getSession();
+		if(session.getAttribute("user")!=null) {
+			// 멤버 테이블 불러오기
+			e_MemberDTO m_dto = new e_MemberDTO();
+			m_dto = (e_MemberDTO)session.getAttribute("user");
+			// 조회수 테이블 불러오기
+			e_SvViewcheckDTO s_viewCheck = new e_SvViewcheckDTO();
+			s_viewCheck.setBno(bno);
+			s_viewCheck.setMember_no(m_dto.getMember_no());
+			// 게시판을 쓴 회원 번호 != 로그인한 회원번호 일시 조회수 증가
+			// 이미 조회수가 증가된 경우가 아닐 때 허용
+			if (s_dto.getMember_no() != m_dto.getMember_no()
+					&& s_service.board_viewCheck(s_viewCheck) == true) {
+				// 조회수 증가
+				s_dto.setView_no(s_dto.getView_no()+1);
+				// 증가한 값 업데이트
+				s_service.board_viewUp(s_dto);
+			}
+		} else if(session.getAttribute("user")==null) {
+			// 조회수 테이블 불러오기
+			e_SvViewcheckDTO s_viewCheck = new e_SvViewcheckDTO();
+			s_viewCheck.setBno(bno);
+			// ip로 접속했을 경우 (ip가 중복되지 않을 시 증가)
+			if (s_service.board_Ipcheck(s_viewCheck) == true) {
+				// 조회수 증가
+				s_dto.setView_no(s_dto.getView_no()+1);
+				// 증가한 값 업데이트
+				s_service.board_viewUp(s_dto);
+			}
+		}
+		
+		// 게시판 불러오기 (값 변화 이후 불러오기)
 		mv.addObject("s_dto", s_dto);
 		mv.setViewName("/service/question-detail");
 
 		return mv;
 	}
 	
+	// 좋아요 체크
 	@PostMapping("/question-detail")
-	public ModelAndView postQuestion_detail(
+	public void postQuestion_detail(
+			@RequestBody int e_bno,
+			@RequestParam(value = "e_heart_check", required = false) String e_heart_check)
+			throws Exception {
+		System.out.println("ServiceController - postQuestion_detail - 좋아요 체크");
+		
+		// 데이터 불러오기 위한 선언
+		e_ServiceDTO s_dto = new e_ServiceDTO();
+
+		// 게시물 번호로 게시물 객체 가져오기
+		s_dto = s_service.board_one(e_bno);
+		
+		// 좋아요 증가 / 감소
+		if (e_heart_check.equals("Y")) {
+		} else if (e_heart_check.equals("N")) {
+		}
+	}
+	
+	// 자주하는 질문 - 상세보기 - 수정/삭제/뒤로가기 이동
+	@PostMapping("/question-detail-button")
+	public ModelAndView postQuestion_detail_button(
 			@RequestParam String e_btn,
 			@RequestParam int e_bno,
 			ModelAndView mv)
 			throws Exception {
-		System.out.println("ServiceController - postQuestion_detail");
+		System.out.println("ServiceController - postQuestion_detail_button");
 		
 		// 데이터 불러오기 위한 선언
 		e_ServiceDTO s_dto = new e_ServiceDTO();
@@ -139,15 +197,17 @@ public class e_ServiceController {
 			// 게시물 수정 버튼 누를시
 			// 수정 페이지로 이동
 			mv.addObject("s_dto", s_dto);
-			mv.setViewName("/all/service/question-fix");
+			mv.setViewName("/service/question-fix");
 			return mv;
 		} else if (e_btn.equals("delete")) {
 			s_service.board_delete(e_bno);
 		}
 		// 게시판 메인 화면으로 이동
-		mv.setViewName("/all/service/question-member");
+		mv.setViewName("redirect:/service/question-member");
 		return mv;
 	}
+	
+	// 자주하는 질문 - 상세보기 - 좋아요 체크
 	
 	// 자주하는 질문 - 게시물 수정
 	@GetMapping("/question-fix")
@@ -159,6 +219,8 @@ public class e_ServiceController {
 		// 세션 생성
 		HttpSession session = request.getSession();
 		if (session.getAttribute("user") == null) {
+			// 응답 - 한글 처리
+			response.setContentType("text/html;charset=UTF-8");
 			// 로그인 안했을 때 - 잘못된 접근
 			// 뒤로가기
 			PrintWriter out = response.getWriter();
@@ -172,11 +234,11 @@ public class e_ServiceController {
 			HttpServletRequest request)
 			throws Exception {
 		System.out.println("ServiceController - postQuestion_fix");
-
+		
 		// 게시물 수정
 		s_service.board_fix(s_dto);
 
-		return "/all/service/question-member";
+		return "redirect:/service/question-member";
 	}
 	
 	// 자주하는 질문 - 게시물 작성
@@ -188,6 +250,8 @@ public class e_ServiceController {
 		// 세션 생성
 		HttpSession session = request.getSession();
 		if (session.getAttribute("user") == null) {
+			// 응답 - 한글 처리
+			response.setContentType("text/html;charset=UTF-8");
 			// 로그인 안했을 때 - 잘못된 접근
 			// 뒤로가기
 			PrintWriter out = response.getWriter();
@@ -196,7 +260,7 @@ public class e_ServiceController {
 		} else {
 			// 로그인 되있을 때 - 정상 접근
 			// 게시물 쓰기 뷰
-			return "/all/service/question-write";
+			return "/service/question-write";
 		}
 		return null;
 	}
@@ -208,13 +272,14 @@ public class e_ServiceController {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		System.out.println("ServiceController - postQuestion_write");
-		
 		// 멤버 객체 생성
 		e_MemberDTO m_dto = new e_MemberDTO();
 
 		// 로그인한 회원 정보 불러오기
 		HttpSession session = request.getSession();
 		m_dto = (e_MemberDTO)session.getAttribute("user");
+		// 닉네임 저장
+		s_dto.setNickname(m_dto.getNickname());
 		// 관리자 여부, 작성 시간, 회원번호
 		// 관리자 여부 저장
 		String admin_type = s_service.board_admin_type(m_dto.getId());
@@ -230,12 +295,14 @@ public class e_ServiceController {
 		s_dto.setMember_no(member_no);
 		// 글쓰기 유형 저장
 		s_dto.setSv_type(e_choice_val);
+		// 글쓰기 줄바꿈 저장
+		s_dto.setDescription(s_dto.getDescription().replace("\r\n","<br>"));
 		
 		// 글 작성
 		s_service.board_write(s_dto);
 
 		// 게시판 메인 홈페이지로 돌아가기
-		return "/all/service/question-member";
+		return "redirect:/service/question-member";
 	}
 	
 	// 고객센터 - 1:1 문의

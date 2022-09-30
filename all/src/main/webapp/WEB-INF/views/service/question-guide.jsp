@@ -42,11 +42,11 @@
 	        	<input type ="hidden" name="e_logout" value="Y">                   
         	</form>
         	<!-- null 오류 방지용 시작 -->
-        	<input type ='hidden' class = "j_btn1 j_btn" onclick="location.href='/all/login'" value="로그인">
-            <input type ='hidden' class = "j_btn2 j_btn" onclick="location.href='/all/join'" value="회원가입">
+        	<input type ='hidden' class = "j_btn1 j_btn" onclick="location.href='/all/member/login'" value="로그인">
+            <input type ='hidden' class = "j_btn2 j_btn" onclick="location.href='/all/member/join'" value="회원가입">
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
-            <input type ='button' class = "e_btn e_btn" onclick="location.href='/all/logout'" value="로그아웃">
+            <input type ='button' class = "e_btn e_btn" onclick="location.href='/all/member/logout'" value="로그아웃">
             <input type ='button' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">
             <!-- 나타나는 부분 끝 -->
         </div>
@@ -61,12 +61,12 @@
         </ul>
         <div id = j_nav>
         	<!-- null 오류 방지용 시작 -->
-            <input type ='hidden' class = "e_btn e_btn" onclick="location.href='/all/logout'" value="로그아웃">
+            <input type ='hidden' class = "e_btn e_btn" onclick="location.href='/all/member/logout'" value="로그아웃">
             <input type ='hidden' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">               
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
-            <input type ='button' class = "j_btn1 j_btn" onclick="location.href='/all/login'" value="로그인">
-            <input type ='button' class = "j_btn2 j_btn" onclick="location.href='/all/join'" value="회원가입">
+            <input type ='button' class = "j_btn1 j_btn" onclick="location.href='/all/member/login'" value="로그인">
+            <input type ='button' class = "j_btn2 j_btn" onclick="location.href='/all/member/join'" value="회원가입">
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
@@ -149,6 +149,7 @@
 									<li>제목</li>
 									<li>글쓴이</li>
 									<li>작성시간</li>
+									<li>조회수</li>
 									<li>좋아요</li>
 								</ul>
 								<%
@@ -157,17 +158,16 @@
 									// 게시물들 불러오기
 									if((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")!=null){
 										s_dto_list = (ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list");
-										int j = s_dto_list.size()+1;
 										for(int i=0; i<s_dto_list.size(); i++){
-											j--;
 											e_ServiceDTO s_dto = new e_ServiceDTO();
 											s_dto = s_dto_list.get(i);
 								%>
 								<ul class="e_boardlist">
-									<li value="<%=s_dto.getBno()%>"><%=j%></li>
+									<li value="<%=s_dto.getBno()%>"><%=i+1%></li>
 									<li><%=s_dto.getTitle()%></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
+									<li><%=s_dto.getView_no()%></li>
 									<li><%=s_dto.getHeart()%></li>
 								</ul>
 								<%

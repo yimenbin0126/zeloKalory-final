@@ -6,12 +6,16 @@ window.onload = function(){
 function form(){
 	// 초기화
 	document.querySelector('#e_bno_val').value = "none";
-	// 게시물을 선택시 글상세로 넘어감
-	document.querySelector('.e_boardlist').addEventListener('click', (e)=>{
-		var val = e.target.parentElement.firstElementChild.value;
+	
+	// 게시물을 각각 선택시 글상세로 넘어감
+	const e_boardlist = document.querySelectorAll(".e_boardlist");
+	for (const e_board of e_boardlist) {
+	  e_board.addEventListener('click', function(e) {
+	    var val = e.target.parentElement.firstElementChild.value;
 		document.querySelector('#e_bno_val').value = val;
 		sub();
-	});
+	  })
+	}
 
 	// 글 상세보기 이동
 	function sub() {

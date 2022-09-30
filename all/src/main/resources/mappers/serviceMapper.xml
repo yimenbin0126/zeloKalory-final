@@ -19,7 +19,7 @@
 	</select>
 	
 	<!-- 게시물 번호 가져오기 - 개별 -->
-	<select id="board_bno" resultType="int">
+	<select id="board_bno" resultType="_int">
 		SELECT bno 
 		FROM sv_board 
 		WHERE sv_type = #{sv_type}
@@ -69,8 +69,89 @@
 	<update id="board_fix">
 		UPDATE sv_board
 		SET title = #{title},
-		description = #{description},
+		description = #{description}
 		WHERE bno = #{bno}
 	</update>
+	
+	<!-- 부수적인 기능 (조회수, 좋아요) -->
+	<!-- 조회수 증가 -->
+	<update id="board_viewUp">
+		UPDATE sv_board
+		SET view_no = #{view_no}
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 조회수 증가 가능 여부 체크 -->
+	<!-- 테이블이 존재하는지 확인 : member_no -->
+	<select id="view_alive_mNo" resultType="_int">
+		SELECT count(*) 
+		FROM sv_viewcheck 
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</select>
+	
+	<!-- 테이블이 존재하는지 확인 : member_ip -->
+	<select id="view_alive_mIp" resultType="_int">
+		SELECT count(*) 
+		FROM sv_viewcheck 
+		WHERE bno = #{bno}
+		AND member_ip = #{member_ip}
+	</select>
+	
+	<!-- 테이블 없을 시 생성 : member_no -->
+	<insert id="view_insert_mNo">
+		INSERT INTO sv_viewcheck 
+		(bno
+		, view_time
+		, member_ip
+		, member_no
+		)
+		VALUES
+		(#{bno}
+		, to_char(sysdate, 'yyyymmdd')
+		, 'none'
+		, #{member_no}
+		)
+	</insert>
+	
+	<!-- 테이블 없을 시 생성 : member_ip -->
+	<insert id="view_insert_mIp">
+		INSERT INTO sv_viewcheck 
+		(bno
+		, view_time
+		, member_ip
+		, member_no
+		)
+		VALUES
+		(#{bno}
+		, to_char(sysdate, 'yyyymmdd')
+		, #{member_ip}
+		, 0
+		)
+	</insert>
+	
+	<!-- 테이블 불러오기 : member_no -->
+	<select id="view_load_mNo" resultType="eunbin.DTO.e_SvViewcheckDTO">
+		SELECT * 
+		FROM sv_viewcheck  
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</select>
+	
+	<!-- 테이블 불러오기 : member_ip -->
+	<select id="view_load_mIp" resultType="eunbin.DTO.e_SvViewcheckDTO">
+		SELECT * 
+		FROM sv_viewcheck  
+		WHERE bno = #{bno}
+		AND member_ip = #{member_ip}
+	</select>
+	
+	<!-- 이미 있는 테이블에서 날짜 체크 -->
+	<select id="view_dateCheck" resultType="_int">
+		SELECT
+		TO_CHAR(SYSDATE, 'YYYYMMDD')
+		 - TO_CHAR(#{view_time}, 'YYYYMMDD') 
+		FROM DUAL
+	</select>
 	
 </mapper>

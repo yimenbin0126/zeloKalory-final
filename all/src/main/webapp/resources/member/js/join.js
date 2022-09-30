@@ -24,7 +24,7 @@ function id_pass() {
 		if(document.querySelector('#e_id_check').style.display =="none"
 		&& document.querySelector('#e_input_id').value.length != 0){
 			$.ajax({
-		        url: "/all/join",
+		        url: "/all/member/join",
 		        type:"POST",
 		        data: {
 		            e_idcheck_click : "Y",
@@ -131,7 +131,7 @@ function nickname() {
 		if(document.querySelector('#e_nick_check').style.display =="none"
 		&& document.querySelector('#e_input_nickname').value.length != 0){
 			$.ajax({
-		        url: "/all/join",
+		        url: "/all/member/join",
 		        type:"POST",
 		        data: {
 		            e_nickCheck_click : "Y",
@@ -434,7 +434,7 @@ function join() {
         function join() {
             var e_mainform = document.e_mainform;
             e_mainform.method="post";
-            e_mainform.action="/all/joinComplet";
+            e_mainform.action="/all/member/joinComplet";
             e_mainform.submit();
             alert("회원가입이 완료되었습니다.");
         }

@@ -75,10 +75,12 @@ public class e_MemberController {
 			return "/main/main";
 		} else {
 			System.out.println("로그인 실패");
+			// 응답 - 한글 처리
+			response.setContentType("text/html;charset=UTF-8");
 			// 로그인 실패 시 경고창
 			PrintWriter out = response.getWriter();
 			out.println(
-					"<script language ='javascript'>alert('아이디 혹은 비밀번호가 맞지 않습니다. \\n다시 로그인 해주세요.'); location.href='/all/login';</script>");
+					"<script language ='javascript'>alert('아이디 혹은 비밀번호가 맞지 않습니다. \\n다시 로그인 해주세요.'); location.href='/all/member/login';</script>");
 			out.flush();
 		}
 		return "/member/login";
@@ -105,9 +107,10 @@ public class e_MemberController {
 				}
 			}
 		}
-
+		// 응답 - 한글 처리
+		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		out.println("<script language ='javascript'>alert('로그아웃 하였습니다.'); location.href='/all/main'; </script>");
+		out.println("<script language ='javascript'>alert('로그아웃 하였습니다.'); location.href='/all/main/main'; </script>");
 		out.flush();
 	}
 	

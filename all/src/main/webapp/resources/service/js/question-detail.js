@@ -24,7 +24,7 @@ function form(){
 			var con_fix = confirm('정말 글을 수정하시겠습니까?');
 			if (con_fix == true) {
 				e_btn_fix_form.method="post";
-				e_btn_fix_form.action="/all/service/question-detail";
+				e_btn_fix_form.action="/all/service/question-detail-button";
 				e_btn_fix_form.submit();
 			} else {
 				event.preventDefault();
@@ -37,7 +37,7 @@ function form(){
 			var con_del = confirm('정말 글을 삭제하시겠습니까?');
 			if (con_del == true) {
 				e_btn_delete_form.method="post";
-				e_btn_delete_form.action="/all/service/question-detail";
+				e_btn_delete_form.action="/all/service/question-detail-button";
 				e_btn_delete_form.submit();
 			} else {
 				event.preventDefault();

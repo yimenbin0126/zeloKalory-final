@@ -30,7 +30,7 @@ function confirm_idpass(){
 		}
 		var e_mainform = document.e_loginform;
 	    e_mainform.method="post";
-	    e_mainform.action="/all/login";
+	    e_mainform.action="/all/member/login";
 	    e_mainform.submit();
 	}
 }

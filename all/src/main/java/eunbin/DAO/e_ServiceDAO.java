@@ -2,8 +2,8 @@ package eunbin.DAO;
 
 import java.util.List;
 
-import eunbin.DTO.e_MemberDTO;
 import eunbin.DTO.e_ServiceDTO;
+import eunbin.DTO.e_SvViewcheckDTO;
 
 public interface e_ServiceDAO {
 
@@ -27,4 +27,13 @@ public interface e_ServiceDAO {
 	// 글 수정
 	public void board_fix(e_ServiceDTO s_dto) throws Exception;
 	
+	// 부수적인 기능 (조회수, 좋아요)
+	// 조회수 증가
+	public void board_viewUp(e_ServiceDTO s_dto) throws Exception;
+	
+	// 조회수 증가 가능 여부 체크
+	public boolean board_viewCheck(e_SvViewcheckDTO s_viewCheck) throws Exception;
+	 
+	// ip로 접속했을 경우 (ip가 중복되지 않을 시 증가)
+	public boolean board_Ipcheck(e_SvViewcheckDTO s_viewCheck) throws Exception;
 }

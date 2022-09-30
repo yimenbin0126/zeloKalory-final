@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import eunbin.DAO.e_ServiceDAO;
 import eunbin.DTO.e_ServiceDTO;
+import eunbin.DTO.e_SvViewcheckDTO;
 
 @Service
 public class e_ServiceServiceimpl implements e_ServiceService {
@@ -65,4 +66,20 @@ public class e_ServiceServiceimpl implements e_ServiceService {
     		return "N";
     	}
     }
+    
+    // 부수적인 기능 (조회수, 좋아요)
+ 	// 조회수 증가
+ 	public void board_viewUp(e_ServiceDTO s_dto) throws Exception {
+ 		s_dao.board_viewUp(s_dto);
+ 	}
+ 	
+ 	// 조회수 증가 가능 여부 체크
+ 	public boolean board_viewCheck(e_SvViewcheckDTO s_viewCheck) throws Exception {
+ 		return s_dao.board_viewCheck(s_viewCheck);
+ 	}
+ 	
+ 	// ip로 접속했을 경우 (ip가 중복되지 않을 시 증가)
+ 	public boolean board_Ipcheck(e_SvViewcheckDTO s_viewCheck) throws Exception {
+ 		return s_dao.board_Ipcheck(s_viewCheck);
+ 	}
 }

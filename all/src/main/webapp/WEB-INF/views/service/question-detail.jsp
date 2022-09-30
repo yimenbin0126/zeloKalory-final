@@ -42,11 +42,11 @@
 	        	<input type ="hidden" name="e_logout" value="Y">                   
         	</form>
         	<!-- null 오류 방지용 시작 -->
-        	<input type ='hidden' class = "j_btn1 j_btn" onclick="location.href='/all/login'" value="로그인">
-            <input type ='hidden' class = "j_btn2 j_btn" onclick="location.href='/all/join'" value="회원가입">
+        	<input type ='hidden' class = "j_btn1 j_btn" onclick="location.href='/all/member/login'" value="로그인">
+            <input type ='hidden' class = "j_btn2 j_btn" onclick="location.href='/all/member/join'" value="회원가입">
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
-            <input type ='button' class = "e_btn e_btn" onclick="location.href='/all/logout'" value="로그아웃">
+            <input type ='button' class = "e_btn e_btn" onclick="location.href='/all/member/logout'" value="로그아웃">
             <input type ='button' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">
             <!-- 나타나는 부분 끝 -->
         </div>
@@ -61,12 +61,12 @@
         </ul>
         <div id = j_nav>
         	<!-- null 오류 방지용 시작 -->
-            <input type ='hidden' class = "e_btn e_btn" onclick="location.href='/all/logout'" value="로그아웃">
+            <input type ='hidden' class = "e_btn e_btn" onclick="location.href='/all/member/logout'" value="로그아웃">
             <input type ='hidden' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">               
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
-            <input type ='button' class = "j_btn1 j_btn" onclick="location.href='/all/login'" value="로그인">
-            <input type ='button' class = "j_btn2 j_btn" onclick="location.href='/all/join'" value="회원가입">
+            <input type ='button' class = "j_btn1 j_btn" onclick="location.href='/all/member/login'" value="로그인">
+            <input type ='button' class = "j_btn2 j_btn" onclick="location.href='/all/member/join'" value="회원가입">
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
@@ -102,6 +102,8 @@
 							// 게시판 객체
 							e_ServiceDTO s_dto = new e_ServiceDTO();
 							s_dto = (e_ServiceDTO)request.getAttribute("s_dto");
+							// 글쓰기 줄바꿈 보이게 저장
+							s_dto.setDescription(s_dto.getDescription().replace("\r\n", "<br>"));
 							if (s_dto.getSv_type()!=null && s_dto.getSv_type().equals("question_member")) {
 						%>
 						<!-- 회원 정보 관리 -->
@@ -120,7 +122,6 @@
 						<%
 							}
 						%>
-						
 						<!-- 내용 -->
 						<div class="e_hd_top_con">
 							<div class="e_con_title"><%=s_dto.getTitle()%></div>
