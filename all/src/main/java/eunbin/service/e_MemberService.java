@@ -7,6 +7,9 @@ public interface e_MemberService {
 	// 회원가입 (멤버 추가 메서드)
 	public void addMember(e_MemberDTO dto) throws Exception;
     
+	// 유효성 검사
+	public String testMember(e_MemberDTO dto) throws Exception;
+	
     // 로그인 체크 (아이디, 비밀번호)
 	public int loginMember(e_MemberDTO dto) throws Exception;
     

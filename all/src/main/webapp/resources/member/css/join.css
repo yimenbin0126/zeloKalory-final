@@ -63,6 +63,19 @@ input:focus {
     text-align: center;
 }
 
+/* 필수항목 입력 요망 메시지 */
+.must_message {
+	font-weight: bold;
+	font-size: 13px;
+	margin-top: 30px;
+}
+
+.must_input {
+	font-size: 16px;
+	font-weight: bold;
+	color: red;
+}
+
 /* 아이디 */
 .e_id {
     padding-top: 40px;

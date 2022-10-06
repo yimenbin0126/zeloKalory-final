@@ -1,12 +1,13 @@
 package eunbin.DTO;
 
+import java.sql.Date;
+
 public class e_SvFileDTO {
 	private int bno;
+	private int file_order;
 	private String filename;
-	private int server_filename;
-	private int path;
-	private String file_extension;
-	private String file_date;
+	private String f_path;
+	private Date file_date;
 	
 	public int getBno() {
 		return bno;
@@ -14,40 +15,33 @@ public class e_SvFileDTO {
 	public void setBno(int bno) {
 		this.bno = bno;
 	}
+	public int getFile_order() {
+		return file_order;
+	}
+	public void setFile_order(int file_order) {
+		this.file_order = file_order;
+	}
 	public String getFilename() {
 		return filename;
 	}
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
-	public int getServer_filename() {
-		return server_filename;
+	public String getF_path() {
+		return f_path;
 	}
-	public void setServer_filename(int server_filename) {
-		this.server_filename = server_filename;
+	public void setF_path(String f_path) {
+		this.f_path = f_path;
 	}
-	public int getPath() {
-		return path;
-	}
-	public void setPath(int path) {
-		this.path = path;
-	}
-	public String getFile_extension() {
-		return file_extension;
-	}
-	public void setFile_extension(String file_extension) {
-		this.file_extension = file_extension;
-	}
-	public String getFile_date() {
+	public Date getFile_date() {
 		return file_date;
 	}
-	public void setFile_date(String file_date) {
+	public void setFile_date(Date file_date) {
 		this.file_date = file_date;
 	}
-	
 	@Override
 	public String toString() {
-		return "SvFileDTO [bno=" + bno + ", filename=" + filename + ", server_filename=" + server_filename + ", path="
-				+ path + ", file_extension=" + file_extension + ", file_date=" + file_date + "]";
+		return "e_SvFileDTO [bno=" + bno + ", file_order=" + file_order + ", filename=" + filename + ", f_path="
+				+ f_path + ", file_date=" + file_date + "]";
 	}
 }

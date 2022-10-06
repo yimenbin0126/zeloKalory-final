@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
-	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO,
+	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO, eunbin.DTO.e_SvPagingView,
 	eunbin.service.e_ServiceService, eunbin.service.e_ServiceServiceimpl,
 	java.util.List, java.util.ArrayList" %>
 <!DOCTYPE html>
@@ -155,15 +155,19 @@
 								<%
 									// 게시물 리스트 객체 생성
 									List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
+									e_SvPagingView s_page = new e_SvPagingView();
+									s_page = (e_SvPagingView)request.getAttribute("s_page");
 									// 게시물들 불러오기
 									if((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")!=null){
 										s_dto_list = (ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list");
+										int j = s_page.getBoard_NowStartBno();
 										for(int i=0; i<s_dto_list.size(); i++){
-											e_ServiceDTO s_dto = new e_ServiceDTO();
-											s_dto = s_dto_list.get(i);
+											if (j <= s_page.getBoard_NowEndBno()){
+												e_ServiceDTO s_dto = new e_ServiceDTO();
+												s_dto = s_dto_list.get(i);
 								%>
 								<ul class="e_boardlist">
-									<li value="<%=s_dto.getBno()%>"><%=i+1%></li>
+									<li value="<%=s_dto.getBno()%>"><%=j%></li>
 									<li><%=s_dto.getTitle()%></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
@@ -171,19 +175,66 @@
 									<li><%=s_dto.getHeart()%></li>
 								</ul>
 								<%
+												j++;
+											}
 										}
 									}
 								%>
 							</div>
 							<!-- 게시물 목록 끝 -->
 						</div>
-
+						
+						<!-- 페이징 -->
 						<div class="e_paging">
-							<div class="e_paging_btnleft">&lt;</div>
+							<%
+								// 클릭 가능 여부
+								if (s_page.isPage_prev()){
+							%>
+							<div onclick="location.href='/all/service/question-member?page_NowBno=<%=s_page.getPage_StartBno()-5%>'"
+							 class="e_paging_btnleft" id="e_paging_btnleft_yes">&lt;</div>
+							<%
+								} else {
+							%>
+							<div onclick="alert('첫 페이지 입니다.');"
+							 class="e_paging_btnleft" id="e_paging_btnleft_no">&lt;</div>
+							<%
+								}
+							%>
 							<div class="e_paging_num">
-								<div id="bno1">1</div>
+							<%
+								// 첫 번호, 마지막 번호
+								int page_StartBno = s_page.getPage_StartBno();
+								int page_EndBno = s_page.getPage_EndBno();
+								// 현재 번호
+								int page_NowBno = s_page.getPage_NowBno();
+								for (int i=page_StartBno; i <= page_EndBno; i++) {
+									if(i==page_NowBno){									
+							%>
+								<div id="page_NowBno"><%=i%></div>
+							<%
+									} else {
+							%>
+								<div onclick="location.href='/all/service/question-member?page_NowBno=<%=i%>'"
+								class="page_Bno" id="page_Bno<%=i%>"><%=i%></div>
+							<%
+									}
+								}
+							%>
 							</div>
-							<div class="e_paging_btnright">&gt;</div>
+							<%
+								// 클릭 가능 여부
+								if (s_page.isPage_prev()){
+							%>
+							<div onclick="location.href='/all/service/question-member?page_NowBno=<%=s_page.getPage_EndBno()+1%>'"
+							class="e_paging_btnright" id="e_paging_btnright_yes">&gt;</div>
+							<%
+								} else {
+							%>
+							<div onclick="alert('마지막 페이지 입니다.');"
+							 class="e_paging_btnright" id="e_paging_btnright_no">&gt;</div>
+							<%
+								}
+							%>
 						</div>
 					</div>
 				</div>

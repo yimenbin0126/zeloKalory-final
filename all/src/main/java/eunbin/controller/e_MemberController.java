@@ -1,6 +1,8 @@
 package eunbin.controller;
 
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -131,16 +133,20 @@ public class e_MemberController {
 	
 	@ResponseBody
 	@PostMapping("/join")
-	public String postJoin(@RequestBody e_MemberDTO m_dto,
-			@RequestParam(value = "e_join_check", required = false) String e_join_check)
+	public String postJoin(
+			@RequestParam(value = "e_input", required = false) String e_input,
+			@RequestParam(value = "e_Check_click", required = false) String e_Check_click)
 			throws Exception {
 		System.out.println("MemberController - postJoin");
 
+		e_MemberDTO m_dto = new e_MemberDTO();
 		// 중복체크
-		if (e_join_check.equals("e_join_idcheck")) {
+		if (e_Check_click.equals("e_join_idcheck")) {
+			m_dto.setId(e_input);
 			// 아이디 중복 체크 - 값 다시 전달
 			return String.valueOf(m_service.idCheck(m_dto));
-		} else if (e_join_check.equals("e_join_nickcheck")) {
+		} else if (e_Check_click.equals("e_join_nickcheck")) {
+			m_dto.setNickname(e_input);
 			// 닉네임 중복 체크 - 값 다시 전달
 			return String.valueOf(m_service.nickCheck(m_dto));
 		}
@@ -153,14 +159,16 @@ public class e_MemberController {
 		System.out.println("MemberController - getJoinComplet");
 	}
 
+	// 회원가입 - 유효성 검사
 	@ResponseBody
-	@PostMapping("/joinComplet")
-	public String postJoinComplet(@RequestBody e_MemberDTO m_dto,
+	@PostMapping(path="/joinComplet", produces="application/text;charset=utf-8")
+	public String postJoinComplet(
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+		request.setCharacterEncoding("utf-8");
+		response.setContentType("text/html;charset=utf-8");
 		System.out.println("MemberController - postJoinComplet");
-		System.out.println("회원가입 실행");
-
+		e_MemberDTO m_dto = new e_MemberDTO();
 		// 프로필 이미지 파일 불러오기
 		// 파일 경로
 		String savePath = "C:\\zerokalory_file";
@@ -173,15 +181,60 @@ public class e_MemberController {
 		String fileName = multi.getFilesystemName("pro_img");
 		// 파일의 전체 경로
 		String pro_img = savePath + "/" + fileName;
+		// 파일 등록 안 했을시
+		if (fileName==null || fileName.equals("")) {
+			pro_img = savePath + "/" + "dietmall_basic_profile.png";
+		}
 		// 프로필 이미지 값 저장
 		m_dto.setPro_img(pro_img);
-
-		// 회원정보 추가
-		m_service.addMember(m_dto);
-		System.out.println("회원가입 성공");
-		
-		// 로그인 홈페이지로 이동
-		return "/member/login";
+		// 그 외 값 불러오기
+		// 필수값 불러오기
+		m_dto.setId(multi.getParameter("id"));
+		m_dto.setPw(multi.getParameter("pw"));
+		m_dto.setNickname(multi.getParameter("nickname"));
+		m_dto.setEmail(multi.getParameter("email"));
+		m_dto.setTel(multi.getParameter("tel"));
+		m_dto.setHeight(Integer.valueOf(String.valueOf(multi.getParameter("height"))));
+		// 필수 아닌 값 불러오기
+		// 이름
+		if (multi.getParameter("name") == null || multi.getParameter("name").equals("")
+				|| Pattern.matches("^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{2,3}$", multi.getParameter("name")) == false) {
+			m_dto.setName("홍길동");
+		} else {
+			m_dto.setName(multi.getParameter("name"));
+		}
+		// 생년월일
+		if (Date.valueOf((String)multi.getParameter("birth")) == null || Date.valueOf((String)multi.getParameter("birth")).equals("")
+				|| Pattern.matches("^[0-9]*$", String.valueOf(Date.valueOf((String)multi.getParameter("birth"))).substring(0,4)) == false
+				|| Pattern.matches("^[0-9]*$", String.valueOf(Date.valueOf((String)multi.getParameter("birth"))).substring(5,7)) == false
+				|| Pattern.matches("^[0-9]*$", String.valueOf(Date.valueOf((String)multi.getParameter("birth"))).substring(8)) == false
+				|| String.valueOf(Date.valueOf((String)multi.getParameter("birth"))).length() != 10
+				|| String.valueOf(Date.valueOf((String)multi.getParameter("birth"))).charAt(4) != '-'
+				|| String.valueOf(Date.valueOf((String)multi.getParameter("birth"))).charAt(7) != '-'
+				) {
+			m_dto.setBirth(java.sql.Date.valueOf("2000-01-01"));
+		} else {
+			m_dto.setBirth(Date.valueOf((String)multi.getParameter("birth")));
+		}
+		// 성별
+		if (multi.getParameter("gender") == null || multi.getParameter("gender").equals("e_none")) {
+			m_dto.setGender("F");
+		} else {
+			m_dto.setGender(multi.getParameter("gender"));
+		}
+		// 유효성 검사
+		String msg = m_service.testMember(m_dto); 
+		if (msg.equals("통과")) {
+			// 유효성 검사 일치할 때
+			// 회원정보 추가
+			m_service.addMember(m_dto);
+			System.out.println("회원가입 성공");
+		} else {
+			// 유효성 검사가 일치하지 않을 때
+			System.out.println("회원가입 실패");
+		}
+		// 결과 값 전달
+		return msg;
 	}
 	
 }

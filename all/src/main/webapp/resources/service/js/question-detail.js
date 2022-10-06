@@ -15,6 +15,48 @@ function form(){
 		document.querySelector('#e_hidden_del').style.display = "none";
 	}
 	
+	// 좋아요 버튼 누를시
+	// 좋아요 X -> 좋아요 누르기
+	document.querySelector('#e_like_heart_n').addEventListener('click', (event)=>{
+		$.ajax({
+	        url: "/all/service/question-detail",
+	        type:"POST",
+	        data: {
+	            e_heart_check : "Y",
+	            e_bno : document.querySelector('#e_bno_value').value
+	        },
+	        success : function(data){
+	        	// 객체 값 가져오기
+	        	// 하트 칠하기
+	        	document.querySelector('#e_like_heart_n').style.display = "none";
+	        	document.querySelector('#e_like_heart_y').style.display = "block";
+	        	// 숫자 증가
+	        	var heart_num = document.querySelector('.e_like_num').innerText;
+	        	document.querySelector('.e_like_num').innerText = parseInt(heart_num) + 1;
+	        },
+	        });
+	});
+	
+	// 좋아요 O -> 좋아요 누르기
+	document.querySelector('#e_like_heart_y').addEventListener('click', (event)=>{
+		$.ajax({
+	        url: "/all/service/question-detail",
+	        type:"POST",
+	        data: {
+	            e_heart_check : "N",
+	            e_bno : document.querySelector('#e_bno_value').value
+	        },
+	        success : function(data){
+	        	// 하트 칠하기
+	        	document.querySelector('#e_like_heart_n').style.display = "block";
+	        	document.querySelector('#e_like_heart_y').style.display = "none";
+	        	// 숫자 감소
+	        	var heart_num = document.querySelector('.e_like_num').innerText;
+	        	document.querySelector('.e_like_num').innerText = parseInt(heart_num) - 1;
+	        },
+	        });
+	});
+	
 	// 버튼 클릭
 	if(document.querySelector('.e_hidden').style.display == "block") {
 

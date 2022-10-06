@@ -18,12 +18,42 @@
 		WHERE bno = #{bno}
 	</select>
 	
+	<!-- 타입별 게시물 갯수 불러오기 (sv_type) -->
+	<select id="board_count_All" resultType="int">
+		SELECT count(*)
+		FROM sv_board 
+		WHERE sv_type = #{sv_type}
+	</select>
+	
+	<!-- 특정 게시물 묶음 불러오기 - 페이징 -->
+	<select id="board_paging" resultType="eunbin.DTO.e_ServiceDTO">
+		SELECT bno, sv_type, group_origin, group_order,
+		admin_type, nickname, title, description, create_time, heart, view_no, member_no
+		from
+			(
+			SELECT * from (
+				SELECT rownum r, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, heart, view_no, member_no
+				FROM sv_board
+				WHERE sv_type = 'question_member'
+				ORDER BY bno
+			)
+			WHERE r
+			BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
+		)
+	</select>
+	
 	<!-- 게시물 번호 가져오기 - 개별 -->
 	<select id="board_bno" resultType="_int">
 		SELECT bno 
 		FROM sv_board 
 		WHERE sv_type = #{sv_type}
 		AND group_origin = #{group_origin}
+	</select>
+	
+	<!-- 글 작성 - bno 시퀀스 만들기 -->
+	<select id="board_write_bno" resultType="int">
+		SELECT sv_bno_sequence.nextval AS bno FROM dual
 	</select>
 	
 	<!-- 글 작성 - 최초 -->
@@ -43,7 +73,7 @@
 		, member_no
 		)
 		VALUES
-		(sv_bno_SEQUENCE.NEXTVAL
+		(#{bno}
 		, #{sv_type}
 		, 1
 		, 1
@@ -57,6 +87,55 @@
 		, #{member_no}
 		)
 	</insert>
+	
+	<!-- 첨부파일 작성 : 글과 함께 -->
+	<insert id="board_write_file">
+		INSERT INTO sv_file 
+		(bno
+		, file_order
+		, filename
+		, f_path
+		, file_date
+		)
+		VALUES
+		(#{bno}
+		, sv_f_file_order_SEQUENCE.nextval
+		, #{filename}
+		, #{f_path}
+		, #{file_date}
+		)
+	</insert>
+	
+	<!-- 첨부파일 전부 불러오기 -->
+	<select id="board_load_file" resultType="eunbin.DTO.e_SvFileDTO">
+		SELECT * 
+		FROM sv_file 
+		WHERE bno = #{bno}
+		ORDER BY file_order
+	</select>
+	
+	<!-- 첨부파일 부분 불러오기 -->
+	<select id="board_load_file_one" resultType="eunbin.DTO.e_SvFileDTO">
+		SELECT * 
+		FROM sv_file 
+		WHERE file_order = #{file_order}
+	</select>
+	
+	
+	<!-- 첨부파일 전체 삭제 : 게시물과 연관된 -->
+	<delete id="board_delete_file">
+		DELETE
+		FROM sv_file 
+		WHERE bno = #{bno}
+	</delete>
+	
+	<!-- 첨부파일 부분 삭제 : 게시물과 연관된 -->
+	<delete id="board_delete_file_one">
+		DELETE
+		FROM sv_file 
+		WHERE bno = #{bno}
+		AND file_order = #{file_order}
+	</delete>
 	
 	<!-- 글 삭제 -->
 	<delete id="board_delete">
@@ -74,6 +153,7 @@
 	</update>
 	
 	<!-- 부수적인 기능 (조회수, 좋아요) -->
+	<!-- 조회수 -->
 	<!-- 조회수 증가 -->
 	<update id="board_viewUp">
 		UPDATE sv_board
@@ -146,6 +226,22 @@
 		AND member_ip = #{member_ip}
 	</select>
 	
+	<!-- 테이블 날짜 저장하기 : member_no -->
+	<update id="view_save_mNo">
+		UPDATE sv_viewcheck
+		SET view_time = to_char(sysdate, 'yyyymmdd')
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</update>
+	
+	<!-- 테이블 날짜 저장하기 : member_ip -->
+	<update id="view_save_mIp">
+		UPDATE sv_viewcheck
+		SET view_time = to_char(sysdate, 'yyyymmdd')
+		WHERE bno = #{bno}
+		AND member_ip = #{member_ip}
+	</update>
+	
 	<!-- 이미 있는 테이블에서 날짜 체크 -->
 	<select id="view_dateCheck" resultType="_int">
 		SELECT
@@ -153,5 +249,68 @@
 		 - TO_CHAR(#{view_time}, 'YYYYMMDD') 
 		FROM DUAL
 	</select>
+	
+	<!-- 조회수 테이블 삭제 -->
+	<delete id="view_delete">
+		DELETE
+		FROM sv_viewcheck 
+		WHERE bno = #{bno}
+	</delete>
+	
+	<!-- 좋아요 -->
+	<!-- 좋아요 : 좋아요만 있는 경우 -->
+	<!-- 테이블 생성 : 좋아요 증가 -->
+	<insert id="like_insert_one">
+		INSERT INTO sv_likecheck 
+		(bno
+		, like_check
+		, dislike_check
+		, member_no
+		)
+		VALUES
+		(#{bno}
+		, 1
+		, 0
+		, #{member_no}
+		)
+	</insert>
+	
+	<!-- 좋아요 증가 -->
+	<update id="like_up">
+		UPDATE sv_likecheck
+		SET like_check = 1
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</update>
+
+	<!-- 좋아요 감소 -->
+	<update id="like_down">
+		UPDATE sv_likecheck
+		SET like_check = 0
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</update>
+	
+	<!-- 좋아요 업데이트 -->
+	<update id="like_update">
+		UPDATE sv_board
+		SET heart = #{heart}
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 좋아요 불러오기 : 회원별 -->
+	<select id="like_load" resultType="eunbin.DTO.e_SvLikecheckDTO">
+		SELECT *
+		FROM sv_likecheck
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</select>
+	
+	<!-- 좋아요 테이블 삭제 -->
+	<delete id="like_delete">
+		DELETE
+		FROM sv_likecheck 
+		WHERE bno = #{bno}
+	</delete>
 	
 </mapper>

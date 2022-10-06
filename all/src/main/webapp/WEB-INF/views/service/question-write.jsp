@@ -131,6 +131,25 @@
 										name="description" id="e_cont_detail_input"></textarea>
 									</div>
 								</div>
+								
+								<!-- 첨부파일 -->
+								<div class="e_con_file">
+									<div class="e_file_title">첨부파일</div>
+									<div class="e_file_detail">
+										<!-- 파일 업로드 -->
+										<label class="e_file_btn" for="e_file_detail_input">
+											파일 업로드
+										</label>
+										<input type="file" name="file"
+											id="e_file_detail_input" style="display:none" multiple>
+									</div>
+								</div>
+								<!-- 파일 업로드 -->
+								<div class="e_con_file_upload">
+									<div class="e_file_title"></div>
+									<div class="file_group">
+									</div>
+								</div>
 							</div>
 
 							<!-- 글쓰기 버튼 -->

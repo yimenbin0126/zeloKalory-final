@@ -60,7 +60,7 @@
 }
 
 /* 글쓰기 */
-.e_ti_title, .e_cont_title {
+.e_ti_title, .e_cont_title, .e_file_title {
 	font-weight: bold;
 	background-color: lightgray;
 }
@@ -78,8 +78,13 @@
 	padding: 10px 100px 400px 15px;
 }
 
+.e_file_title {
+	width: 100px;
+	padding: 10px 32px 15px 15px;
+}
+
 /* 글쓰기 내용 */
-.e_ti_detail, .e_cont_detail {
+.e_ti_detail, .e_cont_detail, .e_file_detail, .file_group {
 	background-color: white;
 	width:633px;
 }
@@ -95,8 +100,17 @@
 	padding-top: 10px;
 }
 
+.e_file_detail, .file_group {
+	padding-left: 15px;
+	padding-top: 10px;
+}
+
 .e_con_content {
 	border-top: 1px solid gray;
+	border-bottom: 1px solid gray;
+}
+
+.e_con_file_upload {
 	border-bottom: 1px solid gray;
 }
 
@@ -113,7 +127,40 @@
 	height: 400px;
 }
 
+/* 파일 업로드 */
+.e_con_file_upload div {
+	display: block;
+}
 
+.file_group div p {
+	font-weight: bold;
+}
+
+.file_group div {
+	font-size: 13px;
+	display: flex;
+	align-items: center;
+}
+
+.file_group div a {
+	font-size: 10px;
+	padding: 3px;
+	margin-left: 7px;
+	border-radius: 12px;
+	border: 1.5px solid red;
+	
+}
+
+/* 첨부파일 */
+.e_file_btn {
+	font-weight: bold;
+	font-size: 13px;
+	padding: 10px;
+	border: none;
+	border-radius: 2px;
+	color: white;
+	background-color: gray;
+}
 
 /* 글쓰기 버튼 */
 .e_button {
@@ -133,5 +180,5 @@
 	padding: 15px;
 	border: none;
 	color: white;
-	background-color: blue;
+	background-color: #1649B0;
 }

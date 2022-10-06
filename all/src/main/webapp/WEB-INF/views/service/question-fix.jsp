@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
-	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO,
+	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO, eunbin.DTO.e_SvFileDTO,
 	eunbin.service.e_ServiceService, eunbin.service.e_ServiceServiceimpl,
 	java.util.List, java.util.ArrayList" %>
 <!DOCTYPE html>
@@ -126,6 +126,43 @@
 									<div class="e_cont_detail">
 										<textarea name="description"
 											id="e_cont_detail_input"><%=s_dto.getDescription()%></textarea>
+									</div>
+								</div>
+								
+								<!-- 첨부파일 -->
+								<div class="e_con_file">
+									<div class="e_file_title">첨부파일</div>
+									<div class="e_file_detail">
+										<!-- 파일 업로드 -->
+										<label class="e_file_btn" for="e_file_detail_input">
+											파일 업로드
+										</label>
+										<input type="file" name="file"
+											id="e_file_detail_input" style="display:none" multiple>
+									</div>
+								</div>
+								<!-- 파일 업로드 -->
+								<div class="e_con_file_upload">
+									<div class="e_file_title"></div>
+									<div class="file_group">
+									<!-- 업로드 된 파일 -->
+									<%
+										// 게시판 첨부파일 객체
+										List<e_SvFileDTO> filelist = new ArrayList<e_SvFileDTO>();
+										if (((ArrayList<e_SvFileDTO>)request.getAttribute("filelist")).size() != 0) {
+											filelist = (ArrayList<e_SvFileDTO>)request.getAttribute("filelist");
+											for (int i=0; i<filelist.size(); i++){
+												e_SvFileDTO s_filedto = new e_SvFileDTO();
+												s_filedto = filelist.get(i);
+									%>
+										<div id="prev_file<%=s_filedto.getFile_order()%>" class="fileList">
+								           <p class="filename"><%=s_filedto.getFilename()%></p>
+								           <a class="filedelete" onclick="prev_deleteFile(<%=s_filedto.getFile_order()%>);">❌</a>
+								        </div>
+									<%
+											}
+										}
+									%>
 									</div>
 								</div>
 							</div>

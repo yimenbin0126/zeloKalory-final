@@ -1,17 +1,117 @@
+// 전역 변수 선언
+// 파일이 늘때마다 고유 번호가 저장됨 (삭제해도 지워지지 않음)
+let fileNo = 0;
+// 전체 파일 목록을 담을 배열 (삭제해도 지워지지 않음)
+let filesArr = new Array();
+// 삭제한 파일들의 고유 번호 담기
+let filesArr_del = new Array();
+
 window.onload = function(){
+	document.querySelector("#e_file_detail_input").addEventListener('change', file);
 	form();
 }
 
-// 글수정 데이터 전달
+// 첨부 파일
+function file() {
+	// 첨부파일 최대 개수
+	var maxFileCount = 5;
+	// 기존 추가된 첨부파일 갯수
+    var allFileCount = document.querySelectorAll('.fileList').length;
+    // 첨부 가능한 파일 추가 갯수
+	var possibleFileCount = maxFileCount - allFileCount;
+	// 현재 선택된 첨부파일 갯수
+	var choiceFileCount = document.querySelector('#e_file_detail_input').files.length;
+    
+	// 첨부파일 최대 갯수 한도 초과
+    if (possibleFileCount == 0) {
+    	alert("첨부파일은 최대 " + maxFileCount + "개 까지만 첨부가 가능합니다.");
+    }
+    
+    // 첨부파일 추가
+    // 현재 선택된 파일 갯수, 첨부 가능한 파일 갯수 중 최솟값 (추가 가능한 갯수까지 한정으로 추가) 
+	// 다중 선택시 파일 개별 선택
+   for (const file of document.querySelector('#e_file_detail_input').files) {
+        file.is_delete = false;
+        filesArr.push(file);
+        // 파일 내용 읽기
+        var reader = new FileReader();
+        // onload = 읽기 동작이 성공적으로 완료되었을 때
+        reader.onload = function () {
+        	// 개별 파일을 저장
+	        reader.readAsDataURL(file);
+        };
+        
+        // 목록 추가
+        let html = '';
+        html += '<div id="file' + fileNo + '" class="fileList">';
+        html += '   <p class="filename">' + file.name + '</p>';
+        html += '   <a class="filedelete" onclick="deleteFile(' + fileNo + ');">❌</a>';
+        html += '</div>';
+        // jquery 로 추가하면 자동으로 dom 으로 변환되어 추가됨
+        $('.file_group').append(html);
+        fileNo++;
+		console.log("첨부파일 추가완료");
+    }
+	    
+    // 추가한 뒤 초기화
+    document.querySelector("input[type=file]").value = "";
+}
+
+// 첨부파일 삭제 - 현재
+function deleteFile(num) {
+    document.querySelector("#file" + num).remove();
+    // 이미 삭제된 파일 해당 인덱스에
+    // .is_delete = true 라는 키와 값을 추가해 구분
+    filesArr[num].is_delete = true;
+}
+
+// 첨부파일 삭제 - 이전
+function prev_deleteFile(num) {
+    document.querySelector("#prev_file" + num).remove();
+    filesArr_del.push(num);
+}
+
+// 글쓰기 데이터 전달
 function form(){
 
-	var e_fix_form = document.e_fix_form;
-
-	// 수정 완료 버튼 클릭
-	document.querySelector('#e_btn_fix_btn').addEventListener('click', ()=>{
-		e_fix_form.method="post";
-		e_fix_form.action="/all/service/question-fix";
-		e_fix_form.submit();
+	// 글수정 데이터 전달
+	document.querySelector('#e_btn_fix_btn').addEventListener('click', (e)=>{
+		e.preventDefault();
+		// 폼 데이터에 값 담기
+	    let formData = new FormData();
+	    // 삭제한 파일 있으면 담기
+	    if (filesArr_del.length >= 1) {
+	    	for (let i = 0; i < filesArr_del.length; i++) {
+            	formData.append('file_del_num', filesArr_del[i]);
+            }
+        } else {
+        	// null 방지 파일 값 전달
+        	formData.append('file_del_num', "");
+        }
+		// 파일을 폼데이터에 담기
+	    for (let i = 0; i < filesArr.length; i++) {
+	        // 삭제되지 않은 파일만 폼데이터에 담기
+	        if (!filesArr[i].is_delete) {
+	            formData.append('file'+i, filesArr[i]);
+	        }
+	    }
+		// 제목
+		formData.append('title', document.querySelector('#e_ti_detail_input').value);
+		// 내용
+		formData.append('description', document.querySelector('#e_cont_detail_input').value);
+		// 글쓰기 유형 선택
+		formData.append('bno', document.querySelector('#e_bno').value);
+		$.ajax({
+		    url: '/all/service/question-fix',
+		    type: 'POST',
+		    processData: false,
+		    contentType: false,
+		    dataType:'text',
+		    data: formData,
+		    success: function(result){
+		    	//location.href="/all/service/question-member";
+		    }
+		});
 	});
 	
 }

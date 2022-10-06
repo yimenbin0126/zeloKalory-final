@@ -27,8 +27,8 @@ function id_pass() {
 		        url: "/all/member/join",
 		        type:"POST",
 		        data: {
-		            e_idcheck_click : "Y",
-		            e_input_id : document.querySelector('#e_input_id').value
+		            e_Check_click : "Y",
+		            e_input : document.querySelector('#e_input_id').value
 		        },
 		        success : function(data){
 		        	if(data==0){
@@ -134,8 +134,8 @@ function nickname() {
 		        url: "/all/member/join",
 		        type:"POST",
 		        data: {
-		            e_nickCheck_click : "Y",
-		            e_input_nick : document.querySelector('#e_input_nickname').value
+		            e_Check_click : "Y",
+		            e_input : document.querySelector('#e_input_nickname').value
 		        },
 		        success : function(data){
 		        	if(data==0){
@@ -322,22 +322,10 @@ function join() {
                     alert('입력한 비밀번호가 맞지 않습니다.');
                     document.querySelector('#e_input_pass_more').focus();
             } else {
-                n_check();
-            }
-        }
-
-        // 이름
-        function n_check() {
-            if (document.querySelector('#e_name_confirm').style.display == "block"
-                || document.querySelector('#e_input_id').value.length == 0) {
-                    e.preventDefault();
-                    alert('이름을 입력해주세요.');
-                    document.querySelector('#e_input_id').focus();
-            } else {
                 nick_check();
             }
         }
-        
+
         // 닉네임
         function nick_check() {
             if (document.querySelector('#e_nickname_confirm').style.display == "block"
@@ -346,32 +334,6 @@ function join() {
                     e.preventDefault();
                     alert('닉네임을 입력해주세요.');
                     document.querySelector('#e_input_nickname').focus();
-            } else {
-                b_check();
-            }
-        }
-
-        // 생년월일
-        function b_check() {
-            if (document.querySelector('#e_birth_confirm').style.display == "block"
-                || document.querySelector('#e_input_birth').value.length == 0) {
-                    e.preventDefault();
-                    alert('생년월일을 입력해주세요.');
-                    document.querySelector('#e_input_birth').focus();
-            } else {
-                g_check();
-            }
-        }
-
-        // 성별
-        function g_check() {
-        	var g_selectbox = document.querySelector('#e_sel_gender');
-        	var g_select = g_selectbox.options[g_selectbox.selectedIndex].value;
-            if (document.querySelector('#e_gender_confirm').style.display == "block"
-                || g_select == 'e_none') {
-                    e.preventDefault();
-                    alert('성별을 선택해주세요.');
-                    document.querySelector('#e_sel_gender').focus();
             } else {
                 e_check();
             }
@@ -391,7 +353,7 @@ function join() {
             }
         }
 
-        // 휴대전화
+        // 전화번호
         function t_check() {
             const regex_tt = /^01([0|1|6|7|8|9])-?([0-9]{4})-?([0-9]{4})$/;
 
@@ -414,29 +376,46 @@ function join() {
                     document.querySelector('#e_input_height').focus();
             } 
             else {
-            	file();
+            	join();
             }
         }
         
-        // 프로필 사진
-        function file() {
-			if(document.querySelector('#e_input_pro_img').value == ""){
-				document.querySelector('#e_pro_img_confirm').style.display = "block";
-				e.preventDefault();
-                alert('프로필 사진을 입력해주세요.');
-                document.querySelector('#e_input_pro_img').focus();
-			} else {
-            	join();
-            }
-		}
-        
         // 가입 완료
         function join() {
-            var e_mainform = document.e_mainform;
-            e_mainform.method="post";
-            e_mainform.action="/all/member/joinComplet";
-            e_mainform.submit();
-            alert("회원가입이 완료되었습니다.");
+            e.preventDefault();
+            // 생년월일 제대로 기입 안되있을시 기본값 저장
+            var birth = document.querySelector("#e_input_birth");
+    		var error_b = document.querySelector("#e_birth_confirm");
+    		const regex_b = /^[0-9]*$/;
+    		
+            if (regex_b.test(birth.value.substring(0,4)) == false || regex_b.test(birth.value.substring(5,7)) == false
+	        || regex_b.test(birth.value.substring(8)) == false || birth.value.length != 10
+	        || birth.value[4] != '-' || birth.value[7] != '-') {
+	            birth.value = "2000-01-01";
+	        } 
+	        // 폼 변수 저장
+	        var form = $('#e_mainform')[0];
+    		var formData = new FormData(e_mainform);
+            // ajax 로 폼 데이터 보내기
+            $.ajax({
+	            url: "/all/member/joinComplet",
+	            type: "POST",
+	            cache: false,
+	            dataType:'text',
+	            contentType: false,
+          		processData: false,
+	            data: formData,
+	            success: function(data){
+	            	if(data=="통과"){
+		            	console.log("회원가입 폼 전달 완료");
+		            	alert('회원가입이 완료되었습니다. \n잠시후, 로그인 페이지로 돌아갑니다.');
+		            	location.href='/all/member/login';
+	            	} else {
+	            		console.log("회원가입 실패");
+	            		alert(data);
+	            	}
+	            }
+	        }) 
         }
     });
 }

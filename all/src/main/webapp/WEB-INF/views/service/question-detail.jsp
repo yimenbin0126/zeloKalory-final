@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
-	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO,
+	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO, eunbin.DTO.e_SvFileDTO,
 	eunbin.service.e_ServiceService, eunbin.service.e_ServiceServiceimpl,
 	java.util.List, java.util.ArrayList" %>
 <!DOCTYPE html>
@@ -102,6 +102,8 @@
 							// 게시판 객체
 							e_ServiceDTO s_dto = new e_ServiceDTO();
 							s_dto = (e_ServiceDTO)request.getAttribute("s_dto");
+							// 게시판 첨부파일 객체
+							List<e_SvFileDTO> filelist = new ArrayList<e_SvFileDTO>();
 							// 글쓰기 줄바꿈 보이게 저장
 							s_dto.setDescription(s_dto.getDescription().replace("\r\n", "<br>"));
 							if (s_dto.getSv_type()!=null && s_dto.getSv_type().equals("question_member")) {
@@ -137,9 +139,60 @@
 								</p>
 								<div class="e_blank"></div>
 								<div class="e_content_like">
-									<p class="e_like_heart">♥</p>
+								<input type="hidden" name="e_bno" id="e_bno_value" value="<%=s_dto.getBno()%>">
+								<%
+									// 초기화 : 좋아요 눌러져 있는지 확인
+									if (request.getAttribute("heart_click")!=null
+									&& request.getAttribute("heart_click").equals("Y")
+									&& (e_MemberDTO)session.getAttribute("user") !=null) {
+								%>
+									<!-- 좋아요 눌러져 있음 -->
+									<input type="hidden" id="heart_click" value="Y">
+									<p id="e_like_heart_n" class="e_like_heart" style="display:none;">♡</p>
+									<p id="e_like_heart_y" class="e_like_heart">♥</p>
+								<%
+									} else if (request.getAttribute("heart_click")!=null
+									&& request.getAttribute("heart_click").equals("N")
+									&& (e_MemberDTO)session.getAttribute("user") !=null) {
+								%>
+									<!-- 좋아요 눌러져 있지 않음 -->
+									<input type="hidden" id="heart_click" value="N">
+									<p id="e_like_heart_n" class="e_like_heart">♡</p>
+									<p id="e_like_heart_y" class="e_like_heart" style="display:none;">♥</p>
+								<%
+									} else {
+								%>
+									<!-- 로그인 안 되어있음 (누를 수 없게 함) -->
+									<p class="e_like_heart">♡</p>
+									<!-- null 값 방지 -->
+									<input type="hidden" id="heart_click" value="none">
+									<p id="e_like_heart_n" class="e_like_heart" style="display:none;">♡</p>
+									<p id="e_like_heart_y" class="e_like_heart" style="display:none;">♥</p>
+								<%
+									}
+								%>
 									<p class="e_like_num"><%=s_dto.getHeart()%></p>
 								</div>
+							</div>
+							<!-- 첨부 파일 -->
+							<div class="e_content_file">
+									<div class="c_file_title">첨부 파일</div>
+									<%
+										if (((ArrayList<e_SvFileDTO>)request.getAttribute("filelist")).size() != 0) {
+											filelist = (ArrayList<e_SvFileDTO>)request.getAttribute("filelist");
+											for (int i=0; i<filelist.size(); i++){
+												e_SvFileDTO s_filedto = new e_SvFileDTO();
+												s_filedto = filelist.get(i);
+									%>
+									<div class="c_file_content"><a href="/all/service/file/download?file_order=<%=s_filedto.getFile_order()%>"><%=s_filedto.getFilename()%></a></div>
+									<%
+											}
+											} else {
+									%>
+									<div class="c_file_content">* 첨부된 파일 없음</div>
+									<%
+										}
+									%>
 							</div>
 						</div>
 
