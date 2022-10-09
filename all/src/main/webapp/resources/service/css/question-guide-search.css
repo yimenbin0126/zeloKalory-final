@@ -106,7 +106,7 @@
 	padding: 20px 132px 20px 132px;
 }
 
-#e_choice_mem {
+#e_choice_guide {
 	color: white;
 	background-color: gray;
 }
@@ -185,24 +185,25 @@
 	display: flex;
 }
 
-.e_paging_num div {
+.e_paging_num a {
+	color: black;
 	margin-right: 10px;
+	background-color: lightgray;	
 }
 
-.e_paging_num div:last-child {
+.e_paging_num a:last-child {
 	margin-right: 0px;
 }
 
-.e_paging_num div {
-	background-color: lightgray;	
-}
 
 .e_paging_btnleft, .e_paging_btnright {
 	color: white;
 	background-color: gray;	
 }
 
-.e_paging_btnleft, .e_paging_btnright, .e_paging_num div {
+.e_paging_btnleft, .e_paging_btnright, .e_paging_num div,
+.e_paging_num a {
+	text-decoration: none;
 	font-weight: bold;
 	padding: 10px;
 	width: 20px;

@@ -15,7 +15,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import eunbin.DTO.e_ServiceDTO;
 import eunbin.DTO.e_SvFileDTO;
 import eunbin.DTO.e_SvLikecheckDTO;
-import eunbin.DTO.e_SvPagingView;
+import eunbin.DTO.e_SvPagingViewDTO;
+import eunbin.DTO.e_SvSearchDTO;
 import eunbin.DTO.e_SvViewcheckDTO;
 
 @Repository
@@ -57,7 +58,7 @@ public class e_ServiceDAOimpl implements e_ServiceDAO {
 	}
 	
 	// 특정 게시물 묶음 불러오기 - 페이징
-	public List<e_ServiceDTO> board_paging(e_SvPagingView s_paging) throws Exception {
+	public List<e_ServiceDTO> board_paging(e_SvPagingViewDTO s_paging) throws Exception {
 		System.out.println("e_ServiceDAOimpl - board_paging - 특정 게시물 묶음 불러오기 - 페이징");
 		return sql.selectList("serviceMapper.board_paging", s_paging);
 	}
@@ -234,7 +235,7 @@ public class e_ServiceDAOimpl implements e_ServiceDAO {
  		s_dto = sql.selectOne("serviceMapper.board_one", s_dto);
  		// 좋아요 증가
  		sql.update("serviceMapper.like_up", s_likeCheck);
- 		s_dto.setHeart(s_dto.getHeart()+1);
+ 		s_dto.setLike_check(s_dto.getLike_check()+1);
  		// 좋아요 증가한 값 업데이트
  		sql.update("serviceMapper.like_update", s_dto);
  	}
@@ -250,9 +251,59 @@ public class e_ServiceDAOimpl implements e_ServiceDAO {
  		s_dto = sql.selectOne("serviceMapper.board_one", s_dto);
  		// 좋아요 감소
   		sql.update("serviceMapper.like_down", s_likeCheck);
-  		s_dto.setHeart(s_dto.getHeart()-1);
+  		s_dto.setLike_check(s_dto.getLike_check()-1);
   	 	// 좋아요 감소한 값 업데이트
   		sql.update("serviceMapper.like_update", s_dto);
   	}
+  	
+  	// 싫어요 증가
+  	public void board_dislike_up(e_SvLikecheckDTO s_likeCheck) throws Exception {
+  		System.out.println("e_ServiceDAOimpl - board_dislike_up - 싫어요 증가");
+  		// 좋아요 테이블 불러오기
+   		if(sql.selectOne("serviceMapper.like_load", s_likeCheck) == null) {
+   			// 테이블이 없을 시
+   			// 싫어요 테이블 생성
+   			sql.insert("serviceMapper.dislike_insert_one", s_likeCheck);
+   			s_likeCheck = sql.selectOne("serviceMapper.like_load", s_likeCheck);
+   		}
+   		// 게시판 테이블 불러오기
+ 		e_ServiceDTO s_dto = new e_ServiceDTO();
+ 		s_dto.setBno(s_likeCheck.getBno());
+ 		s_dto = sql.selectOne("serviceMapper.board_one", s_dto);
+ 		// 싫어요 증가
+ 		sql.update("serviceMapper.dislike_up", s_likeCheck);
+ 		s_dto.setDislike_check(s_dto.getDislike_check()+1);
+ 		// 싫어요 증가한 값 업데이트
+ 		sql.update("serviceMapper.dislike_update", s_dto);
+  	}
+  	
+  	// 싫어요 감소
+   	public void board_dislike_down(e_SvLikecheckDTO s_likeCheck) throws Exception {
+   		System.out.println("e_ServiceDAOimpl - board_dislike_down - 싫어요 감소");
+   		// 싫어요 테이블 불러오기
+   		sql.selectOne("serviceMapper.like_load", s_likeCheck);
+   		// 게시판 테이블 불러오기
+ 		e_ServiceDTO s_dto = new e_ServiceDTO();
+ 		s_dto.setBno(s_likeCheck.getBno());
+ 		s_dto = sql.selectOne("serviceMapper.board_one", s_dto);
+ 		// 싫어요 감소
+ 		sql.update("serviceMapper.dislike_down", s_likeCheck);
+  		s_dto.setDislike_check(s_dto.getDislike_check()-1);
+  	 	// 좋아요 감소한 값 업데이트
+  		sql.update("serviceMapper.dislike_update", s_dto);
+   	}
+  	
+  	// 검색
+ 	// 검색한 게시물 갯수 가져오기
+ 	public int board_search_count_All(e_SvSearchDTO s_searchdto) throws Exception {
+ 		System.out.println("e_ServiceDAOimpl - board_search_count_All - 검색한 게시물 갯수 가져오기");
+ 		return sql.selectOne("serviceMapper.board_search_count_All", s_searchdto);
+ 	}
+ 	
+ 	// 검색한 게시물 전체 가져오기 : 페이징 적용
+ 	public List<e_ServiceDTO> board_search_All(e_SvSearchDTO s_searchdto) throws Exception {
+ 		System.out.println("e_ServiceDAOimpl - board_search_All - 검색한 게시물 전체 가져오기 : 페이징 적용");
+ 		return sql.selectList("serviceMapper.board_search_All", s_searchdto);
+ 	}
   	
 }

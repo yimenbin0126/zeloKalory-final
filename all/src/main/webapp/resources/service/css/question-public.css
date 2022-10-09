@@ -28,7 +28,7 @@
 	width: 40px;
 	height: 40px;
 	float: left;
-	padding-left: 70px;
+	padding-left: 45px;
 }
 
 /* 오른쪽 카데고리 */
@@ -47,7 +47,13 @@
 	text-align: center;
 }
 
-.e_hd_top_write, .e_hd_choice {
+.e_hd_top_con {
+	padding-bottom: 30px;
+	font-weight:bold;
+	font-size: 13px;
+}
+
+.e_hd_top_write, .e_hd_choice, .e_hd_top_write_mylist {
 	padding: 0px 0px 30px 50px;
 }
 
@@ -57,13 +63,34 @@
 	padding-bottom: 15px;
 }
 
-/* 글쓰기 */
-.e_hd_top_btn {
-	font-size: 25px;
-	width: 750px;
-	height: 80px;
-	margin: 40px 20px 40px 20px;
-	background-color: lightgray;
+/* 글쓰기 등 버튼 */
+.e_btn_list {
+	margin: 0px 60px 0px 50px;
+}
+
+.e_btn_list {
+	margin-top: 20px;
+	display: flex;
+	justify-content: right;
+}
+
+.e_hd_top_write {
+	font-weight: bold;
+	font-size: 15px;
+	padding: 10px 25px 10px 25px;
+	color: white;
+	background-color: #1649B0;
+	border-radius: 5px;
+	border: none;
+}
+
+.e_hd_top_write_mylist {
+	margin-right: 10px;
+	font-weight: bold;
+	font-size: 15px;
+	padding: 10px 25px 10px 25px;
+	color: white;
+	background-color: gray;
 	border-radius: 5px;
 	border: none;
 }
@@ -84,23 +111,10 @@
 	background-color: gray;
 }
 
-.e_header {
-	margin-left:50px;
-	margin-right:60px;
-	margin-bottom: 60px;
-	border-bottom: 1px solid gray;
-}
 
-/* 1:1 문의 내역 */
 /* 카데고리별 */
 .e_content {
 	margin: 0px 60px 0px 50px;
-}
-
-.e_con_title {
-	margin-bottom: 40px;
-	font-size: 22px;
-	font-weight: bold;
 }
 
 /* 회원정보 관리 */
@@ -131,12 +145,12 @@
 
 .e_content ul li:nth-child(2) {
 	padding: 10px 5px 10px 10px;
-	width: 300px;	
+	width: 250px;	
 }
 
 .e_content ul li:nth-child(3) {
 	padding: 10px 5px 10px 10px;
-	width: 100px;	
+	width: 80px;	
 }
 
 .e_content ul li:nth-child(4) {
@@ -150,11 +164,15 @@
 	width: 60px;	
 }
 
+.e_content ul li:nth-child(6) {
+	padding: 10px 15px 10px 5px;
+	width: 60px;	
+}
+
 
 /* 페이징 */
 .e_paging {
-	margin-top: 40px;
-	margin-bottom: 100px;
+	margin-bottom: 40px;
 	display: flex;
 	justify-content: center;
 }
@@ -175,9 +193,69 @@
 	margin-right: 0px;
 }
 
+.e_paging_num div {
+	background-color: lightgray;	
+}
+
+.e_paging_btnleft, .e_paging_btnright {
+	color: white;
+	background-color: gray;	
+}
+
 .e_paging_btnleft, .e_paging_btnright, .e_paging_num div {
+	font-weight: bold;
 	padding: 10px;
 	width: 20px;
 	text-align:center;
-	background-color: lightgray;	
+}
+
+#page_NowBno {
+	font-weight: bold;
+	color:white;
+	background-color: #1649B0;
+}
+
+/* 검색 */
+/* 전체 */
+.e_search {
+	margin-bottom: 100px;
+	justify-content: center;
+	display:flex;
+}
+
+.e_search div:not(:last-child, .s_content) {
+	margin-right: 5px;
+}
+
+/* 기간 */
+.e_search_time select {
+	outline: none;
+	border: 1px solid lightgray;
+	padding: 10px;
+}
+
+/* 타입 */
+.e_search_type select {
+	outline: none;
+	border: 1px solid lightgray;
+	padding: 10px;
+}
+
+/* 내용 */
+.e_search_content {
+	display:flex;
+}
+
+.e_search_content div input {
+	outline: none;
+	border: 1px solid lightgray;
+	margin-right: 0px;
+	padding: 10px;
+}
+
+.e_search_content button {
+	border: none;
+	color: white;
+	background-color: gray;
+	padding: 0px 15px 0px 15px;
 }

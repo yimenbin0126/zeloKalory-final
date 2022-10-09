@@ -3,6 +3,8 @@
 let fileNo = 0;
 // 전체 파일 목록을 담을 배열 (삭제해도 지워지지 않음)
 let filesArr = new Array();
+// 삭제한 파일들의 고유 번호 담기
+let filesArr_del = new Array();
 
 window.onload = function(){
 	document.querySelector("#e_file_detail_input").addEventListener('change', file);
@@ -55,7 +57,7 @@ function file() {
     document.querySelector("input[type=file]").value = "";
 }
 
-// 첨부파일 삭제
+// 첨부파일 삭제 - 현재
 function deleteFile(num) {
     document.querySelector("#file" + num).remove();
     // 이미 삭제된 파일 해당 인덱스에
@@ -63,25 +65,29 @@ function deleteFile(num) {
     filesArr[num].is_delete = true;
 }
 
+// 첨부파일 삭제 - 이전
+function prev_deleteFile(num) {
+    document.querySelector("#prev_file" + num).remove();
+    filesArr_del.push(num);
+}
+
 // 글쓰기 데이터 전달
 function form(){
 
-
-	// 기본 선택값 초기화
-	var select = $('#e_con_choice option:selected').val();
-	document.querySelector('#e_choice_val').value = select;
-	
-	// 클릭하면 선택값 변화
-	document.querySelector('#e_con_choice').addEventListener('click', ()=>{
-		var select = $('#e_con_choice option:selected').val();
-		document.querySelector('#e_choice_val').value = select;
-	});
-
-	// 글쓰기 버튼 클릭
-	document.querySelector('#e_btn_write_btn').addEventListener('click', (e)=>{
+	// 글수정 데이터 전달
+	document.querySelector('#e_btn_fix_btn').addEventListener('click', (e)=>{
 		e.preventDefault();
 		// 폼 데이터에 값 담기
 	    let formData = new FormData();
+	    // 삭제한 파일 있으면 담기
+	    if (filesArr_del.length >= 1) {
+	    	for (let i = 0; i < filesArr_del.length; i++) {
+            	formData.append('file_del_num', filesArr_del[i]);
+            }
+        } else {
+        	// null 방지 파일 값 전달
+        	formData.append('file_del_num', "");
+        }
 		// 파일을 폼데이터에 담기
 	    for (let i = 0; i < filesArr.length; i++) {
 	        // 삭제되지 않은 파일만 폼데이터에 담기
@@ -94,16 +100,16 @@ function form(){
 		// 내용
 		formData.append('description', document.querySelector('#e_cont_detail_input').value);
 		// 글쓰기 유형 선택
-		formData.append('sv_type', document.querySelector('#e_choice_val').value);
+		formData.append('bno', document.querySelector('#e_bno').value);
 		$.ajax({
-		    url: '/all/service/question-write',
+		    url: '/all/service/question-public-fix',
 		    type: 'POST',
 		    processData: false,
 		    contentType: false,
 		    dataType:'text',
 		    data: formData,
 		    success: function(result){
-		    		location.href="/all/service/question-member";
+		    	location.href="/all/service/question-public";
 		    }
 		});
 	});

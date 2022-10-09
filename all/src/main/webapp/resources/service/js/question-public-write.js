@@ -96,14 +96,14 @@ function form(){
 		// 글쓰기 유형 선택
 		formData.append('sv_type', document.querySelector('#e_choice_val').value);
 		$.ajax({
-		    url: '/all/service/question-write',
+		    url: '/all/service/question-public-write',
 		    type: 'POST',
 		    processData: false,
 		    contentType: false,
 		    dataType:'text',
 		    data: formData,
 		    success: function(result){
-		    		location.href="/all/service/question-member";
+		    		location.href="/all/service/question-public";
 		    }
 		});
 	});

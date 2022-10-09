@@ -87,8 +87,8 @@
 						</div>
 						<!-- 자주하는 질문 -->
 						<div class="e_nav_question" onclick="location.href='/all/service/question-member'">자주하는 질문</div>
-						<!-- 1:1 문의 -->
-						<div class="e_nav_onebyone" onclick="location.href='/all/service/oneByone'">1:1 문의</div>
+						<!-- 공개 건의함 -->
+						<div class="e_nav_onebyone" onclick="location.href='/all/service/question-public'">공개 건의함</div>
 					</nav>
 	
 					<!-- 오른쪽 카데고리 -->

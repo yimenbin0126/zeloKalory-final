@@ -1,14 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
-	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO,eunbin.DTO.e_SvPagingViewDTO,eunbin.service.e_ServiceService,eunbin.service.e_ServiceServiceimpl,java.util.List,java.util.ArrayList" %>
+	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO,eunbin.DTO.e_SvPagingViewDTO,
+	eunbin.service.e_ServiceService, eunbin.service.e_ServiceServiceimpl,
+	java.util.List, java.util.ArrayList, eunbin.DTO.e_SvSearchDTO" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.net.URLDecoder"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>고객센터</title>
 <link href="/all/resources/service/css/header.css" rel="stylesheet">
-<link href="/all/resources/service/css/question-guide.css" rel="stylesheet">
-<script src="/all/resources/service/js/question-guide.js"></script>
+<link href="/all/resources/service/css/question-member-search.css" rel="stylesheet">
+<script src="/all/resources/service/js/question-member.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
@@ -20,11 +25,12 @@
         <!-- <img src="./img/logo.png" id="j_logo"> -->
 
 		<%
-		e_MemberDTO m_dto = new e_MemberDTO();
+			request.setCharacterEncoding("utf-8");
+			e_MemberDTO m_dto = new e_MemberDTO();
 		        		
-		        	// 로그인 유무
-		           	if((e_MemberDTO)session.getAttribute("user") !=null){
-		           		m_dto = (e_MemberDTO)session.getAttribute("user");
+        	// 로그인 유무
+           	if((e_MemberDTO)session.getAttribute("user") !=null){
+           		m_dto = (e_MemberDTO)session.getAttribute("user");
 		%>
 		<ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
@@ -49,7 +55,7 @@
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
-        } else {
+        	} else {
         %>
         <ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
@@ -68,11 +74,11 @@
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
-        }
+        	}
         %>
     </div>
     <!-- 헤더 끝 -->
-
+    
 	<section>
 		<div id="j_wrap">
 			<div id="j_box">
@@ -110,12 +116,12 @@
 								<form name="e_hd_choice_form">
 									<input type="hidden" name="e_hd_choice_LR" id="e_hd_choice_LR" value="L">
 								</form>
-								<div id="e_choice_mem" onclick="location.href='/all/service/question-member'">회원 정보 관리</div>
-								<div id="e_choice_guide">사이트 이용 가이드</div>
+								<div id="e_choice_mem">회원 정보 관리</div>
+								<div id="e_choice_guide" onclick="location.href='/all/service/question-guide'">사이트 이용 가이드</div>
 							</div>
 						</div>
 
-						<!-- 게시물 불러오기 - 사이트 이용 가이드 -->
+						<!-- 게시물 불러오기 - 회원 정보 관리 -->
 						<div class="e_content">
 							<!-- 게시물 번호 보내기 - 상세보기 -->
 							<form name="e_bno_val_form" id="e_bno_val_form">
@@ -135,16 +141,18 @@
 
 									// 게시물 리스트 객체 생성
 									List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
+									// 검색 객체
+									e_SvSearchDTO s_searchdto = new e_SvSearchDTO();
+									s_searchdto = (e_SvSearchDTO)request.getAttribute("s_searchdto");
 									e_SvPagingViewDTO s_page = new e_SvPagingViewDTO();
 									s_page = (e_SvPagingViewDTO)request.getAttribute("s_page");
-									System.out.println(s_page.toString());
 									// 게시물들 불러오기
 									if((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")!=null
 									&& ((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")).size()!=0){
 										s_dto_list = (ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list");
-										int j = s_page.getBoard_NowStartBno();
+										int j = s_searchdto.getBoard_NowStartBno();
 										for(int i=0; i<s_dto_list.size(); i++){
-											if (j <= s_page.getBoard_NowEndBno()){
+											if (j <= s_searchdto.getBoard_NowEndBno()){
 												e_ServiceDTO s_dto = new e_ServiceDTO();
 												s_dto = s_dto_list.get(i);
 								%>
@@ -195,14 +203,16 @@
 								%>
 						
 						</div>
-
+						
 						<!-- 페이징 시작 -->
 						<div class="e_paging">
 							<%
 								// 클릭 가능 여부
 								if (s_page.isPage_prev()){
 							%>
-							<div onclick="location.href='/all/service/question-member?page_NowBno=<%=s_page.getPage_StartBno()-5%>'"
+							<div onclick="location.href='/all/service/question-member-search?page_NowBno=<%=s_page.getPage_StartBno()-5%>
+							&search_time=<%=s_searchdto.getSearch_time()%>&search_type=<%=s_searchdto.getSearch_type()%>
+							&search_content=<%=URLEncoder.encode(s_searchdto.getSearch_content(), "UTF-8")%>'"
 							 class="e_paging_btnleft" id="e_paging_btnleft_yes">&lt;</div>
 							<%
 								} else {
@@ -219,15 +229,20 @@
 								int page_EndBno = s_page.getPage_EndBno();
 								// 현재 번호
 								int page_NowBno = s_page.getPage_NowBno();
+								String search_content = URLEncoder.encode(s_searchdto.getSearch_content(),"utf-8");
 								for (int i=page_StartBno; i <= page_EndBno; i++) {
 									if(i==page_NowBno){									
 							%>
-								<div id="page_NowBno"><%=i%></div>
+								<a id="page_NowBno"><%=i%></a>
 							<%
 									} else {
 							%>
-								<div onclick="location.href='/all/service/question-member?page_NowBno=<%=i%>'"
-								class="page_Bno" id="page_Bno<%=i%>"><%=i%></div>
+								<a href="/all/service/question-member-search
+								?page_NowBno=<%=i%>
+								&search_time=<%=s_searchdto.getSearch_time()%>
+								&search_type=<%=s_searchdto.getSearch_type()%>
+								&search_content=<%=s_searchdto.getSearch_content()%>"
+								class="page_Bno"><%=i%></a>
 							<%
 									}
 								}
@@ -237,7 +252,9 @@
 								// 클릭 가능 여부
 								if (s_page.isPage_prev()){
 							%>
-							<div onclick="location.href='/all/service/question-member?page_NowBno=<%=s_page.getPage_EndBno()+1%>'"
+							<div onclick="location.href='/all/service/question-member-search?page_NowBno=<%=s_page.getPage_EndBno()+1%>
+							&search_time=<%=s_searchdto.getSearch_time()%>&search_type=<%=s_searchdto.getSearch_type()%>
+							&search_content=<%=URLEncoder.encode(s_searchdto.getSearch_content(), "UTF-8")%>'"
 							class="e_paging_btnright" id="e_paging_btnright_yes">&gt;</div>
 							<%
 								} else {
@@ -255,18 +272,20 @@
 							<!-- 기간 -->
 							<div class="e_search_time">
 								<select name="e_search_time_sel" id="e_search_time_sel">
-									<option value="all">전체 기간</option>
-									<option value="one_day">1일</option>
-									<option value="one_week">1주일</option>
-									<option value="one_month">1개월</option>
+									<c:set var="search_time" value="<%=s_searchdto.getSearch_time()%>" />
+									<option value="all" <c:if test="${search_time == 'all'}">selected</c:if>>전체 기간</option>
+									<option value="one_day" <c:if test="${search_time == 'one_day'}">selected</c:if>>1일</option>
+									<option value="one_week" <c:if test="${search_time == 'one_week'}">selected</c:if>>1주일</option>
+									<option value="one_month" <c:if test="${search_time == 'one_month'}">selected</c:if>>1개월</option>
 								</select>
 							</div>
 							<!-- 타입 -->
 							<div class="e_search_type">
 								<select name="e_search_type_sel" id="e_search_type_sel">
-									<option value="title_content">제목 + 내용</option>
-									<option value="title">제목</option>
-									<option value="writer">글 작성자</option>
+									<c:set var="search_type" value="<%=s_searchdto.getSearch_type()%>" />
+									<option value="title_content" <c:if test="${search_type == 'title_content'}">selected</c:if>>제목 + 내용</option>
+									<option value="title" <c:if test="${search_type == 'title'}">selected</c:if>>제목</option>
+									<option value="writer" <c:if test="${search_type == 'writer'}">selected</c:if>>글 작성자</option>
 								</select>
 							</div>
 							<!-- 내용 -->
@@ -275,7 +294,7 @@
 								<div class="s_content">
 									<input type="text" id="s_content_input"
 									placeholder="검색어를 입력하세요." onfocus="this.placeholder=''"
-									onblur="this.placeholder='검색어를 입력하세요.'">
+									onblur="this.placeholder='검색어를 입력하세요.'" value="<%=s_searchdto.getSearch_content()%>">
 								</div>
 								<!-- 검색 버튼 -->
 								<button type="button" id="s_content_btn">

@@ -28,15 +28,15 @@
 	<!-- 특정 게시물 묶음 불러오기 - 페이징 -->
 	<select id="board_paging" resultType="eunbin.DTO.e_ServiceDTO">
 		SELECT bno, sv_type, group_origin, group_order,
-		admin_type, nickname, title, description, create_time, heart, view_no, member_no
+		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
 		from
 			(
 			SELECT * from (
 				SELECT rownum r, bno, sv_type, group_origin, group_order,
-				admin_type, nickname, title, description, create_time, heart, view_no, member_no
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
 				FROM sv_board
-				WHERE sv_type = 'question_member'
-				ORDER BY bno
+				WHERE sv_type = #{sv_type}
+				ORDER BY bno desc
 			)
 			WHERE r
 			BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
@@ -68,7 +68,8 @@
 		, title
 		, description
 		, create_time
-		, heart
+		, like_check
+		, dislike_check
 		, view_no
 		, member_no
 		)
@@ -82,6 +83,7 @@
 		, #{title}
 		, #{description}
 		, #{create_time}
+		, 0
 		, 0
 		, 0
 		, #{member_no}
@@ -294,7 +296,7 @@
 	<!-- 좋아요 업데이트 -->
 	<update id="like_update">
 		UPDATE sv_board
-		SET heart = #{heart}
+		SET like_check = #{like_check}
 		WHERE bno = #{bno}
 	</update>
 	
@@ -312,5 +314,145 @@
 		FROM sv_likecheck 
 		WHERE bno = #{bno}
 	</delete>
+	
+	<!-- 싫어요 -->
+	<!-- 테이블 생성 : 싫어요 증가 -->
+	<insert id="dislike_insert_one">
+		INSERT INTO sv_likecheck 
+		(bno
+		, like_check
+		, dislike_check
+		, member_no
+		)
+		VALUES
+		(#{bno}
+		, 0
+		, 1
+		, #{member_no}
+		)
+	</insert>
+	
+	<!-- 싫어요 증가 -->
+	<update id="dislike_up">
+		UPDATE sv_likecheck
+		SET dislike_check = 1
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</update>
+
+	<!-- 싫어요 감소 -->
+	<update id="dislike_down">
+		UPDATE sv_likecheck
+		SET dislike_check = 0
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</update>
+	
+	<!-- 싫어요 업데이트 -->
+	<update id="dislike_update">
+		UPDATE sv_board
+		SET dislike_check = #{dislike_check}
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 검색 -->
+	<!-- question-member, question-guide -->
+	<!-- 검색한 게시물 갯수 가져오기 -->
+	<select id="board_search_count_All" resultType="int">
+		SELECT count(*)
+		FROM sv_board 
+		<where>
+			sv_type = #{sv_type}
+			<!-- 검색 타입 -->
+			<choose>
+				<!-- 제목 + 내용 -->
+				<when test="search_content != '' and search_type == 'title_content' and search_type != null">
+					AND (
+					instr(title, #{search_content}) > 0
+					OR instr(description, #{search_content}) > 0
+					)
+				</when>
+				<!-- 제목 -->
+				<when test="search_content != '' and search_type == 'title' and search_type != null">
+					AND instr(title, #{search_content}) > 0
+				</when>
+				<!-- 글 작성자 -->
+				<when test="search_content != '' and search_type == 'writer' and search_type != null">
+					AND instr(nickname, #{search_content}) > 0
+				</when>
+			</choose>
+			<!-- 검색 기간 -->
+			<choose>
+				<!-- 1일 -->
+				<when test="search_time == 'one_day' and search_time != null">
+					AND create_time BETWEEN SYSDATE-1 AND SYSDATE
+				</when>
+				<!-- 1주일 -->
+				<when test="search_time == 'one_week' and search_time != null">
+					AND create_time BETWEEN SYSDATE-7 AND SYSDATE
+				</when>
+				<!-- 1개월 -->
+				<when test="search_time == 'one_month' and search_time != null">
+					AND create_time BETWEEN to_date(add_months(sysdate, -1)) and sysdate
+				</when>
+			</choose>
+		</where>
+	</select>
+	
+	
+	
+	<!-- 검색한 게시물 전체 가져오기 : 페이징 적용 -->
+	<select id="board_search_All" resultType="eunbin.DTO.e_ServiceDTO">
+		SELECT bno, sv_type, group_origin, group_order,
+		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+		from
+			(
+			SELECT * from
+				(
+				SELECT rownum r, bno, sv_type, group_origin, group_order,
+						admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+				FROM sv_board 
+				<where>
+					sv_type = #{sv_type}
+					<!-- 검색 타입 -->
+					<choose>
+						<!-- 제목 + 내용 -->
+						<when test="search_content != '' and search_type == 'title_content' and search_type != null">
+							AND (
+							instr(title, #{search_content}) > 0
+							OR instr(description, #{search_content}) > 0
+							)
+						</when>
+						<!-- 제목 -->
+						<when test="search_content != '' and search_type == 'title' and search_type != null">
+							AND instr(title, #{search_content}) > 0
+						</when>
+						<!-- 글 작성자 -->
+						<when test="search_content != '' and search_type == 'writer' and search_type != null">
+							AND instr(nickname, #{search_content}) > 0
+						</when>
+					</choose>
+					<!-- 검색 기간 -->
+					<choose>
+						<!-- 1일 -->
+						<when test="search_time == 'one_day' and search_time != null">
+							AND create_time BETWEEN SYSDATE-1 AND SYSDATE
+						</when>
+						<!-- 1주일 -->
+						<when test="search_time == 'one_week' and search_time != null">
+							AND create_time BETWEEN SYSDATE-7 AND SYSDATE
+						</when>
+						<!-- 1개월 -->
+						<when test="search_time == 'one_month' and search_time != null">
+							AND create_time BETWEEN to_date(add_months(sysdate, -1)) and sysdate
+						</when>
+					</choose>
+				</where>
+				ORDER BY bno desc
+				)
+			WHERE r
+			BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
+		)
+	</select>
 	
 </mapper>

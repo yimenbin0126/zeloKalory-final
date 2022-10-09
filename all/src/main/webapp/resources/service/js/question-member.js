@@ -1,5 +1,6 @@
 window.onload = function(){
 	form();
+	search();
 }
 
 // 글상세 데이터 전달
@@ -25,4 +26,36 @@ function form(){
 		e_bno_val_form.submit();
 	}
 	
+}
+
+// 검색 결과 전달
+function search(){
+	
+	// 엔터 시 클릭
+	document.querySelector('#s_content_input').addEventListener('keydown',function(event){
+        if(event.keyCode ==13){
+        	event.preventDefault();
+            document.querySelector('#s_content_btn').click();
+        }
+    });
+	
+	// 버튼 누를 시 실행
+	document.querySelector('#s_content_btn').addEventListener('click', ()=>{
+		// 검색 기간
+		let e_search_time = document.querySelector('#e_search_time_sel').value;
+		
+		// 검색 타입
+		let e_search_type = document.querySelector('#e_search_type_sel').value;
+		
+		// 검색 내용
+		let e_search_content = document.querySelector('#s_content_input').value;
+		
+		let url = "/all/service/question-member-search";
+		
+		url += "?search_time="+e_search_time;
+		url += "&search_type="+e_search_type;
+		url += "&search_content="+e_search_content;
+		
+		location.href= url;
+	});
 }

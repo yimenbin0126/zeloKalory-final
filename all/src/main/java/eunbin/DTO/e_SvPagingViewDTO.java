@@ -1,7 +1,10 @@
 package eunbin.DTO;
 
 // 회원정보 테이블
-public class e_SvPagingView {
+public class e_SvPagingViewDTO {
+	// 게시물에서 가져올 값
+	private String sv_type;
+	
 	// 현재 페이지
 	private int page_NowBno;
 	// 현재 페이지의 시작 번호
@@ -25,10 +28,10 @@ public class e_SvPagingView {
 	// 현재 페이지의 게시물 목록 끝번호
 	private int board_NowEndBno;
 	
-	public e_SvPagingView () {
+	public e_SvPagingViewDTO () {
 	}
 	// 전체 게시물 갯수, 현재 페이지
-	public e_SvPagingView(int board_AllCount, int page_NowBno) {
+	public e_SvPagingViewDTO(int board_AllCount, int page_NowBno) {
 		// 값 초기화
 		// 총 게시물 수
 		setBoard_AllCount(board_AllCount);
@@ -48,8 +51,10 @@ public class e_SvPagingView {
 		int bno_end_last = 0;
 		if(1 <= bno_end && bno_end <= 5) {
 			bno_end_first = 1;
-			if(5 >=  page_AllCount) {
+			if(5 >=  page_AllCount && page_AllCount > 0) {
 				bno_end_last = page_AllCount;
+			} else if (page_AllCount == 0) {
+				bno_end_last = 1;
 			} else {
 				bno_end_last = 5;
 			}
@@ -98,6 +103,13 @@ public class e_SvPagingView {
 		} else {
 			setBoard_NowEndBno((this.page_NowBno)*(board_NowBnoSize));
 		}
+	}
+	
+	public String getSv_type() {
+		return sv_type;
+	}
+	public void setSv_type(String sv_type) {
+		this.sv_type = sv_type;
 	}
 	public int getPage_NowBno() {
 		return page_NowBno;
@@ -168,10 +180,10 @@ public class e_SvPagingView {
 	
 	@Override
 	public String toString() {
-		return "e_SvPagingView [page_NowBno=" + page_NowBno + ", page_StartBno=" + page_StartBno + ", page_EndBno="
-				+ page_EndBno + ", page_RangeSize=" + page_RangeSize + ", page_AllCount=" + page_AllCount
-				+ ", page_prev=" + page_prev + ", page_next=" + page_next + ", board_NowBnoSize=" + board_NowBnoSize
-				+ ", board_AllCount=" + board_AllCount + ", board_NowStartBno=" + board_NowStartBno
-				+ ", board_NowEndBno=" + board_NowEndBno + "]";
+		return "e_SvPagingView [sv_type=" + sv_type + ", page_NowBno=" + page_NowBno + ", page_StartBno="
+				+ page_StartBno + ", page_EndBno=" + page_EndBno + ", page_RangeSize=" + page_RangeSize
+				+ ", page_AllCount=" + page_AllCount + ", page_prev=" + page_prev + ", page_next=" + page_next
+				+ ", board_NowBnoSize=" + board_NowBnoSize + ", board_AllCount=" + board_AllCount
+				+ ", board_NowStartBno=" + board_NowStartBno + ", board_NowEndBno=" + board_NowEndBno + "]";
 	}
 }

@@ -1,8 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
-	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO, eunbin.DTO.e_SvPagingView,
-	eunbin.service.e_ServiceService, eunbin.service.e_ServiceServiceimpl,
-	java.util.List, java.util.ArrayList" %>
+	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO,eunbin.DTO.e_SvPagingViewDTO,eunbin.service.e_ServiceService,eunbin.service.e_ServiceServiceimpl,java.util.List,java.util.ArrayList" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,12 +20,12 @@
         <!-- <img src="./img/logo.png" id="j_logo"> -->
 
 		<%
-       		e_MemberDTO m_dto = new e_MemberDTO();
-        		
+			e_MemberDTO m_dto = new e_MemberDTO();
+		        		
         	// 로그인 유무
            	if((e_MemberDTO)session.getAttribute("user") !=null){
            		m_dto = (e_MemberDTO)session.getAttribute("user");
-        %>
+		%>
 		<ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
             <li class="j_menu2 j_menu" onclick="location.href='/all/community/listArticles.do'">커뮤니티</li>
@@ -51,7 +49,7 @@
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
-        	} else {
+        } else {
         %>
         <ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
@@ -70,7 +68,7 @@
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
-        	}
+        }
         %>
     </div>
     <!-- 헤더 끝 -->
@@ -91,8 +89,8 @@
 							<div class="e_que_div">자주하는 질문</div>
 							<div><img src="/all/resources/service/img/category_click.png"></div>
 						</div>
-						<!-- 1:1 문의 -->
-						<div class="e_nav_onebyone" onclick="location.href='/all/service/oneByone'">1:1 문의</div>
+						<!-- 공개 건의함 -->
+						<div class="e_nav_onebyone" onclick="location.href='/all/service/question-public'">공개 건의함</div>
 					</nav>
 
 					<!-- 오른쪽 내용 -->
@@ -102,29 +100,10 @@
 						<div class="e_header">
 							<div class="e_hd_top_que">자주하는 질문</div>
 							<div class="e_hd_top_con">
-								<span> 설명설명설명설명설명설명<br> 설명설명설명설명설명설명<br>
-									설명설명설명설명설명설명
+								<span> 자주하는 질문은 <br>관리자가 관리할 수 있는 게시판입니다.
+								<br>관리자로 로그인 하면, 게시물을 작성할 수 있습니다.
 								</span>
 							</div>
-							
-							<!-- 글쓰기 버튼 보이기 (로그인 + 관리자일 경우) -->
-							<%
-								// 게시판 관련 메서드 불러오기
-								e_ServiceService s_service = new e_ServiceServiceimpl();
-								// 로그인 여부
-								if((e_MemberDTO)session.getAttribute("user") !=null){
-									// 관리자 여부
-									String id = m_dto.getId();
-									if(s_service.board_admin_type(id).equals("Y")){
-							%>
-							<form name="e_hd_top_write_form">
-								<input type="button"  value="글쓰기" class="e_hd_top_write"
-								onclick="location.href='/all/service/question-write'">							
-							</form>
-							<%
-									}
-								}
-							%>
 
 							<!-- 카데고리 선택 -->
 							<div class="e_hd_choice">
@@ -155,10 +134,12 @@
 								<%
 									// 게시물 리스트 객체 생성
 									List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
-									e_SvPagingView s_page = new e_SvPagingView();
-									s_page = (e_SvPagingView)request.getAttribute("s_page");
+									e_SvPagingViewDTO s_page = new e_SvPagingViewDTO();
+									s_page = (e_SvPagingViewDTO)request.getAttribute("s_page");
+									System.out.println(s_page.toString());
 									// 게시물들 불러오기
-									if((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")!=null){
+									if((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")!=null
+									&& ((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")).size()!=0){
 										s_dto_list = (ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list");
 										int j = s_page.getBoard_NowStartBno();
 										for(int i=0; i<s_dto_list.size(); i++){
@@ -172,19 +153,49 @@
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>
-									<li><%=s_dto.getHeart()%></li>
+									<li><%=s_dto.getLike_check()%></li>
 								</ul>
 								<%
 												j++;
 											}
 										}
+									} else {
+								%>
+								<ul class="e_boardlist">
+									<li style="width:100%; text-align:center;
+									font-weight:bold; font-size: 13px;
+									margin-top:10px; margin-bottom:10px;">존재하는 게시물 없음</li>
+								</ul>
+								<%
 									}
 								%>
 							</div>
 							<!-- 게시물 목록 끝 -->
 						</div>
 						
-						<!-- 페이징 -->
+						<div class="e_btn_list">
+							<!-- 글쓰기 버튼 보이기 (로그인) -->
+								<%
+										// 게시판 관련 메서드 불러오기
+										e_ServiceService s_service = new e_ServiceServiceimpl();
+										// 로그인 여부
+										if((e_MemberDTO)session.getAttribute("user") !=null){
+											// 관리자 여부
+											String id = m_dto.getId();
+											if(s_service.board_admin_type(id).equals("Y")){
+								%>
+									<div>
+										<input type="button"  value="글쓰기" class="e_hd_top_write"
+										onclick="location.href='/all/service/question-write'">
+									</div>
+								<%
+										}
+									}
+								%>
+						
+						</div>
+						
+						<!-- 페이징 시작 -->
 						<div class="e_paging">
 							<%
 								// 클릭 가능 여부
@@ -236,6 +247,42 @@
 								}
 							%>
 						</div>
+						<!-- 페이징 끝 -->
+						
+						<!-- 검색 시작 -->
+						<div class="e_search">
+							<!-- 기간 -->
+							<div class="e_search_time">
+								<select name="e_search_time_sel" id="e_search_time_sel">
+									<option value="all">전체 기간</option>
+									<option value="one_day">1일</option>
+									<option value="one_week">1주일</option>
+									<option value="one_month">1개월</option>
+								</select>
+							</div>
+							<!-- 타입 -->
+							<div class="e_search_type">
+								<select name="e_search_type_sel" id="e_search_type_sel">
+									<option value="title_content">제목 + 내용</option>
+									<option value="title">제목</option>
+									<option value="writer">글 작성자</option>
+								</select>
+							</div>
+							<!-- 내용 -->
+							<div class="e_search_content">
+								<!-- 검색 내용 -->
+								<div class="s_content">
+									<input type="text" id="s_content_input"
+									placeholder="검색어를 입력하세요." onfocus="this.placeholder=''"
+									onblur="this.placeholder='검색어를 입력하세요.'">
+								</div>
+								<!-- 검색 버튼 -->
+								<button type="button" id="s_content_btn">
+									검색
+								</button>
+							</div>
+						</div>
+						<!-- 검색 끝 -->
 					</div>
 				</div>
 

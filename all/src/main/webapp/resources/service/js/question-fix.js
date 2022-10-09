@@ -109,7 +109,7 @@ function form(){
 		    dataType:'text',
 		    data: formData,
 		    success: function(result){
-		    	//location.href="/all/service/question-member";
+		    	location.href="/all/service/question-member";
 		    }
 		});
 	});

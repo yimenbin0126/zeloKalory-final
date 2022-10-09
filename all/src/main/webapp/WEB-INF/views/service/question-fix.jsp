@@ -83,14 +83,16 @@
 					<!-- 왼쪽 카데고리 -->
 					<nav class="e_nav">
 						<!-- 문의 전체보기 -->
-						<div class="e_nav_all" onclick="location.href='/all/service/allService'">문의 전체보기</div>
+						<div class="e_nav_all" onclick="location.href='/all/service/allService'">
+							문의 전체보기
+						</div>
 						<!-- 자주하는 질문 -->
 						<div class="e_nav_question" onclick="location.href='/all/service/question-member'">
-							<span>자주하는 질문</span> <img src="/all/resources/service/img/category_click.png">
+							<div class="e_que_div">자주하는 질문</div>
+							<div><img src="/all/resources/service/img/category_click.png"></div>
 						</div>
-
-						<!-- 1:1 문의 -->
-						<div class="e_nav_onebyone" onclick="location.href='/all/service/oneByone'">1:1 문의</div>
+						<!-- 공개 건의함 -->
+						<div class="e_nav_onebyone" onclick="location.href='/all/service/question-public'">공개 건의함</div>
 					</nav>
 
 					<%

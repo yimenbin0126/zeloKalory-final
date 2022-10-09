@@ -29,7 +29,8 @@ import eunbin.DTO.e_MemberDTO;
 import eunbin.DTO.e_ServiceDTO;
 import eunbin.DTO.e_SvFileDTO;
 import eunbin.DTO.e_SvLikecheckDTO;
-import eunbin.DTO.e_SvPagingView;
+import eunbin.DTO.e_SvPagingViewDTO;
+import eunbin.DTO.e_SvSearchDTO;
 import eunbin.DTO.e_SvViewcheckDTO;
 import eunbin.service.e_MemberService;
 import eunbin.service.e_ServiceService;
@@ -76,15 +77,17 @@ public class e_ServiceController {
 		s_dto.setSv_type("question_member");
 		int board_AllCount = s_service.board_count_All(s_dto);
 		// 페이징
-		e_SvPagingView s_page = new e_SvPagingView(board_AllCount, page_NowBno);
+		e_SvPagingViewDTO s_page = new e_SvPagingViewDTO(board_AllCount, page_NowBno);
+		s_page.setSv_type("question_member");
 		// 페이지 내 게시물 목록 불러오기
 		s_dto_list = s_service.board_paging(s_page);
 		if (s_dto_list != null && s_dto_list.size() != 0) {
-			mv.addObject("s_page", s_page);
-			mv.addObject("s_dto_list", s_dto_list);
+			System.out.println("ServiceController - getQuestion_member - 존재하는 게시물 있음");
 		} else {
 			System.out.println("ServiceController - getQuestion_member - 존재하는 게시물 없음");
 		}
+		mv.addObject("s_page", s_page);
+		mv.addObject("s_dto_list", s_dto_list);
 		mv.setViewName("/service/question-member");
 		return mv;
 	}
@@ -112,15 +115,17 @@ public class e_ServiceController {
 		s_dto.setSv_type("question_guide");
 		int board_AllCount = s_service.board_count_All(s_dto);
 		// 페이징
-		e_SvPagingView s_page = new e_SvPagingView(board_AllCount, page_NowBno);
+		e_SvPagingViewDTO s_page = new e_SvPagingViewDTO(board_AllCount, page_NowBno);
+		s_page.setSv_type("question_guide");
 		// 페이지 내 게시물 목록 불러오기
 		s_dto_list = s_service.board_paging(s_page);
 		if (s_dto_list != null && s_dto_list.size() != 0) {
-			mv.addObject("s_page", s_page);
-			mv.addObject("s_dto_list", s_dto_list);
+			System.out.println("ServiceController - getQuestion_member - 존재하는 게시물 있음");
 		} else {
-			System.out.println("ServiceController - getQuestion_guide - 존재하는 게시물 없음");
+			System.out.println("ServiceController - getQuestion_member - 존재하는 게시물 없음");
 		}
+		mv.addObject("s_page", s_page);
+		mv.addObject("s_dto_list", s_dto_list);
 		mv.setViewName("/service/question-guide");
 		return mv;
 	}
@@ -339,8 +344,9 @@ public class e_ServiceController {
 		}
 	}
 	
+	@ResponseBody
 	@PostMapping("/question-fix")
-	public String postQuestion_fix(
+	public void postQuestion_fix(
 			HttpServletRequest request)
 			throws Exception {
 		System.out.println("ServiceController - postQuestion_fix");
@@ -404,8 +410,7 @@ public class e_ServiceController {
 			// 첨부파일 생성
 			s_service.board_write_file(s_filedto);
 		}
-		System.out.println();
-		return "/service/question-member";
+		//return "/service/question-member";
 	}
 	
 	// 자주하는 질문 - 게시물 작성
@@ -432,8 +437,9 @@ public class e_ServiceController {
 		return null;
 	}
 	
+	@ResponseBody
 	@PostMapping("/question-write")
-	public String postQuestion_write(
+	public void postQuestion_write(
 			HttpServletRequest request)
 			throws Exception {
 		System.out.println("ServiceController - postQuestion_write");
@@ -505,60 +511,530 @@ public class e_ServiceController {
 			s_service.board_write_file(s_filedto);
 		}
 		// 게시판 메인 홈페이지로 돌아가기
-		return "redirect:/service/question-member";
+		//return "redirect:/service/question-member";
 	}
 	
-	// 고객센터 - 1:1 문의
-	// 메인화면 - 회원
-	@GetMapping("/oneByone")
-	public void getOneByone(HttpServletRequest request)
-			throws Exception {
-		System.out.println("ServiceController - getOneByone");
-	}
-	
-	@PostMapping("/oneByone")
-	public void postOneByone(HttpServletRequest request)
-			throws Exception {
-		System.out.println("ServiceController - postOneByone");
-	}
-	
-	// 글쓰기 - 회원
-	@GetMapping("/oneByone-write")
-	public void getOneByone_write(HttpServletRequest request)
-			throws Exception {
-		System.out.println("ServiceController - getOneByone_write");
-	}
-	
-	@PostMapping("/oneByone-write")
-	public void postOneByone_write(HttpServletRequest request)
-			throws Exception {
-		System.out.println("ServiceController - postOneByone_write");
-	}
-	
-	// 상세보기 - 회원 
-	@GetMapping("/oneByone-detail")
-	public void getOneByone_detail(HttpServletRequest request)
-			throws Exception {
-		System.out.println("ServiceController - getOneByone_detail");
-	}
-	
-	@PostMapping("/oneByone-detail")
-	public void postOneByone_detail(HttpServletRequest request)
-			throws Exception {
-		System.out.println("ServiceController - postOneByone_detail");
-	}
+	// 검색 - question-member
+	@GetMapping("/question-member-search")
+	public ModelAndView getQuestion_member_search(
+			ModelAndView mv,
+			@RequestParam(value="page_NowBno", defaultValue="1") int page_NowBno,
+			@RequestParam(value="search_time") String search_time,
+			@RequestParam(value="search_type") String search_type,
+			@RequestParam(value="search_content") String search_content
+			)throws Exception {
+		System.out.println("ServiceController - getQuestion_member_search");
 		
-	// 수정하기 - 회원
-	@GetMapping("/oneByone-fix")
-	public void getOneByone_fix(HttpServletRequest request)
-			throws Exception {
-		System.out.println("ServiceController - getOneByone_fix");
+		// 디코딩
+		//search_content = java.net.URLDecoder.decode(search_content);
+		
+		// 검색 객체
+		e_SvSearchDTO s_searchdto = new e_SvSearchDTO();
+		s_searchdto.setSearch_time(search_time);
+		s_searchdto.setSearch_type(search_type);
+		s_searchdto.setSearch_content(search_content);
+		System.out.println(search_content);
+		s_searchdto.setSv_type("question_member");
+		// 페이지 전체 갯수
+		int board_AllCount = s_service.board_search_count_All(s_searchdto);
+		// 페이징
+		e_SvPagingViewDTO s_pageviewdto = new e_SvPagingViewDTO(board_AllCount, page_NowBno);
+		s_searchdto.setBoard_NowStartBno(s_pageviewdto.getBoard_NowStartBno());
+		s_searchdto.setBoard_NowEndBno(s_pageviewdto.getBoard_NowEndBno());
+		
+		// 데이터 전달
+		// 데이터 불러오기 위한 선언
+		List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
+		// 페이지 내 게시물 목록 불러오기
+		s_dto_list = s_service.board_search_All(s_searchdto);
+		
+		if (s_dto_list != null && s_dto_list.size() != 0) {
+			System.out.println("ServiceController - getQuestion_member_search - 존재하는 게시물 있음");
+		} else {
+			System.out.println("ServiceController - getQuestion_member_search - 존재하는 게시물 없음");
+		}
+		mv.addObject("s_searchdto", s_searchdto);
+		mv.addObject("s_page", s_pageviewdto);
+		mv.addObject("s_dto_list", s_dto_list);
+		mv.setViewName("/service/question-member-search");
+		return mv;
 	}
 	
-	@PostMapping("/oneByone-fix")
-	public void postOneByone_fix(HttpServletRequest request)
-			throws Exception {
-		System.out.println("ServiceController - postOneByone_fix");
+	// 검색 - question-guide
+	@GetMapping("/question-guide-search")
+	public ModelAndView getQuestion_guide_search(
+			ModelAndView mv,
+			@RequestParam(value="page_NowBno", defaultValue="1") int page_NowBno,
+			@RequestParam(value="search_time") String search_time,
+			@RequestParam(value="search_type") String search_type,
+			@RequestParam(value="search_content") String search_content
+			)throws Exception {
+		System.out.println("ServiceController - getQuestion_guide_search");
+		
+		// 검색 객체
+		e_SvSearchDTO s_searchdto = new e_SvSearchDTO();
+		s_searchdto.setSearch_time(search_time);
+		s_searchdto.setSearch_type(search_type);
+		s_searchdto.setSearch_content(search_content);
+		s_searchdto.setSv_type("question_guide");
+		// 페이지 전체 갯수
+		int board_AllCount = s_service.board_search_count_All(s_searchdto);
+		// 페이징
+		e_SvPagingViewDTO s_pageviewdto = new e_SvPagingViewDTO(board_AllCount, page_NowBno);
+		s_searchdto.setBoard_NowStartBno(s_pageviewdto.getBoard_NowStartBno());
+		s_searchdto.setBoard_NowEndBno(s_pageviewdto.getBoard_NowEndBno());
+		
+		// 데이터 전달
+		// 데이터 불러오기 위한 선언
+		List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
+		// 페이지 내 게시물 목록 불러오기
+		s_dto_list = s_service.board_search_All(s_searchdto);
+		
+		if (s_dto_list != null && s_dto_list.size() != 0) {
+			System.out.println("ServiceController - getQuestion_guide_search - 존재하는 게시물 있음");
+		} else {
+			System.out.println("ServiceController - getQuestion_guide_search - 존재하는 게시물 없음");
+		}
+		mv.addObject("s_searchdto", s_searchdto);
+		mv.addObject("s_page", s_pageviewdto);
+		mv.addObject("s_dto_list", s_dto_list);
+		mv.setViewName("/service/question-guide-search");
+		return mv;
 	}
 	
+	
+	
+	// 고객센터 - 공개 건의함
+	// 메인화면
+	@GetMapping("/question-public")
+	public ModelAndView getQuestion_public(
+			ModelAndView mv,
+			@RequestParam(value="page_NowBno", defaultValue="1") int page_NowBno)
+			throws Exception {
+		System.out.println("ServiceController - getQuestion_public");
+		
+		// 데이터 불러오기 위한 선언
+		List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
+
+		// 첫 화면 - 회원정보 관리
+		// 게시물 갯수 불러오기
+		e_ServiceDTO s_dto = new e_ServiceDTO();
+		s_dto.setSv_type("question_public");
+		int board_AllCount = s_service.board_count_All(s_dto);
+		// 페이징
+		e_SvPagingViewDTO s_page = new e_SvPagingViewDTO(board_AllCount, page_NowBno);
+		s_page.setSv_type("question_public");
+		// 페이지 내 게시물 목록 불러오기
+		s_dto_list = s_service.board_paging(s_page);
+		if (s_dto_list != null && s_dto_list.size() != 0) {
+			System.out.println("ServiceController - getQuestion_public - 존재하는 게시물 있음");
+		} else {
+			System.out.println("ServiceController - getQuestion_public - 존재하는 게시물 없음");
+		}
+		mv.addObject("s_page", s_page);
+		mv.addObject("s_dto_list", s_dto_list);
+		mv.setViewName("/service/question-public");
+		return mv;
+	}
+	
+	@PostMapping("/question-public")
+	public void postQuestion_public(HttpServletRequest request)
+			throws Exception {
+		System.out.println("ServiceController - postQuestion_member");
+	}
+	
+	// 공개 건의함 - 상세보기
+	@GetMapping("/question-public-detail")
+	public ModelAndView getQuestion_public_detail(
+			HttpServletRequest request,
+			@RequestParam int bno,
+			ModelAndView mv)
+			throws Exception {
+		System.out.println("ServiceController - getQuestion_public_detail");
+		
+		// 데이터 불러오기 위한 선언
+		e_ServiceDTO s_dto = new e_ServiceDTO();
+		List<e_SvFileDTO> filelist = new ArrayList<e_SvFileDTO>(); 
+		// 게시물 대표번호로 게시물 정보 가져오기
+		s_dto = s_service.board_one(bno);
+		// 파일도 같이 가져오기
+		filelist = s_service.board_load_file(s_dto);
+		// 로그인한 경우 (작성자와 같은 아이디 아닐시 증가)
+		HttpSession session = request.getSession();
+		if(session.getAttribute("user")!=null) {
+			// 멤버 테이블 불러오기
+			e_MemberDTO m_dto = new e_MemberDTO();
+			m_dto = (e_MemberDTO)session.getAttribute("user");
+			// 게시물 조회수 증가
+			// 조회수 테이블 불러오기
+			e_SvViewcheckDTO s_viewCheck = new e_SvViewcheckDTO();
+			s_viewCheck.setBno(bno);
+			s_viewCheck.setMember_no(m_dto.getMember_no());
+			// 게시판을 쓴 회원 번호 != 로그인한 회원번호 일시 조회수 증가
+			if (s_dto.getMember_no() != m_dto.getMember_no()) {
+				// 이미 조회수가 증가된 경우가 아닐 때 허용
+				if(s_service.board_viewCheck(s_viewCheck) == true) {
+					// 조회수 증가
+					s_dto.setView_no(s_dto.getView_no()+1);
+					// 증가한 값 업데이트
+					s_service.board_viewUp(s_dto);
+				}
+				
+				// 좋아요 테이블 불러오기
+				e_SvLikecheckDTO s_likeCheck = new e_SvLikecheckDTO();
+				s_likeCheck.setBno(bno);
+				s_likeCheck.setMember_no(m_dto.getMember_no());
+				
+				// 좋아요 테이블 여부
+				if (s_service.board_like_load(s_likeCheck) != null) {
+					// 좋아요 여부 찾기
+					s_likeCheck = s_service.board_like_load(s_likeCheck);
+					if(s_likeCheck.getLike_check()==1) {
+						// 좋아요를 눌렀다
+						mv.addObject("like_click", "Y");
+					} else {
+						// 좋아요를 누르지 않았다
+						mv.addObject("like_click", "N");
+					}
+				} else {
+					// 좋아요를 누르지 않았다
+					mv.addObject("like_click", "N");
+				}
+				
+				// 싫어요 테이블 여부
+				if (s_service.board_like_load(s_likeCheck) != null) {
+					// 싫어요 여부 찾기
+					s_likeCheck = s_service.board_like_load(s_likeCheck);
+					if(s_likeCheck.getDislike_check()==1) {
+						// 싫어요를 눌렀다
+						mv.addObject("dislike_click", "Y");
+					} else {
+						// 싫어요를 누르지 않았다
+						mv.addObject("dislike_click", "N");
+					}
+				} else {
+					// 싫어요를 누르지 않았다
+					mv.addObject("dislike_click", "N");
+				}
+			}
+			
+		} else if(session.getAttribute("user")==null) {
+			// 조회수 테이블 불러오기
+			e_SvViewcheckDTO s_viewCheck = new e_SvViewcheckDTO();
+			s_viewCheck.setBno(bno);
+			// ip로 접속했을 경우 (ip가 중복되지 않을 시 증가)
+			if (s_service.board_Ipcheck(s_viewCheck) == true) {
+				// 조회수 증가
+				s_dto.setView_no(s_dto.getView_no()+1);
+				// 증가한 값 업데이트
+				s_service.board_viewUp(s_dto);
+			}
+		}
+		
+		// 게시판 불러오기 (값 변화 이후 불러오기)
+		mv.addObject("filelist", filelist);
+		mv.addObject("s_dto", s_dto);
+		mv.setViewName("/service/question-public-detail");
+
+		return mv;
+	}
+	
+	// 공개 건의함 - 상세보기 - 좋아요, 싫어요 체크
+	@ResponseBody
+	@PostMapping("/question-public-detail")
+	public e_ServiceDTO postQuestion_public_detail(
+			HttpServletRequest request,
+			@RequestParam(value = "e_bno", required = false) int e_bno,
+			@RequestParam(value = "e_heart_check", required = false) String e_heart_check)
+			throws Exception {
+		System.out.println("ServiceController - postQuestion_public_detail - 좋아요 체크");
+		
+		// 데이터 불러오기 위한 선언
+		e_ServiceDTO s_dto = new e_ServiceDTO();
+		// 게시물 번호로 게시물 객체 가져오기
+		s_dto = s_service.board_one(e_bno);
+		// 멤버 객체 테이블 불러오기
+		HttpSession session = request.getSession();
+		e_MemberDTO m_dto = new e_MemberDTO();
+		m_dto = (e_MemberDTO)session.getAttribute("user");
+		// 좋아요 객체 테이블 불러오기
+		e_SvLikecheckDTO s_likeDTO = new e_SvLikecheckDTO();
+		s_likeDTO.setBno(e_bno);
+		s_likeDTO.setMember_no(m_dto.getMember_no());
+		// 좋아요 증가 / 감소
+		if (e_heart_check.equals("like_Y")) {
+			s_service.board_like_up(s_likeDTO);
+		} else if (e_heart_check.equals("like_N")) {
+			s_service.board_like_down(s_likeDTO);
+			// 싫어요 증가 / 감소
+		} else if (e_heart_check.equals("dislike_Y")) {
+			s_service.board_dislike_up(s_likeDTO);
+		} else if (e_heart_check.equals("dislike_N")) {
+			s_service.board_dislike_down(s_likeDTO);
+		}
+		return s_dto;
+	}
+	
+	// 공개 건의함 - 상세보기 - 수정/삭제/뒤로가기 이동
+	@PostMapping("/question-public-detail-button")
+	public ModelAndView postQuestion_public_detail_button(
+			@RequestParam String e_btn,
+			@RequestParam int e_bno,
+			ModelAndView mv)
+			throws Exception {
+		System.out.println("ServiceController - postQuestion_public_detail_button");
+		
+		// 데이터 불러오기 위한 선언
+		e_ServiceDTO s_dto = new e_ServiceDTO();
+		// 게시물 번호로 게시물 객체 가져오기
+		s_dto = s_service.board_one(e_bno);
+		// 게시판 첨부파일 객체
+		List<e_SvFileDTO> filelist = new ArrayList<e_SvFileDTO>();
+		// 파일도 같이 가져오기
+		filelist = s_service.board_load_file(s_dto);
+		
+		if (e_btn.equals("fix")) {
+			// 게시물 수정 버튼 누를시
+			// 수정 페이지로 이동
+			mv.addObject("filelist", filelist);
+			mv.addObject("s_dto", s_dto);
+			mv.setViewName("/service/question-fix");
+			return mv;
+		} else if (e_btn.equals("delete")) {
+			s_service.board_delete(s_dto);
+		}
+		// 게시판 메인 화면으로 이동
+		mv.setViewName("redirect:/service/question-public");
+		return mv;
+	}
+	
+	// 공개 건의함 - 게시물 수정
+	@GetMapping("/question-public-fix")
+	public void getQuestion_public_fix(
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		System.out.println("ServiceController - getQuestion_public_fix");
+		
+		// 세션 생성
+		HttpSession session = request.getSession();
+		if (session.getAttribute("user") == null) {
+			// 응답 - 한글 처리
+			response.setContentType("text/html;charset=UTF-8");
+			// 로그인 안했을 때 - 잘못된 접근
+			// 뒤로가기
+			PrintWriter out = response.getWriter();
+			out.println("<script language ='javascript'>window.history.back();</script>");
+			out.flush();
+		}
+	}
+	
+	@ResponseBody
+	@PostMapping("/question-public-fix")
+	public void postQuestion_public_fix(
+			HttpServletRequest request)
+			throws Exception {
+		System.out.println("ServiceController - postQuestion_public_fix");
+		request.setCharacterEncoding("utf-8");
+		// 객체 생성
+		e_MemberDTO m_dto = new e_MemberDTO();
+		e_ServiceDTO s_dto = new e_ServiceDTO();
+		
+		// 첨부 파일 불러오기 - (1)
+		// 파일 경로
+		String savePath = "C:\\zerokalory_file";
+		// 파일 크기 15MB
+		int sizeLimit = 1024 * 1024 * 15;
+		// 파라미터를 전달해줌 (같은 이름의 파일명 방지)
+		MultipartRequest multi = new MultipartRequest(request, savePath, sizeLimit, "utf-8",
+				new DefaultFileRenamePolicy());
+		
+		// 글 수정
+		// 글쓰기 제목, 내용 - 줄바꿈 저장, 글 번호
+		s_dto.setTitle(multi.getParameter("title"));
+		s_dto.setDescription(multi.getParameter("description").replace("\r\n","<br>"));
+		int bno = Integer.valueOf((String)multi.getParameter("bno"));
+		s_dto.setBno(bno);
+		
+		// 게시물 수정
+		s_service.board_fix(s_dto);
+		// 첨부파일 수정
+		// 첨부파일 기존꺼 삭제
+		if (!multi.getParameterValues("file_del_num")[0].equals("")) {
+			String[] values = multi.getParameterValues("file_del_num");
+			int val = 0;
+			//차례대로 삭제
+			for(int i=0; i<values.length; i++) {
+				val = Integer.valueOf(values[i]);
+				e_SvFileDTO s_filedto = new e_SvFileDTO();
+				s_filedto.setBno(bno);
+				s_filedto.setFile_order(val);
+				s_service.board_delete_file_one(s_filedto);
+			}
+		} 
+		
+		// 첨부파일 새 파일 추가
+		// 첨부 파일 불러오기 - (2)
+		// getFileNames() : 파일 이름들 받아오기
+		Enumeration enumeration = multi.getFileNames();
+		String fileName = "";
+		String f_path = "";
+		int i = 0;
+		// 데이터가 있을때, 불러오기
+		while(enumeration.hasMoreElements()){
+			i++;
+			// 파일 객체 불러오기
+			e_SvFileDTO s_filedto = new e_SvFileDTO();
+			s_filedto.setBno(bno);
+			fileName = multi.getFilesystemName((String) enumeration.nextElement());
+			s_filedto.setFilename(fileName);
+			// 파일의 전체 경로
+			f_path = savePath + "/" + fileName;
+			s_filedto.setF_path(f_path);
+			s_filedto.setFile_order(i);
+			// 첨부파일 생성
+			s_service.board_write_file(s_filedto);
+		}
+		//return "/service/question-member";
+	}
+	
+	// 공개 건의함 - 게시물 작성
+	@GetMapping("/question-public-write")
+	public String getQuestion_public_write(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		System.out.println("ServiceController - getQuestion_write");
+		
+		// 세션 생성
+		HttpSession session = request.getSession();
+		if (session.getAttribute("user") == null) {
+			// 응답 - 한글 처리
+			response.setContentType("text/html;charset=UTF-8");
+			// 로그인 안했을 때 - 잘못된 접근
+			// 뒤로가기
+			PrintWriter out = response.getWriter();
+			out.println("<script language ='javascript'>window.history.back();</script>");
+			out.flush();
+		} else {
+			// 로그인 되있을 때 - 정상 접근
+			// 게시물 쓰기 뷰
+			return "/service/question-public-write";
+		}
+		return null;
+	}
+	
+	@ResponseBody
+	@PostMapping("/question-public-write")
+	public void postQuestion_public_write(
+			HttpServletRequest request)
+			throws Exception {
+		System.out.println("ServiceController - postQuestion_public_write");
+		request.setCharacterEncoding("utf-8");
+		
+		// 객체 생성
+		e_MemberDTO m_dto = new e_MemberDTO();
+		e_ServiceDTO s_dto = new e_ServiceDTO();
+		
+		// 첨부 파일 불러오기 - (1)
+		// 파일 경로
+		String savePath = "C:\\zerokalory_file";
+		// 파일 크기 15MB
+		int sizeLimit = 1024 * 1024 * 15;
+		// 파라미터를 전달해줌 (같은 이름의 파일명 방지)
+		MultipartRequest multi = new MultipartRequest(request, savePath, sizeLimit, "utf-8",
+				new DefaultFileRenamePolicy());
+		
+		// 글 작성
+		// 로그인한 회원 정보 불러오기
+		HttpSession session = request.getSession();
+		m_dto = (e_MemberDTO)session.getAttribute("user");
+		// 닉네임 저장
+		s_dto.setNickname(m_dto.getNickname());
+		// 관리자 여부, 작성 시간, 회원번호
+		// 관리자 여부 저장
+		String admin_type = s_service.board_admin_type(m_dto.getId());
+		s_dto.setAdmin_type(admin_type);
+		// 작성 시간 저장
+		java.util.Date date = new java.util.Date();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String formattedDate = simpleDateFormat.format(date);
+		java.sql.Date date_re = java.sql.Date.valueOf(formattedDate);
+		s_dto.setCreate_time(date_re);
+		// 회원번호 저장
+		int member_no = m_dto.getMember_no();
+		s_dto.setMember_no(member_no);
+		// 글쓰기 유형 저장
+		s_dto.setSv_type("question_public");
+		// 글쓰기 제목, 내용 - 줄바꿈 저장
+		s_dto.setTitle(multi.getParameter("title"));
+		s_dto.setDescription(multi.getParameter("description").replace("\r\n","<br>"));
+		
+		// 글 시퀀스 불러오기
+		int bno = s_service.board_write_bno();
+		s_dto.setBno(bno);
+		// 글 작성
+		s_service.board_write(s_dto);
+		// 첨부 파일 불러오기 - (2)
+		// getFileNames() : 파일 이름들 받아오기
+		Enumeration enumeration = multi.getFileNames();
+		String fileName = "";
+		String f_path = "";
+		int i = 0;
+		// 데이터가 있을때, 불러오기
+		while(enumeration.hasMoreElements()){
+			i++;
+			// 파일 객체 불러오기
+			e_SvFileDTO s_filedto = new e_SvFileDTO();
+			s_filedto.setBno(bno);
+			s_filedto.setFile_date(date_re);
+			fileName = multi.getFilesystemName((String) enumeration.nextElement());
+			s_filedto.setFilename(fileName);
+			// 파일의 전체 경로
+			f_path = savePath + "/" + fileName;
+			s_filedto.setF_path(f_path);
+			s_filedto.setFile_order(i);
+			// 첨부파일 생성
+			s_service.board_write_file(s_filedto);
+		}
+	}
+	
+	// 검색 - question-public
+	@GetMapping("/question-public-search")
+	public ModelAndView getQuestion_public_search(
+			ModelAndView mv,
+			@RequestParam(value="page_NowBno", defaultValue="1") int page_NowBno,
+			@RequestParam(value="search_time") String search_time,
+			@RequestParam(value="search_type") String search_type,
+			@RequestParam(value="search_content") String search_content
+			)throws Exception {
+		System.out.println("ServiceController - getQuestion_public_search");
+		
+		// 검색 객체
+		e_SvSearchDTO s_searchdto = new e_SvSearchDTO();
+		s_searchdto.setSearch_time(search_time);
+		s_searchdto.setSearch_type(search_type);
+		s_searchdto.setSearch_content(search_content);
+		s_searchdto.setSv_type("question_public");
+		// 페이지 전체 갯수
+		int board_AllCount = s_service.board_search_count_All(s_searchdto);
+		// 페이징
+		e_SvPagingViewDTO s_pageviewdto = new e_SvPagingViewDTO(board_AllCount, page_NowBno);
+		s_searchdto.setBoard_NowStartBno(s_pageviewdto.getBoard_NowStartBno());
+		s_searchdto.setBoard_NowEndBno(s_pageviewdto.getBoard_NowEndBno());
+		
+		// 데이터 전달
+		// 데이터 불러오기 위한 선언
+		List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
+		// 페이지 내 게시물 목록 불러오기
+		s_dto_list = s_service.board_search_All(s_searchdto);
+		
+		if (s_dto_list != null && s_dto_list.size() != 0) {
+			System.out.println("ServiceController - getQuestion_public_search - 존재하는 게시물 있음");
+		} else {
+			System.out.println("ServiceController - getQuestion_public_search - 존재하는 게시물 없음");
+		}
+		mv.addObject("s_searchdto", s_searchdto);
+		mv.addObject("s_page", s_pageviewdto);
+		mv.addObject("s_dto_list", s_dto_list);
+		mv.setViewName("/service/question-public-search");
+		return mv;
+	}
 }

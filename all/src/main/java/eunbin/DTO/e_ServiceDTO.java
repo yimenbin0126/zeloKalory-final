@@ -13,7 +13,8 @@ public class e_ServiceDTO {
 	private String title;
 	private String description;
 	private Date create_time;
-	private int heart;
+	private int like_check;
+	private int dislike_check;
 	private int view_no;
 	private int member_no;
 	
@@ -71,11 +72,18 @@ public class e_ServiceDTO {
 	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
 	}
-	public int getHeart() {
-		return heart;
+	
+	public int getLike_check() {
+		return like_check;
 	}
-	public void setHeart(int heart) {
-		this.heart = heart;
+	public void setLike_check(int like_check) {
+		this.like_check = like_check;
+	}
+	public int getDislike_check() {
+		return dislike_check;
+	}
+	public void setDislike_check(int dislike_check) {
+		this.dislike_check = dislike_check;
 	}
 	public int getView_no() {
 		return view_no;
@@ -92,9 +100,10 @@ public class e_ServiceDTO {
 	
 	@Override
 	public String toString() {
-		return "ServiceDTO [bno=" + bno + ", sv_type=" + sv_type + ", group_origin=" + group_origin + ", group_order="
+		return "e_ServiceDTO [bno=" + bno + ", sv_type=" + sv_type + ", group_origin=" + group_origin + ", group_order="
 				+ group_order + ", admin_type=" + admin_type + ", nickname=" + nickname + ", title=" + title
-				+ ", description=" + description + ", create_time=" + create_time + ", heart=" + heart + ", view_no="
-				+ view_no + ", member_no=" + member_no + "]";
+				+ ", description=" + description + ", create_time=" + create_time + ", like_check=" + like_check
+				+ ", dislike_check=" + dislike_check + ", view_no=" + view_no + ", member_no=" + member_no + "]";
 	}
+	
 }

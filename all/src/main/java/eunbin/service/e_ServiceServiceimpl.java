@@ -9,7 +9,8 @@ import eunbin.DAO.e_ServiceDAO;
 import eunbin.DTO.e_ServiceDTO;
 import eunbin.DTO.e_SvFileDTO;
 import eunbin.DTO.e_SvLikecheckDTO;
-import eunbin.DTO.e_SvPagingView;
+import eunbin.DTO.e_SvPagingViewDTO;
+import eunbin.DTO.e_SvSearchDTO;
 import eunbin.DTO.e_SvViewcheckDTO;
 
 @Service
@@ -32,7 +33,7 @@ public class e_ServiceServiceimpl implements e_ServiceService {
 	}
 	
 	// 특정 게시물 묶음 불러오기 - 페이징
-	public List<e_ServiceDTO> board_paging(e_SvPagingView s_paging) throws Exception {
+	public List<e_ServiceDTO> board_paging(e_SvPagingViewDTO s_paging) throws Exception {
 		System.out.println("e_ServiceServiceimpl - board_paging - 특정 게시물 묶음 불러오기 - 페이징");
 		return s_dao.board_paging(s_paging);
 	}
@@ -148,4 +149,27 @@ public class e_ServiceServiceimpl implements e_ServiceService {
   		System.out.println("e_ServiceServiceimpl - board_like_load - 좋아요 불러오기");
   		return s_dao.board_like_load(s_likeCheck);
   	}
+  	
+  	// 싫어요 증가
+ 	public void board_dislike_up(e_SvLikecheckDTO s_likeCheck) throws Exception {
+ 		System.out.println("e_ServiceServiceimpl - board_dislike_up - 싫어요 증가");
+  		s_dao.board_dislike_up(s_likeCheck);
+ 	}
+ 	
+ 	// 싫어요 감소
+	public void board_dislike_down(e_SvLikecheckDTO s_likeCheck) throws Exception {
+		System.out.println("e_ServiceServiceimpl - board_dislike_down - 싫어요 감소");
+  		s_dao.board_dislike_down(s_likeCheck);
+	}
+  	
+  	// 검색
+ 	// 검색한 게시물 갯수 가져오기
+ 	public int board_search_count_All(e_SvSearchDTO s_searchdto) throws Exception {
+ 		return s_dao.board_search_count_All(s_searchdto);
+ 	}
+ 	
+ 	// 검색한 게시물 전체 가져오기 : 페이징 적용
+ 	public List<e_ServiceDTO> board_search_All(e_SvSearchDTO s_searchdto) throws Exception {
+ 		return s_dao.board_search_All(s_searchdto);
+ 	}
 }
