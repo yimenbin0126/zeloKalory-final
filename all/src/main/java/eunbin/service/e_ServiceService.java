@@ -31,6 +31,9 @@ public interface e_ServiceService {
 	// 게시물 번호 시퀀스 생성
 	public int board_write_bno() throws Exception;
 	
+	// 답글 작성
+	public void board_reply(e_ServiceDTO s_dto) throws Exception;
+	
 	// 글 작성 - 최초
 	public void board_write(e_ServiceDTO s_dto) throws Exception;
 	

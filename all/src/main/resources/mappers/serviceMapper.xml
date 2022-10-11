@@ -31,16 +31,19 @@
 		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
 		from
 			(
-			SELECT * from (
-				SELECT rownum r, bno, sv_type, group_origin, group_order,
+			SELECT
+			rownum r, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+			from (
+				SELECT rownum, bno, sv_type, group_origin, group_order,
 				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
 				FROM sv_board
 				WHERE sv_type = #{sv_type}
 				ORDER BY bno desc
 			)
-			WHERE r
-			BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
 		)
+		WHERE r
+		BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
 	</select>
 	
 	<!-- 게시물 번호 가져오기 - 개별 -->
@@ -51,12 +54,43 @@
 		AND group_origin = #{group_origin}
 	</select>
 	
+	<!-- 게시물 원글+답글 묶음 가져오기 (1) - 원글 -->
+	<select id="board_load_origin" resultType="eunbin.DTO.e_ServiceDTO">
+		SELECT bno 
+		FROM sv_board 
+		WHERE sv_type = #{sv_type}
+		AND admin_type = 'origin'
+	</select>
+	
+	<!-- 특정 게시물 묶음 불러오기 - 페이징 - 원글+답글 -->
+	<select id="board_paging_origin_reply" resultType="eunbin.DTO.e_ServiceDTO">
+		SELECT bno, sv_type, group_origin, group_order,
+		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+		from
+			(
+			SELECT
+			rownum r, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+			from (
+				SELECT rownum, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+				FROM sv_board
+				WHERE sv_type = #{sv_type}
+				AND group_origin = #{group_origin}
+				ORDER BY bno desc
+			)
+		)
+		WHERE r
+		BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
+	</select>
+	
 	<!-- 글 작성 - bno 시퀀스 만들기 -->
 	<select id="board_write_bno" resultType="int">
 		SELECT sv_bno_sequence.nextval AS bno FROM dual
 	</select>
 	
 	<!-- 글 작성 - 최초 -->
+	<!-- group_order = 0 -->
 	<insert id="board_write">
 		INSERT INTO sv_board 
 		(bno
@@ -76,9 +110,49 @@
 		VALUES
 		(#{bno}
 		, #{sv_type}
-		, 1
-		, 1
-		, #{admin_type}
+		, #{bno}
+		, 0
+		, 'origin'
+		, #{nickname}
+		, #{title}
+		, #{description}
+		, #{create_time}
+		, 0
+		, 0
+		, 0
+		, #{member_no}
+		)
+	</insert>
+	
+	<!-- 글 작성 - 답글 group_order 시퀀스 만들기 -->
+	<select id="board_reply_group_order" resultType="int">
+		SELECT sv_group_order_SEQUENCE.nextval AS group_order FROM dual
+	</select>
+	
+	<!-- 글 작성 - 답글 -->
+	<!-- group_order = 1 -->
+	<insert id="board_reply">
+		INSERT INTO sv_board 
+		(bno
+		, sv_type
+		, group_origin
+		, group_order
+		, admin_type
+		, nickname
+		, title
+		, description
+		, create_time
+		, like_check
+		, dislike_check
+		, view_no
+		, member_no
+		)
+		VALUES
+		(#{bno}
+		, #{sv_type}
+		, #{group_origin}
+		, 0
+		, 'reply'
 		, #{nickname}
 		, #{title}
 		, #{description}
@@ -407,9 +481,12 @@
 		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
 		from
 			(
-			SELECT * from
+			SELECT
+			rownum r, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+			from
 				(
-				SELECT rownum r, bno, sv_type, group_origin, group_order,
+				SELECT rownum, bno, sv_type, group_origin, group_order,
 						admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
 				FROM sv_board 
 				<where>
@@ -450,9 +527,9 @@
 				</where>
 				ORDER BY bno desc
 				)
-			WHERE r
-			BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
 		)
+		WHERE r
+		BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
 	</select>
 	
 </mapper>

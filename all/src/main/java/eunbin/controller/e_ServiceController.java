@@ -464,10 +464,7 @@ public class e_ServiceController {
 		m_dto = (e_MemberDTO)session.getAttribute("user");
 		// 닉네임 저장
 		s_dto.setNickname(m_dto.getNickname());
-		// 관리자 여부, 작성 시간, 회원번호
-		// 관리자 여부 저장
-		String admin_type = s_service.board_admin_type(m_dto.getId());
-		s_dto.setAdmin_type(admin_type);
+		// 작성 시간, 회원번호
 		// 작성 시간 저장
 		java.util.Date date = new java.util.Date();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -626,6 +623,9 @@ public class e_ServiceController {
 		s_page.setSv_type("question_public");
 		// 페이지 내 게시물 목록 불러오기
 		s_dto_list = s_service.board_paging(s_page);
+		// 게시물 원글, 답글 가져오기
+		// 원글 가져오기
+		// 답글 가져오기
 		if (s_dto_list != null && s_dto_list.size() != 0) {
 			System.out.println("ServiceController - getQuestion_public - 존재하는 게시물 있음");
 		} else {
@@ -798,10 +798,14 @@ public class e_ServiceController {
 			// 수정 페이지로 이동
 			mv.addObject("filelist", filelist);
 			mv.addObject("s_dto", s_dto);
-			mv.setViewName("/service/question-fix");
+			mv.setViewName("/service/question-public-fix");
 			return mv;
 		} else if (e_btn.equals("delete")) {
 			s_service.board_delete(s_dto);
+		} else if (e_btn.equals("reply")) {
+			mv.addObject("e_bno", e_bno);
+			mv.setViewName("/service/question-public-reply");
+			return mv;
 		}
 		// 게시판 메인 화면으로 이동
 		mv.setViewName("redirect:/service/question-public");
@@ -948,10 +952,7 @@ public class e_ServiceController {
 		m_dto = (e_MemberDTO)session.getAttribute("user");
 		// 닉네임 저장
 		s_dto.setNickname(m_dto.getNickname());
-		// 관리자 여부, 작성 시간, 회원번호
-		// 관리자 여부 저장
-		String admin_type = s_service.board_admin_type(m_dto.getId());
-		s_dto.setAdmin_type(admin_type);
+		// 작성 시간, 회원번호
 		// 작성 시간 저장
 		java.util.Date date = new java.util.Date();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -972,6 +973,105 @@ public class e_ServiceController {
 		s_dto.setBno(bno);
 		// 글 작성
 		s_service.board_write(s_dto);
+		// 첨부 파일 불러오기 - (2)
+		// getFileNames() : 파일 이름들 받아오기
+		Enumeration enumeration = multi.getFileNames();
+		String fileName = "";
+		String f_path = "";
+		int i = 0;
+		// 데이터가 있을때, 불러오기
+		while(enumeration.hasMoreElements()){
+			i++;
+			// 파일 객체 불러오기
+			e_SvFileDTO s_filedto = new e_SvFileDTO();
+			s_filedto.setBno(bno);
+			s_filedto.setFile_date(date_re);
+			fileName = multi.getFilesystemName((String) enumeration.nextElement());
+			s_filedto.setFilename(fileName);
+			// 파일의 전체 경로
+			f_path = savePath + "/" + fileName;
+			s_filedto.setF_path(f_path);
+			s_filedto.setFile_order(i);
+			// 첨부파일 생성
+			s_service.board_write_file(s_filedto);
+		}
+	}
+	
+	// 공개 건의함 - 답글 작성
+	@GetMapping("/question-public-reply")
+	public String getQuestion_public_reply(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		System.out.println("ServiceController - getQuestion_public_reply");
+		
+		// 세션 생성
+		HttpSession session = request.getSession();
+		if (session.getAttribute("user") == null) {
+			// 응답 - 한글 처리
+			response.setContentType("text/html;charset=UTF-8");
+			// 로그인 안했을 때 - 잘못된 접근
+			// 뒤로가기
+			PrintWriter out = response.getWriter();
+			out.println("<script language ='javascript'>window.history.back();</script>");
+			out.flush();
+		} else {
+			// 로그인 되있을 때 - 정상 접근
+			// 게시물 쓰기 뷰
+			return "/service/question-public-reply";
+		}
+		return null;
+	}
+	
+	@ResponseBody
+	@PostMapping("/question-public-reply")
+	public void postQuestion_public_reply(
+			HttpServletRequest request)
+			throws Exception {
+		System.out.println("ServiceController - postQuestion_public_reply");
+		request.setCharacterEncoding("utf-8");
+		
+		// 객체 생성
+		e_MemberDTO m_dto = new e_MemberDTO();
+		e_ServiceDTO s_dto = new e_ServiceDTO();
+		
+		// 첨부 파일 불러오기 - (1)
+		// 파일 경로
+		String savePath = "C:\\zerokalory_file";
+		// 파일 크기 15MB
+		int sizeLimit = 1024 * 1024 * 15;
+		// 파라미터를 전달해줌 (같은 이름의 파일명 방지)
+		MultipartRequest multi = new MultipartRequest(request, savePath, sizeLimit, "utf-8",
+				new DefaultFileRenamePolicy());
+		
+		// 글 작성
+		// 로그인한 회원 정보 불러오기
+		HttpSession session = request.getSession();
+		m_dto = (e_MemberDTO)session.getAttribute("user");
+		// 닉네임 저장
+		s_dto.setNickname(m_dto.getNickname());
+		// 작성 시간, 회원번호
+		// 작성 시간 저장
+		java.util.Date date = new java.util.Date();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String formattedDate = simpleDateFormat.format(date);
+		java.sql.Date date_re = java.sql.Date.valueOf(formattedDate);
+		s_dto.setCreate_time(date_re);
+		// 회원번호 저장
+		int member_no = m_dto.getMember_no();
+		s_dto.setMember_no(member_no);
+		// 글쓰기 유형 저장
+		s_dto.setSv_type("question_public");
+		// 글쓰기 제목, 내용 - 줄바꿈 저장
+		s_dto.setTitle(multi.getParameter("title"));
+		s_dto.setDescription(multi.getParameter("description").replace("\r\n","<br>"));
+		
+		// 답글 원글 번호 불러오기
+		int group_origin = Integer.valueOf(multi.getParameter("e_bno"));
+		s_dto.setGroup_origin(group_origin);
+		// 글 시퀀스 불러오기
+		int bno = s_service.board_write_bno();
+		s_dto.setBno(bno);
+		// 답글 작성
+		s_service.board_reply(s_dto);
 		// 첨부 파일 불러오기 - (2)
 		// getFileNames() : 파일 이름들 받아오기
 		Enumeration enumeration = multi.getFileNames();

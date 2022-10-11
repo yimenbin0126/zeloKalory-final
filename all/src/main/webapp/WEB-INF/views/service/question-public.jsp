@@ -142,7 +142,9 @@
 											if (j <= s_page.getBoard_NowEndBno()){
 												e_ServiceDTO s_dto = new e_ServiceDTO();
 												s_dto = s_dto_list.get(i);
+												if (s_dto.getGroup_order()==0) {
 								%>
+								<!-- 원글일 경우 -->
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><%=j%></li>
 									<li><%=s_dto.getTitle()%></li>
@@ -151,8 +153,20 @@
 									<li><%=s_dto.getView_no()%></li>
 									<li><%=s_dto.getLike_check()%></li>
 								</ul>
-								<!-- 답글이 있을 경우 -->
 								<%
+												} else {
+								%>
+								<!-- 답글일 경우 -->
+								<ul class="e_boardlist">
+									<li value="<%=s_dto.getBno()%>"><%=j%></li>
+									<li>└ <%=s_dto.getTitle()%></li>
+									<li><%=s_dto.getNickname()%></li>
+									<li><%=s_dto.getCreate_time()%></li>
+									<li><%=s_dto.getView_no()%></li>
+									<li><%=s_dto.getLike_check()%></li>
+								</ul>
+								<%
+												}
 												j++;
 											}
 										}
@@ -232,7 +246,7 @@
 							</div>
 							<%
 								// 클릭 가능 여부
-								if (s_page.isPage_prev()){
+								if (s_page.isPage_next()){
 							%>
 							<div onclick="location.href='/all/service/question-public?page_NowBno=<%=s_page.getPage_EndBno()+1%>'"
 							class="e_paging_btnright" id="e_paging_btnright_yes">&gt;</div>

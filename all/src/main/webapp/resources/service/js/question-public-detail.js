@@ -98,8 +98,8 @@ function form(){
 		// 글 답글 쓰기 버튼
 		document.querySelector('#e_btn_reply').addEventListener('click', (event)=>{
 			var e_btn_reply_form = document.e_btn_reply_form;
-			var con_fix = confirm('답글을 작성하시겠습니까?');
-			if (con_fix == true) {
+			var con_reply = confirm('정말 답글을 작성하시겠습니까?');
+			if (con_reply == true) {
 				e_btn_reply_form.method="post";
 				e_btn_reply_form.action="/all/service/question-public-detail-button";
 				e_btn_reply_form.submit();

@@ -201,13 +201,15 @@
 							// 게시판 관련 메서드 불러오기
 							e_ServiceService s_service = new e_ServiceServiceimpl();
 							// 관리자 여부
-							if ((e_MemberDTO)session.getAttribute("user") !=null
-							&& s_service.board_admin_type(m_dto.getId()).equals("Y")){
+							if ((e_MemberDTO)session.getAttribute("user") !=null){
+								m_dto = (e_MemberDTO)session.getAttribute("user");
+								if(m_dto.getId().equals("admin")){
 							// 게시물 수정, 삭제 버튼 보이기 여부
 						%>
 							<input type="hidden" id="e_hidden_YN" value="Y">
 						<%
-							} else {
+								}
+								} else {
 						%>
 							<input type="hidden" id="e_hidden_YN" value="N">
 						<%

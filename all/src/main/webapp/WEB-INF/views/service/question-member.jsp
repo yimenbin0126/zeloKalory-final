@@ -176,13 +176,13 @@
 						<div class="e_btn_list">
 							<!-- 글쓰기 버튼 보이기 (로그인) -->
 								<%
-										// 게시판 관련 메서드 불러오기
-										e_ServiceService s_service = new e_ServiceServiceimpl();
-										// 로그인 여부
-										if((e_MemberDTO)session.getAttribute("user") !=null){
-											// 관리자 여부
-											String id = m_dto.getId();
-											if(s_service.board_admin_type(id).equals("Y")){
+									// 게시판 관련 메서드 불러오기
+									e_ServiceService s_service = new e_ServiceServiceimpl();
+									// 관리자 여부
+									if ((e_MemberDTO)session.getAttribute("user") !=null){
+										m_dto = (e_MemberDTO)session.getAttribute("user");
+										if(m_dto.getId().equals("admin")){
+									// 게시물 수정, 삭제 버튼 보이기 여부
 								%>
 									<div>
 										<input type="button"  value="글쓰기" class="e_hd_top_write"
@@ -234,7 +234,7 @@
 							</div>
 							<%
 								// 클릭 가능 여부
-								if (s_page.isPage_prev()){
+								if (s_page.isPage_next()){
 							%>
 							<div onclick="location.href='/all/service/question-member?page_NowBno=<%=s_page.getPage_EndBno()+1%>'"
 							class="e_paging_btnright" id="e_paging_btnright_yes">&gt;</div>

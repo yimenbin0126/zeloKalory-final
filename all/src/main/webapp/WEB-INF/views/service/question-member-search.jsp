@@ -250,7 +250,7 @@
 							</div>
 							<%
 								// 클릭 가능 여부
-								if (s_page.isPage_prev()){
+								if (s_page.isPage_next()){
 							%>
 							<div onclick="location.href='/all/service/question-member-search?page_NowBno=<%=s_page.getPage_EndBno()+1%>
 							&search_time=<%=s_searchdto.getSearch_time()%>&search_type=<%=s_searchdto.getSearch_type()%>

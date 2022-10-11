@@ -9,8 +9,8 @@
 <meta charset="UTF-8">
 <title>고객센터</title>
 <link href="/all/resources/service/css/header.css" rel="stylesheet">
-<link href="/all/resources/service/css/question-public-write.css" rel="stylesheet">
-<script src="/all/resources/service/js/question-public-write.js"></script>
+<link href="/all/resources/service/css/question-public-reply.css" rel="stylesheet">
+<script src="/all/resources/service/js/question-public-reply.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
@@ -108,7 +108,10 @@
 
 						<!-- 카데고리별 -->
 						<form name="e_write_form">
-						
+							<%
+								int e_bno = (int)request.getAttribute("e_bno");
+							%>
+							<input type="hidden" name="e_bno" value="<%=e_bno%>">
 							<div class="e_content">
 								<!-- 글쓰기 제목 -->
 								<div class="e_con_title">
@@ -151,7 +154,7 @@
 							<!-- 글쓰기 버튼 -->
 							<div class="e_button">
 								<div class="e_btn_write">
-									<input type="submit" value="글쓰기" id="e_btn_write_btn">
+									<input type="submit" value="답글쓰기" id="e_btn_write_btn">
 								</div>
 							</div>
 						</form>

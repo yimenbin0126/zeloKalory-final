@@ -11,8 +11,8 @@
 <meta charset="UTF-8">
 <title>고객센터</title>
 <link href="/all/resources/service/css/header.css" rel="stylesheet">
-<link href="/all/resources/service/css/question-guide-search.css" rel="stylesheet">
-<script src="/all/resources/service/js/question-guide.js"></script>
+<link href="/all/resources/service/css/question-public-search.css" rel="stylesheet">
+<script src="/all/resources/service/js/question-public.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
@@ -24,11 +24,11 @@
         <!-- <img src="./img/logo.png" id="j_logo"> -->
 
 		<%
-			e_MemberDTO m_dto = new e_MemberDTO();
+		e_MemberDTO m_dto = new e_MemberDTO();
 		        		
-        	// 로그인 유무
-           	if((e_MemberDTO)session.getAttribute("user") !=null){
-           		m_dto = (e_MemberDTO)session.getAttribute("user");
+		        	// 로그인 유무
+		           	if((e_MemberDTO)session.getAttribute("user") !=null){
+		           		m_dto = (e_MemberDTO)session.getAttribute("user");
 		%>
 		<ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
@@ -76,7 +76,7 @@
         %>
     </div>
     <!-- 헤더 끝 -->
-
+    
 	<section>
 		<div id="j_wrap">
 			<div id="j_box">
@@ -90,36 +90,31 @@
 						</div>
 						<!-- 자주하는 질문 -->
 						<div class="e_nav_question" onclick="location.href='/all/service/question-member'">
-							<div class="e_que_div">자주하는 질문</div>
-							<div><img src="/all/resources/service/img/category_click.png"></div>
+							자주하는 질문
 						</div>
 						<!-- 공개 건의함 -->
-						<div class="e_nav_onebyone" onclick="location.href='/all/service/question-public'">공개 건의함</div>
+						<div class="e_nav_onebyone" onclick="location.href='/all/service/question-public'">
+							<div class="e_que_div">공개 건의함</div>
+							<div><img src="/all/resources/service/img/category_click.png"></div>
+						</div>
 					</nav>
+
 
 					<!-- 오른쪽 내용 -->
 					<div class="e_right">
 						<!-- 상단 -->
-						<div class="e_hd_top">고객센터 &gt; 자주하는 질문</div>
+						<div class="e_hd_top">고객센터 &gt; 공개 건의함</div>
 						<div class="e_header">
-							<div class="e_hd_top_que">자주하는 질문</div>
+							<div class="e_hd_top_que">공개 건의함</div>
 							<div class="e_hd_top_con">
-								<span> 자주하는 질문은 <br>관리자가 관리할 수 있는 게시판입니다.
-								<br>관리자로 로그인 하면, 게시물을 작성할 수 있습니다.
+								<span> 공개건의함은 관리자, 회원 등<br>모든 회원이 로그인 한 상태라면<br>
+									건의 관련 글을 쓰고 댓글을 남길수 있는 소통 공간입니다.
 								</span>
 							</div>
 							
-							<!-- 카데고리 선택 -->
-							<div class="e_hd_choice">
-								<form name="e_hd_choice_form">
-									<input type="hidden" name="e_hd_choice_LR" id="e_hd_choice_LR" value="L">
-								</form>
-								<div id="e_choice_mem" onclick="location.href='/all/service/question-member'">회원 정보 관리</div>
-								<div id="e_choice_guide">사이트 이용 가이드</div>
-							</div>
 						</div>
 
-						<!-- 게시물 불러오기 - 사이트 이용 가이드 -->
+						<!-- 게시물 불러오기 - 회원 정보 관리 -->
 						<div class="e_content">
 							<!-- 게시물 번호 보내기 - 상세보기 -->
 							<form name="e_bno_val_form" id="e_bno_val_form">
@@ -162,6 +157,7 @@
 									<li><%=s_dto.getView_no()%></li>
 									<li><%=s_dto.getLike_check()%></li>
 								</ul>
+								<!-- 답글이 있을 경우 -->
 								<%
 												j++;
 											}
@@ -187,21 +183,22 @@
 										e_ServiceService s_service = new e_ServiceServiceimpl();
 										// 로그인 여부
 										if((e_MemberDTO)session.getAttribute("user") !=null){
-											// 관리자 여부
-											String id = m_dto.getId();
-											if(s_service.board_admin_type(id).equals("Y")){
 								%>
 									<div>
+										<input type="button"  value="내가 쓴 글 보기" class="e_hd_top_write_mylist"
+										onclick="location.href='/all/service/question-public-write-mylist'">								
+									</div>
+									<div>
 										<input type="button"  value="글쓰기" class="e_hd_top_write"
-										onclick="location.href='/all/service/question-write'">
+										onclick="location.href='/all/service/question-public-write'">
 									</div>
 								<%
-										}
+	
 									}
 								%>
 						
 						</div>
-
+						
 						<!-- 페이징 시작 -->
 						<div class="e_paging">
 							<%

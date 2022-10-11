@@ -82,6 +82,12 @@ public class e_ServiceDAOimpl implements e_ServiceDAO {
 		return sql.selectOne("serviceMapper.board_write_bno");
 	}
 	
+	// 답글 작성
+	public void board_reply(e_ServiceDTO s_dto) throws Exception {
+		System.out.println("e_ServiceDAOimpl - board_reply - 답글 작성");
+		sql.insert("serviceMapper.board_reply", s_dto);
+	}
+	
 	// 글 작성 - 최초
 	public void board_write(e_ServiceDTO s_dto) throws Exception {
 		System.out.println("e_ServiceDAOimpl - board_write - 글 작성 - 최초");

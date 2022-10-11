@@ -57,6 +57,12 @@ public class e_ServiceServiceimpl implements e_ServiceService {
 		return s_dao.board_write_bno();
 	}
 	
+	// 답글 작성
+	public void board_reply(e_ServiceDTO s_dto) throws Exception {
+		System.out.println("e_ServiceServiceimpl - board_reply - 답글 작성");
+		s_dao.board_reply(s_dto);
+	}
+	
 	// 글 작성 - 최초
 	public void board_write(e_ServiceDTO s_dto) throws Exception {
 		System.out.println("e_ServiceServiceimpl - board_write - 글 작성 - 최초");

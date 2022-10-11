@@ -16,8 +16,8 @@ public class e_SvPagingViewDTO {
 	// 전체 페이지 수
 	private int page_AllCount;
 	// 이전페이지, 다음 페이지 여부
-	private boolean page_prev = true;
-	private boolean page_next = true;
+	private boolean page_prev = false;
+	private boolean page_next = false;
 	
 	// 현재 페이지의 게시물 리스트 갯수
 	private int board_NowBnoSize = 5;
@@ -27,6 +27,10 @@ public class e_SvPagingViewDTO {
 	private int board_NowStartBno;
 	// 현재 페이지의 게시물 목록 끝번호
 	private int board_NowEndBno;
+	
+	// 원글+답글
+	// 원글 번호
+	private int group_origin;
 	
 	public e_SvPagingViewDTO () {
 	}
@@ -86,7 +90,16 @@ public class e_SvPagingViewDTO {
 		// 이전페이지, 다음 페이지 여부
 		if (this.page_RangeSize < this.page_AllCount
 				&& this.page_EndBno < this.page_AllCount) {
-			setPage_next(false);
+			setPage_next(true);
+		}
+		
+		if (this.page_StartBno >= 6) {
+			setPage_prev(true);
+		}
+		
+		if (this.page_EndBno == 5
+				&& page_EndBno < page_AllCount) {
+			setPage_next(true);
 		}
 		
 		if (this.page_AllCount < this.page_RangeSize) {
@@ -178,12 +191,21 @@ public class e_SvPagingViewDTO {
 		this.board_NowEndBno = board_NowEndBno;
 	}
 	
+	public int getGroup_origin() {
+		return group_origin;
+	}
+	public void setGroup_origin(int group_origin) {
+		this.group_origin = group_origin;
+	}
+	
 	@Override
 	public String toString() {
-		return "e_SvPagingView [sv_type=" + sv_type + ", page_NowBno=" + page_NowBno + ", page_StartBno="
+		return "e_SvPagingViewDTO [sv_type=" + sv_type + ", page_NowBno=" + page_NowBno + ", page_StartBno="
 				+ page_StartBno + ", page_EndBno=" + page_EndBno + ", page_RangeSize=" + page_RangeSize
 				+ ", page_AllCount=" + page_AllCount + ", page_prev=" + page_prev + ", page_next=" + page_next
 				+ ", board_NowBnoSize=" + board_NowBnoSize + ", board_AllCount=" + board_AllCount
-				+ ", board_NowStartBno=" + board_NowStartBno + ", board_NowEndBno=" + board_NowEndBno + "]";
+				+ ", board_NowStartBno=" + board_NowStartBno + ", board_NowEndBno=" + board_NowEndBno
+				+ ", group_origin=" + group_origin + "]";
 	}
+	
 }

@@ -88,12 +88,15 @@
 						</div>
 						<!-- 자주하는 질문 -->
 						<div class="e_nav_question" onclick="location.href='/all/service/question-member'">
-							<div class="e_que_div">자주하는 질문</div>
-							<div><img src="/all/resources/service/img/category_click.png"></div>
+							자주하는 질문
 						</div>
 						<!-- 공개 건의함 -->
-						<div class="e_nav_onebyone" onclick="location.href='/all/service/question-public'">공개 건의함</div>
+						<div class="e_nav_onebyone" onclick="location.href='/all/service/question-public'">
+							<div class="e_que_div">공개 건의함</div>
+							<div><img src="/all/resources/service/img/category_click.png"></div>
+						</div>
 					</nav>
+
 
 					<!-- 오른쪽 내용 -->
 					<div class="e_right">
