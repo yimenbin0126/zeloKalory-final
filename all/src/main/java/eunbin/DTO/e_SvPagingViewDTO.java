@@ -31,6 +31,8 @@ public class e_SvPagingViewDTO {
 	// 원글+답글
 	// 원글 번호
 	private int group_origin;
+	// 멤버번호 (내 게시물만 불러올 때 사용)
+	private int member_no;
 	
 	public e_SvPagingViewDTO () {
 	}
@@ -198,6 +200,13 @@ public class e_SvPagingViewDTO {
 		this.group_origin = group_origin;
 	}
 	
+	public int getMember_no() {
+		return member_no;
+	}
+	public void setMember_no(int member_no) {
+		this.member_no = member_no;
+	}
+	
 	@Override
 	public String toString() {
 		return "e_SvPagingViewDTO [sv_type=" + sv_type + ", page_NowBno=" + page_NowBno + ", page_StartBno="
@@ -205,7 +214,7 @@ public class e_SvPagingViewDTO {
 				+ ", page_AllCount=" + page_AllCount + ", page_prev=" + page_prev + ", page_next=" + page_next
 				+ ", board_NowBnoSize=" + board_NowBnoSize + ", board_AllCount=" + board_AllCount
 				+ ", board_NowStartBno=" + board_NowStartBno + ", board_NowEndBno=" + board_NowEndBno
-				+ ", group_origin=" + group_origin + "]";
+				+ ", group_origin=" + group_origin + ", member_no=" + member_no + "]";
 	}
 	
 }

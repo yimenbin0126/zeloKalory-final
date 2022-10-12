@@ -10,13 +10,13 @@
 	background-color: lightgray;
 }
 
-.e_nav_all, .e_nav_onebyone {
+.e_nav_all, .e_nav_question {
 	padding: 15px 0px 15px 20px;
 	background-color: darkgray;
 	border-bottom: 1.5px solid gray;
 }
 
-.e_nav_question {
+.e_nav_onebyone {
 	padding: 5px 0px 5px 20px;
 	display: flex;
 	align-items: center;
@@ -24,11 +24,11 @@
 	color: white;
 }
 
-.e_nav_question img {
+.e_nav_onebyone img {
 	width: 40px;
 	height: 40px;
 	float: left;
-	padding-left: 30px;
+	padding-left: 45px;
 }
 
 /* 오른쪽 카데고리 */
@@ -118,6 +118,10 @@
 }
 
 /* 회원정보 관리 */
+.e_boardlist li {
+	font-size: 14px;
+}
+
 .e_content div > ul {
 	display: flex;
 	justify-content : space-between;
@@ -145,7 +149,10 @@
 
 .e_content ul li:nth-child(2) {
 	padding: 10px 5px 10px 10px;
-	width: 250px;	
+	width: 250px;
+	overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;	
 }
 
 .e_content ul li:nth-child(3) {

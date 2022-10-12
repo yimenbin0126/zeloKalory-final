@@ -55,6 +55,17 @@
 	margin-right: 50px;
 }
 
+.origin_board {
+	margin-bottom: 30px;
+}
+
+.origin_board a {
+	font-weight:bold;
+	font-size:15px; 
+	text-decoration: none;
+	color: #1649B0;
+}
+
 .e_con_title, .e_explain_member, .e_con_content {
 	padding-left: 20px;
 	padding-right: 20px;
@@ -87,6 +98,11 @@
 }
 
 /* 좋아요 */
+.e_content_like_dislike {
+	display: flex;
+	justify-content: center;
+}
+
 .e_con_content {
 	padding-bottom: 40px;
 }
@@ -97,24 +113,36 @@
 	height: 100px;
 	border-radius: 100px;
 	text-align: center;
-	color: red;
-	margin: 0 auto;
+	color: #E21E2E;
+	margin: 0px 5px 0px 0px;
 }
 
-.e_like_heart, .e_like_num {
+.e_content_dislike {
+	background-color: lightgray;
+	width: 100px;
+	height: 100px;
+	border-radius: 100px;
+	text-align: center;
+	color: #234AE6;
+	margin: 0px 0px 0px 5px;
+}
+
+.e_like_heart, .e_like_num,
+.e_dislike_heart, .e_dislike_num {
 	font-size: 35px;
 	margin: 0px;
 	padding: 0px;
 }
 
-.e_like_heart{
-	line-height: 70px;
-	
+.e_like_heart, .e_dislike_heart {
+	line-height: 30px;
+    padding-top: 25px;
 }
 
-.e_like_num {
-	line-height: 0px;
-	font-size: 17px;
+.e_like_num, .e_dislike_num {
+	line-height: 31px;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 /* 첨부파일 */
@@ -156,11 +184,13 @@
 	background-color: lightgray;
 }
 
+#e_btn_reply {
+	color: white;
+	background-color: gray;
+}
+
 #e_btn_delete, #e_btn_fix {
 	color: white;
 	background-color: #1649B0;
 }
 
-.e_hidden {
-	display: none;
-}

@@ -32,10 +32,28 @@ public class e_ServiceServiceimpl implements e_ServiceService {
 		return s_dao.board_count_All(s_dto);
 	}
 	
+	// 타입별 게시물 갯수 불러오기 (sv_type) - 내 게시물만
+	public int myboard_count_All(e_ServiceDTO s_dto) throws Exception {
+		System.out.println("e_ServiceServiceimpl - myboard_count_All - 타입별 게시물 갯수 불러오기 (sv_type) - 내 게시물만");
+		return s_dao.myboard_count_All(s_dto);
+	}
+	
 	// 특정 게시물 묶음 불러오기 - 페이징
 	public List<e_ServiceDTO> board_paging(e_SvPagingViewDTO s_paging) throws Exception {
 		System.out.println("e_ServiceServiceimpl - board_paging - 특정 게시물 묶음 불러오기 - 페이징");
 		return s_dao.board_paging(s_paging);
+	}
+	
+	// 게시물 원글+답글 묶음 불러오기 - 페이징
+	public List<e_ServiceDTO> board_paging_origin_reply(e_SvPagingViewDTO s_paging) throws Exception {
+		System.out.println("e_ServiceServiceimpl - board_paging_origin_reply - 게시물 원글+답글 묶음 불러오기 - 페이징");
+		return s_dao.board_paging_origin_reply(s_paging);
+	}
+	
+	// 게시물 원글+답글 묶음 불러오기 - 페이징 - 내 게시물만
+	public List<e_ServiceDTO> myboard_paging_origin_reply(e_SvPagingViewDTO s_paging) throws Exception {
+		System.out.println("e_ServiceServiceimpl - myboard_paging_origin_reply - 게시물 원글+답글 묶음 불러오기 - 페이징 - 내 게시물만");
+		return s_dao.myboard_paging_origin_reply(s_paging);
 	}
 	
 	// 특정 게시물 불러오기 - 번호 (bno)
@@ -91,6 +109,12 @@ public class e_ServiceServiceimpl implements e_ServiceService {
 	public void board_delete_file_one(e_SvFileDTO s_filedto) throws Exception {
 		System.out.println("e_ServiceServiceimpl - board_delete_file_one - 첨부파일 부분 삭제 : 게시물과 연관된");
 		s_dao.board_delete_file_one(s_filedto);
+	}
+	
+	// 여러 글 삭제
+	public void board_deleteAll(List<String> e_bno_list) throws Exception {
+		System.out.println("e_ServiceServiceimpl - board_deleteAll - 여러 글 삭제");
+		s_dao.board_deleteAll(e_bno_list);
 	}
 	
 	// 글 삭제

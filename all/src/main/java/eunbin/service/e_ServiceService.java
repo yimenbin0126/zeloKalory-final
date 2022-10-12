@@ -18,8 +18,17 @@ public interface e_ServiceService {
 	// 타입별 게시물 갯수 불러오기 (sv_type)
 	public int board_count_All(e_ServiceDTO s_dto) throws Exception;
 	
+	// 타입별 게시물 갯수 불러오기 (sv_type) - 내 게시물만
+	public int myboard_count_All(e_ServiceDTO s_dto) throws Exception;
+	
 	// 특정 게시물 묶음 불러오기 - 페이징
 	public List<e_ServiceDTO> board_paging(e_SvPagingViewDTO s_paging) throws Exception;
+	
+	// 게시물 원글+답글 묶음 불러오기 - 페이징
+	public List<e_ServiceDTO> board_paging_origin_reply(e_SvPagingViewDTO s_paging) throws Exception;
+	
+	// 게시물 원글+답글 묶음 불러오기 - 페이징 - 내 게시물만
+	public List<e_ServiceDTO> myboard_paging_origin_reply(e_SvPagingViewDTO s_paging) throws Exception;
 	
 	// 특정 게시물 불러오기 - 번호 (bno)
 	public e_ServiceDTO board_one(int bno) throws Exception;
@@ -48,6 +57,9 @@ public interface e_ServiceService {
 	
 	// 첨부파일 부분 삭제 : 게시물과 연관된
 	public void board_delete_file_one(e_SvFileDTO s_filedto) throws Exception;
+	
+	// 여러 글 삭제
+	public void board_deleteAll(List<String> e_bno_list) throws Exception;
 	
 	// 글 삭제
 	public void board_delete(e_ServiceDTO s_dto) throws Exception;

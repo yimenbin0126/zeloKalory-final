@@ -53,7 +53,7 @@
 	font-size: 13px;
 }
 
-.e_hd_top_write, .e_hd_choice, .e_hd_top_write_mylist {
+.e_hd_top_write, .e_hd_choice, .e_hd_top_write_myboard {
 	padding: 0px 0px 30px 50px;
 }
 
@@ -84,7 +84,7 @@
 	border: none;
 }
 
-.e_hd_top_write_mylist {
+.e_hd_top_write_myboard {
 	margin-right: 10px;
 	font-weight: bold;
 	font-size: 15px;
@@ -118,6 +118,10 @@
 }
 
 /* 회원정보 관리 */
+.e_boardlist li {
+	font-size: 14px;
+}
+
 .e_content div > ul {
 	display: flex;
 	justify-content : space-between;
@@ -144,8 +148,12 @@
 }
 
 .e_content ul li:nth-child(2) {
+	text-align: left;
 	padding: 10px 5px 10px 10px;
 	width: 250px;	
+	overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;	
 }
 
 .e_content ul li:nth-child(3) {

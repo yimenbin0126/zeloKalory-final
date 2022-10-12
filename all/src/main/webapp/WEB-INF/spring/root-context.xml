@@ -5,27 +5,4 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 	
-	<!-- Root Context: defines shared resources visible to all other web components -->
-	<context:component-scan base-package="eunbin.controller" />
-	<context:component-scan base-package="eunbin.service" />
-	<context:component-scan base-package="eunbin.DAO" />
-	<context:component-scan base-package="eunbin.DTO" />
-	
-	<!-- 오라클 접속. username(사용자이름) password(패스워드) -->
-    <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
-        <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
-        <property name="url" value="jdbc:oracle:thin:@todair.synology.me:51521:XE"/>
-        <property name="username" value="three"/> 
-        <property name="password" value="0303"/>
-    </bean>
-    
-     <!-- Mybatis 연동 -->
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-         <property name="dataSource" ref="dataSource"></property>
-         <property name="configLocation" value="classpath:/mybatis-config.xml"></property>
-         <property name="mapperLocations" value="classpath:mappers/**/*Mapper.xml"/>
-    </bean>
-    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
-        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
-    </bean>
 </beans>

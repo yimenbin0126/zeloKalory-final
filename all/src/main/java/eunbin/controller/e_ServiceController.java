@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -622,10 +623,8 @@ public class e_ServiceController {
 		e_SvPagingViewDTO s_page = new e_SvPagingViewDTO(board_AllCount, page_NowBno);
 		s_page.setSv_type("question_public");
 		// 페이지 내 게시물 목록 불러오기
-		s_dto_list = s_service.board_paging(s_page);
+		s_dto_list = s_service.board_paging_origin_reply(s_page);
 		// 게시물 원글, 답글 가져오기
-		// 원글 가져오기
-		// 답글 가져오기
 		if (s_dto_list != null && s_dto_list.size() != 0) {
 			System.out.println("ServiceController - getQuestion_public - 존재하는 게시물 있음");
 		} else {
@@ -641,6 +640,69 @@ public class e_ServiceController {
 	public void postQuestion_public(HttpServletRequest request)
 			throws Exception {
 		System.out.println("ServiceController - postQuestion_member");
+	}
+	
+	// 내가 쓴 글 보기
+	@GetMapping("/question-public-myboard")
+	public ModelAndView getQuestion_public_myboard(
+			HttpServletRequest request,
+			ModelAndView mv,
+			@RequestParam(value="page_NowBno", defaultValue="1") int page_NowBno)
+			throws Exception {
+		System.out.println("ServiceController - getQuestion_public_myboard");
+		
+		// 세션 생성
+		HttpSession session = request.getSession();
+		if(session.getAttribute("user")==null) {
+			// 로그인 안했을 때 - 비정상 접근
+			mv.setViewName("/main/main");
+		} else {
+			// 데이터 불러오기 위한 선언
+			List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
+	
+			// 첫 화면 - 회원정보 관리
+			// 게시물 갯수 불러오기
+			e_ServiceDTO s_dto = new e_ServiceDTO();
+			s_dto.setSv_type("question_public");
+			// 내가 쓴 게시물만 불러오기
+			e_MemberDTO m_dto = new e_MemberDTO();
+			m_dto = (e_MemberDTO)session.getAttribute("user");
+			s_dto.setMember_no(m_dto.getMember_no());
+			int board_AllCount = s_service.myboard_count_All(s_dto);
+			// 페이징
+			e_SvPagingViewDTO s_page = new e_SvPagingViewDTO(board_AllCount, page_NowBno);
+			s_page.setSv_type("question_public");
+			// 페이지 내 게시물 목록 불러오기
+			s_page.setMember_no(m_dto.getMember_no());
+			s_dto_list = s_service.myboard_paging_origin_reply(s_page);
+			// 게시물 원글, 답글 가져오기
+			if (s_dto_list != null && s_dto_list.size() != 0) {
+				System.out.println("ServiceController - getQuestion_public_myboard - 존재하는 게시물 있음");
+			} else {
+				System.out.println("ServiceController - getQuestion_public_myboard - 존재하는 게시물 없음");
+			}
+			mv.addObject("s_page", s_page);
+			mv.addObject("s_dto_list", s_dto_list);
+			mv.setViewName("/service/question-public-myboard");
+		}
+		return mv;
+	}
+	
+	// 여러 글 삭제 - 선택
+	@ResponseBody
+	@PostMapping("/question-public-myboard-delete")
+	public String postQuestion_public_myboard_delete(
+			@RequestBody List<String> e_bno_list)
+			throws Exception {
+		System.out.println("ServiceController - postQuestion_public_myboard_delete");
+		// 값이 제대로 안넘어 왔을 경우
+		if(e_bno_list==null || e_bno_list.size()==0) {
+			return "X";
+		} else {
+			// 글 삭제
+			s_service.board_deleteAll(e_bno_list);
+			return "O";
+		}
 	}
 	
 	// 공개 건의함 - 상세보기
@@ -776,8 +838,8 @@ public class e_ServiceController {
 	}
 	
 	// 공개 건의함 - 상세보기 - 수정/삭제/뒤로가기 이동
-	@PostMapping("/question-public-detail-button")
-	public ModelAndView postQuestion_public_detail_button(
+	@GetMapping("/question-public-detail-button")
+	public ModelAndView getQuestion_public_detail_button(
 			@RequestParam String e_btn,
 			@RequestParam int e_bno,
 			ModelAndView mv)
@@ -1065,6 +1127,7 @@ public class e_ServiceController {
 		s_dto.setDescription(multi.getParameter("description").replace("\r\n","<br>"));
 		
 		// 답글 원글 번호 불러오기
+		System.out.println(multi.getParameter("e_bno"));
 		int group_origin = Integer.valueOf(multi.getParameter("e_bno"));
 		s_dto.setGroup_origin(group_origin);
 		// 글 시퀀스 불러오기
@@ -1135,6 +1198,48 @@ public class e_ServiceController {
 		mv.addObject("s_page", s_pageviewdto);
 		mv.addObject("s_dto_list", s_dto_list);
 		mv.setViewName("/service/question-public-search");
+		return mv;
+	}
+	
+	// 검색 - question-public-myboard
+	@GetMapping("/question-public-myboard-search")
+	public ModelAndView getQuestion_public_myboard_search(
+			ModelAndView mv,
+			@RequestParam(value="page_NowBno", defaultValue="1") int page_NowBno,
+			@RequestParam(value="search_time") String search_time,
+			@RequestParam(value="search_type") String search_type,
+			@RequestParam(value="search_content") String search_content
+			)throws Exception {
+		System.out.println("ServiceController - getQuestion_public_myboard_search");
+		
+		// 검색 객체
+		e_SvSearchDTO s_searchdto = new e_SvSearchDTO();
+		s_searchdto.setSearch_time(search_time);
+		s_searchdto.setSearch_type(search_type);
+		s_searchdto.setSearch_content(search_content);
+		s_searchdto.setSv_type("question_public");
+		// 페이지 전체 갯수
+		int board_AllCount = s_service.board_search_count_All(s_searchdto);
+		// 페이징
+		e_SvPagingViewDTO s_pageviewdto = new e_SvPagingViewDTO(board_AllCount, page_NowBno);
+		s_searchdto.setBoard_NowStartBno(s_pageviewdto.getBoard_NowStartBno());
+		s_searchdto.setBoard_NowEndBno(s_pageviewdto.getBoard_NowEndBno());
+		
+		// 데이터 전달
+		// 데이터 불러오기 위한 선언
+		List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
+		// 페이지 내 게시물 목록 불러오기
+		s_dto_list = s_service.board_search_All(s_searchdto);
+		
+		if (s_dto_list != null && s_dto_list.size() != 0) {
+			System.out.println("ServiceController - getQuestion_public_myboard_search - 존재하는 게시물 있음");
+		} else {
+			System.out.println("ServiceController - getQuestion_public_myboard_search - 존재하는 게시물 없음");
+		}
+		mv.addObject("s_searchdto", s_searchdto);
+		mv.addObject("s_page", s_pageviewdto);
+		mv.addObject("s_dto_list", s_dto_list);
+		mv.setViewName("/service/question-public-myboard-search");
 		return mv;
 	}
 }

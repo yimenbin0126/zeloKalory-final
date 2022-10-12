@@ -66,17 +66,6 @@ function deleteFile(num) {
 // 글쓰기 데이터 전달
 function form(){
 
-
-	// 기본 선택값 초기화
-	var select = $('#e_con_choice option:selected').val();
-	document.querySelector('#e_choice_val').value = select;
-	
-	// 클릭하면 선택값 변화
-	document.querySelector('#e_con_choice').addEventListener('click', ()=>{
-		var select = $('#e_con_choice option:selected').val();
-		document.querySelector('#e_choice_val').value = select;
-	});
-
 	// 글쓰기 버튼 클릭
 	document.querySelector('#e_btn_write_btn').addEventListener('click', (e)=>{
 		e.preventDefault();
@@ -89,12 +78,12 @@ function form(){
 	            formData.append('file'+i, filesArr[i]);
 	        }
 	    }
+	    
+	    formData.append('e_bno', document.querySelector('#e_bno').value);
 		// 제목
 		formData.append('title', document.querySelector('#e_ti_detail_input').value);
 		// 내용
 		formData.append('description', document.querySelector('#e_cont_detail_input').value);
-		// 글쓰기 유형 선택
-		formData.append('sv_type', document.querySelector('#e_choice_val').value);
 		$.ajax({
 		    url: '/all/service/question-public-reply',
 		    type: 'POST',
@@ -103,7 +92,7 @@ function form(){
 		    dataType:'text',
 		    data: formData,
 		    success: function(result){
-		    		location.href="/all/service/question-public-reply";
+		    		location.href="/all/service/question-public";
 		    }
 		});
 	});

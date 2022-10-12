@@ -103,15 +103,12 @@
 						<!-- 상단 -->
 						<div class="e_header">
 							<div class="e_hd_top">고객센터 &gt; 공개 건의함 &gt; 글쓰기</div>
-							<div class="e_hd_top_title">글쓰기</div>
+							<div class="e_hd_top_title">답글쓰기</div>
 						</div>
 
 						<!-- 카데고리별 -->
 						<form name="e_write_form">
-							<%
-								int e_bno = (int)request.getAttribute("e_bno");
-							%>
-							<input type="hidden" name="e_bno" value="<%=e_bno%>">
+							<input type="hidden" id="e_bno" name="e_bno" value="<%=(int)request.getAttribute("e_bno")%>">
 							<div class="e_content">
 								<!-- 글쓰기 제목 -->
 								<div class="e_con_title">

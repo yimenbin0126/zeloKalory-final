@@ -25,6 +25,14 @@
 		WHERE sv_type = #{sv_type}
 	</select>
 	
+	<!-- 타입별 게시물 갯수 불러오기 (sv_type) - 내 게시물만 -->
+	<select id="myboard_count_All" resultType="int">
+		SELECT count(*)
+		FROM sv_board 
+		WHERE sv_type = #{sv_type}
+		AND member_no = #{member_no}
+	</select>
+	
 	<!-- 특정 게시물 묶음 불러오기 - 페이징 -->
 	<select id="board_paging" resultType="eunbin.DTO.e_ServiceDTO">
 		SELECT bno, sv_type, group_origin, group_order,
@@ -54,15 +62,29 @@
 		AND group_origin = #{group_origin}
 	</select>
 	
-	<!-- 게시물 원글+답글 묶음 가져오기 (1) - 원글 -->
-	<select id="board_load_origin" resultType="eunbin.DTO.e_ServiceDTO">
-		SELECT bno 
-		FROM sv_board 
-		WHERE sv_type = #{sv_type}
-		AND admin_type = 'origin'
+	<!-- 게시물 원글+답글 묶음 불러오기 - 페이징 - 내 게시물만 -->
+	<select id="myboard_paging_origin_reply" resultType="eunbin.DTO.e_ServiceDTO">
+		SELECT bno, sv_type, group_origin, group_order,
+		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+		from
+			(
+			SELECT
+			rownum r, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+			from (
+				SELECT rownum, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+				FROM sv_board
+				WHERE sv_type = #{sv_type}
+				AND member_no = #{member_no}
+				ORDER BY group_origin DESC, bno
+				)
+			)
+		WHERE r
+		BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
 	</select>
 	
-	<!-- 특정 게시물 묶음 불러오기 - 페이징 - 원글+답글 -->
+	<!-- 게시물 원글+답글 묶음 불러오기 - 페이징 -->
 	<select id="board_paging_origin_reply" resultType="eunbin.DTO.e_ServiceDTO">
 		SELECT bno, sv_type, group_origin, group_order,
 		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
@@ -76,10 +98,9 @@
 				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
 				FROM sv_board
 				WHERE sv_type = #{sv_type}
-				AND group_origin = #{group_origin}
-				ORDER BY bno desc
+				ORDER BY group_origin DESC, bno
+				)
 			)
-		)
 		WHERE r
 		BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
 	</select>

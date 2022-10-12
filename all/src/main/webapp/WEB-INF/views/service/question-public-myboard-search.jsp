@@ -5,15 +5,14 @@
 	java.util.List, java.util.ArrayList, eunbin.DTO.e_SvSearchDTO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.net.URLEncoder" %>
-<%@ page import="java.net.URLDecoder"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>고객센터</title>
 <link href="/all/resources/service/css/header.css" rel="stylesheet">
-<link href="/all/resources/service/css/question-member-search.css" rel="stylesheet">
-<script src="/all/resources/service/js/question-member.js"></script>
+<link href="/all/resources/service/css/question-public-myboard-search.css" rel="stylesheet">
+<script src="/all/resources/service/js/question-public-myboard.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
@@ -25,12 +24,11 @@
         <!-- <img src="./img/logo.png" id="j_logo"> -->
 
 		<%
-			request.setCharacterEncoding("utf-8");
-			e_MemberDTO m_dto = new e_MemberDTO();
+		e_MemberDTO m_dto = new e_MemberDTO();
 		        		
-        	// 로그인 유무
-           	if((e_MemberDTO)session.getAttribute("user") !=null){
-           		m_dto = (e_MemberDTO)session.getAttribute("user");
+		        	// 로그인 유무
+		           	if((e_MemberDTO)session.getAttribute("user") !=null){
+		           		m_dto = (e_MemberDTO)session.getAttribute("user");
 		%>
 		<ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
@@ -55,7 +53,7 @@
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
-        	} else {
+        } else {
         %>
         <ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
@@ -74,7 +72,7 @@
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
-        	}
+        }
         %>
     </div>
     <!-- 헤더 끝 -->
@@ -92,33 +90,28 @@
 						</div>
 						<!-- 자주하는 질문 -->
 						<div class="e_nav_question" onclick="location.href='/all/service/question-member'">
-							<div class="e_que_div">자주하는 질문</div>
-							<div><img src="/all/resources/service/img/category_click.png"></div>
+							자주하는 질문
 						</div>
 						<!-- 공개 건의함 -->
-						<div class="e_nav_onebyone" onclick="location.href='/all/service/question-public'">공개 건의함</div>
+						<div class="e_nav_onebyone" onclick="location.href='/all/service/question-public'">
+							<div class="e_que_div">공개 건의함</div>
+							<div><img src="/all/resources/service/img/category_click.png"></div>
+						</div>
 					</nav>
+
 
 					<!-- 오른쪽 내용 -->
 					<div class="e_right">
 						<!-- 상단 -->
-						<div class="e_hd_top">고객센터 &gt; 자주하는 질문</div>
+						<div class="e_hd_top">고객센터 &gt; 공개 건의함</div>
 						<div class="e_header">
-							<div class="e_hd_top_que">자주하는 질문</div>
+							<div class="e_hd_top_que">공개 건의함</div>
 							<div class="e_hd_top_con">
-								<span> 자주하는 질문은 <br>관리자가 관리할 수 있는 게시판입니다.
-								<br>관리자로 로그인 하면, 게시물을 작성할 수 있습니다.
+								<span> 공개건의함은 관리자, 회원 등<br>모든 회원이 로그인 한 상태라면<br>
+									건의 관련 글을 쓰고 댓글을 남길수 있는 소통 공간입니다.
 								</span>
 							</div>
-
-							<!-- 카데고리 선택 -->
-							<div class="e_hd_choice">
-								<form name="e_hd_choice_form">
-									<input type="hidden" name="e_hd_choice_LR" id="e_hd_choice_LR" value="L">
-								</form>
-								<div id="e_choice_mem">회원 정보 관리</div>
-								<div id="e_choice_guide" onclick="location.href='/all/service/question-guide'">사이트 이용 가이드</div>
-							</div>
+							
 						</div>
 
 						<!-- 게시물 불러오기 - 회원 정보 관리 -->
@@ -151,18 +144,33 @@
 									&& ((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")).size()!=0){
 										s_dto_list = (ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list");
 										for(int i=0; i<s_dto_list.size(); i++){
-												e_ServiceDTO s_dto = new e_ServiceDTO();
-												s_dto = s_dto_list.get(i);
+											e_ServiceDTO s_dto = new e_ServiceDTO();
+											s_dto = s_dto_list.get(i);
+											if (s_dto.getAdmin_type().equals("origin")) {
 								%>
+								<!-- 원글일 경우 -->
 								<ul class="e_boardlist">
-									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
-									<li><%=s_dto.getTitle()%></li>
-									<li><%=s_dto.getNickname()%></li>
+									<li value="<%=s_dto.getBno()%>"><input type="checkbox" class="check_list" name="check_list" value="<%=s_dto.getBno()%>"></li>
+									<li><%=s_dto.getBno()%></li>
+									<li class="blist_title"><%=s_dto.getTitle()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>
 									<li><%=s_dto.getLike_check()%></li>
 								</ul>
 								<%
+												} else if (s_dto.getAdmin_type().equals("reply")) {
+								%>
+								<!-- 답글일 경우 -->
+								<ul class="e_boardlist">
+									<li value="<%=s_dto.getBno()%>"><input type="checkbox" class="check_list" name="check_list" value="<%=s_dto.getBno()%>"></li>
+									<li><%=s_dto.getBno()%></li>
+									<li class="blist_title"><b>[<%=s_dto.getGroup_origin()%> 번의 답글]</b> <%=s_dto.getTitle()%></li>
+									<li><%=s_dto.getCreate_time()%></li>
+									<li><%=s_dto.getView_no()%></li>
+									<li><%=s_dto.getLike_check()%></li>
+								</ul>
+								<%
+												}
 										}
 									} else {
 								%>
@@ -185,16 +193,25 @@
 										e_ServiceService s_service = new e_ServiceServiceimpl();
 										// 로그인 여부
 										if((e_MemberDTO)session.getAttribute("user") !=null){
-											// 관리자 여부
-											String id = m_dto.getId();
-											if(s_service.board_admin_type(id).equals("Y")){
 								%>
-									<div>
-										<input type="button"  value="글쓰기" class="e_hd_top_write"
-										onclick="location.href='/all/service/question-write'">
+									<div class="checkbox_class">
+										<input type="checkbox">
+										<span>전체 선택</span>
+									</div>
+									<div class="btn_list_class">
+										<div>
+											<form name="e_btn_delete_form" id="e_btn_delete_form">
+												<input type="hidden" name="e_btn" value="delete_list">
+												<input type="button"  value="선택글 삭제" class="e_hd_top_del">								
+											</form>
+										</div>
+										<div>
+											<input type="button"  value="글쓰기" class="e_hd_top_write"
+											onclick="location.href='/all/service/question-public-write'">
+										</div>
 									</div>
 								<%
-										}
+	
 									}
 								%>
 						
@@ -206,7 +223,7 @@
 								// 클릭 가능 여부
 								if (s_page.isPage_prev()){
 							%>
-							<div onclick="location.href='/all/service/question-member-search?page_NowBno=<%=s_page.getPage_StartBno()-5%>
+							<div onclick="location.href='/all/service/question-public-myboard-search?page_NowBno=<%=s_page.getPage_StartBno()-5%>
 							&search_time=<%=s_searchdto.getSearch_time()%>&search_type=<%=s_searchdto.getSearch_type()%>
 							&search_content=<%=URLEncoder.encode(s_searchdto.getSearch_content(), "UTF-8")%>'"
 							 class="e_paging_btnleft" id="e_paging_btnleft_yes">&lt;</div>
@@ -233,7 +250,7 @@
 							<%
 									} else {
 							%>
-								<a href="/all/service/question-member-search
+								<a href="/all/service/question-public-myboard-search
 								?page_NowBno=<%=i%>
 								&search_time=<%=s_searchdto.getSearch_time()%>
 								&search_type=<%=s_searchdto.getSearch_type()%>
@@ -248,7 +265,7 @@
 								// 클릭 가능 여부
 								if (s_page.isPage_next()){
 							%>
-							<div onclick="location.href='/all/service/question-member-search?page_NowBno=<%=s_page.getPage_EndBno()+1%>
+							<div onclick="location.href='/all/service/question-public-myboard-search?page_NowBno=<%=s_page.getPage_EndBno()+1%>
 							&search_time=<%=s_searchdto.getSearch_time()%>&search_type=<%=s_searchdto.getSearch_type()%>
 							&search_content=<%=URLEncoder.encode(s_searchdto.getSearch_content(), "UTF-8")%>'"
 							class="e_paging_btnright" id="e_paging_btnright_yes">&gt;</div>

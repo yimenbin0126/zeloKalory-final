@@ -118,6 +118,10 @@
 }
 
 /* 회원정보 관리 */
+.e_boardlist li {
+	font-size: 14px;
+}
+
 .e_content div > ul {
 	display: flex;
 	justify-content : space-between;
@@ -145,7 +149,10 @@
 
 .e_content ul li:nth-child(2) {
 	padding: 10px 5px 10px 10px;
-	width: 250px;	
+	width: 250px;
+	overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;	
 }
 
 .e_content ul li:nth-child(3) {

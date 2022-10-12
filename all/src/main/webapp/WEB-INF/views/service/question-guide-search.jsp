@@ -148,14 +148,12 @@
 									if((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")!=null
 									&& ((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")).size()!=0){
 										s_dto_list = (ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list");
-										int j = s_searchdto.getBoard_NowStartBno();
 										for(int i=0; i<s_dto_list.size(); i++){
-											if (j <= s_searchdto.getBoard_NowEndBno()){
 												e_ServiceDTO s_dto = new e_ServiceDTO();
 												s_dto = s_dto_list.get(i);
 								%>
 								<ul class="e_boardlist">
-									<li value="<%=s_dto.getBno()%>"><%=j%></li>
+									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
 									<li><%=s_dto.getTitle()%></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
@@ -163,8 +161,6 @@
 									<li><%=s_dto.getLike_check()%></li>
 								</ul>
 								<%
-												j++;
-											}
 										}
 									} else {
 								%>

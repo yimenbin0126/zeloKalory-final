@@ -121,6 +121,16 @@
 						%>
 						<!-- 내용 -->
 						<div class="e_hd_top_con">
+							<!-- 답글인 경우 -->
+							<%
+								if(s_dto.getAdmin_type().equals("reply")){
+							%>
+							<div class="origin_board">
+								<a href="/all/service/question-public-detail?bno=<%=s_dto.getGroup_origin()%>">원본 게시물로 이동</a>
+							</div>
+							<%
+								}
+							%>
 							<div class="e_con_title"><%=s_dto.getTitle()%></div>
 							<div class="e_con_explain">
 								<div class="e_explain_member">
@@ -135,75 +145,105 @@
 								<div class="e_blank"></div>
 								<!-- 좋아요 / 싫어요 -->
 								<!-- 좋아요 -->
-								<div class="e_content_like">
-									<input type="hidden" name="e_bno" id="e_bno_value" value="<%=s_dto.getBno()%>">
-									<%
-										// 초기화 : 좋아요 눌러져 있는지 확인
-										if (request.getAttribute("like_click")!=null
-										&& request.getAttribute("like_click").equals("Y")
-										&& (e_MemberDTO)session.getAttribute("user") !=null) {
-									%>
-										<!-- 좋아요 눌러져 있음 -->
-										<input type="hidden" id="heart_click" value="Y">
-										<p id="e_like_heart_n" class="e_like_heart" style="display:none;">♡</p>
-										<p id="e_like_heart_y" class="e_like_heart">♥</p>
-									<%
-										} else if (request.getAttribute("like_click")!=null
-										&& request.getAttribute("like_click").equals("N")
-										&& (e_MemberDTO)session.getAttribute("user") !=null) {
-									%>
-										<!-- 좋아요 눌러져 있지 않음 -->
-										<input type="hidden" id="heart_click" value="N">
-										<p id="e_like_heart_n" class="e_like_heart">♡</p>
-										<p id="e_like_heart_y" class="e_like_heart" style="display:none;">♥</p>
-									<%
-										} else {
-									%>
-										<!-- 로그인 안 되어있음 (누를 수 없게 함) -->
-										<p class="e_like_heart">♡</p>
-										<!-- null 값 방지 -->
-										<input type="hidden" id="heart_click" value="none">
-										<p id="e_like_heart_n" class="e_like_heart" style="display:none;">♡</p>
-										<p id="e_like_heart_y" class="e_like_heart" style="display:none;">♥</p>
-									<%
-										}
-									%>
-										<p class="e_like_num"><%=s_dto.getLike_check()%></p>
-								</div>
-								<!-- 싫어요 -->
-								<div class="e_content_dislike">
-									<%
-										// 초기화 : 싫어요 눌러져 있는지 확인
-										if (request.getAttribute("dislike_click")!=null
-										&& request.getAttribute("dislike_click").equals("Y")
-										&& (e_MemberDTO)session.getAttribute("user") !=null) {
-									%>
-										<!-- 싫어요 눌러져 있음 -->
-										<input type="hidden" id="heart_click" value="Y">
-										<p id="e_dislike_heart_n" class="e_dislike_heart" style="display:none;">♡</p>
-										<p id="e_dislike_heart_y" class="e_dislike_heart">♥</p>
-									<%
-										} else if (request.getAttribute("dislike_click")!=null
-										&& request.getAttribute("dislike_click").equals("N")
-										&& (e_MemberDTO)session.getAttribute("user") !=null) {
-									%>
-										<!-- 싫어요 눌러져 있지 않음 -->
-										<input type="hidden" id="heart_click" value="N">
-										<p id="e_dislike_heart_n" class="e_dislike_heart">♡</p>
-										<p id="e_dislike_heart_y" class="e_dislike_heart" style="display:none;">♥</p>
-									<%
-										} else {
-									%>
-										<!-- 로그인 안 되어있음 (누를 수 없게 함) -->
-										<p class="e_like_heart">♡</p>
-										<!-- null 값 방지 -->
-										<input type="hidden" id="heart_click" value="none">
-										<p id="e_dislike_heart_n" class="e_dislike_heart" style="display:none;">♡</p>
-										<p id="e_dislike_heart_y" class="e_dislike_heart" style="display:none;">♥</p>
-									<%
-										}
-									%>
-										<p class="e_dislike_num"><%=s_dto.getDislike_check()%></p>
+								<div class="e_content_like_dislike">
+									<div class="e_content_like">
+										<input type="hidden" name="e_bno" id="e_bno_value" value="<%=s_dto.getBno()%>">
+										<%
+											// 초기화 : 좋아요 눌러져 있는지 확인
+											if (request.getAttribute("like_click")!=null
+											&& request.getAttribute("like_click").equals("Y")
+											&& (e_MemberDTO)session.getAttribute("user") !=null) {
+										%>
+											<!-- 좋아요 눌러져 있음 -->
+											<input type="hidden" id="heart_click" value="Y">
+											<p id="e_like_heart_n" class="e_like_heart" style="display:none;">
+												<img src="/all/resources/service/img/like_blank.png" style="width:35px; height:35px;">
+											</p>
+											<p id="e_like_heart_y" class="e_like_heart">
+												<img src="/all/resources/service/img/like_full.png" style="width:35px; height:35px;">
+											</p>
+										<%
+											} else if (request.getAttribute("like_click")!=null
+											&& request.getAttribute("like_click").equals("N")
+											&& (e_MemberDTO)session.getAttribute("user") !=null) {
+										%>
+											<!-- 좋아요 눌러져 있지 않음 -->
+											<input type="hidden" id="heart_click" value="N">
+											<p id="e_like_heart_n" class="e_like_heart">
+												<img src="/all/resources/service/img/like_blank.png" style="width:35px; height:35px;">
+											</p>
+											<p id="e_like_heart_y" class="e_like_heart" style="display:none;">
+												<img src="/all/resources/service/img/like_full.png" style="width:35px; height:35px;">
+											</p>
+										<%
+											} else {
+										%>
+											<!-- 로그인 안 되어있음 (누를 수 없게 함) -->
+											<p class="e_like_heart">
+												<img src="/all/resources/service/img/like_blank.png" style="width:35px; height:35px;">
+											</p>
+											<!-- null 값 방지 -->
+											<input type="hidden" id="heart_click" value="none">
+											<p id="e_like_heart_n" class="e_like_heart" style="display:none;">
+												<img src="/all/resources/service/img/like_blank.png" style="width:35px; height:35px;">
+											</p>
+											<p id="e_like_heart_y" class="e_like_heart" style="display:none;">
+												<img src="/all/resources/service/img/like_full.png" style="width:35px; height:35px;">
+											</p>
+										<%
+											}
+										%>
+											<p class="e_like_num"><%=s_dto.getLike_check()%></p>
+									</div>
+									<!-- 싫어요 -->
+									<div class="e_content_dislike">
+										<%
+											// 초기화 : 싫어요 눌러져 있는지 확인
+											if (request.getAttribute("dislike_click")!=null
+											&& request.getAttribute("dislike_click").equals("Y")
+											&& (e_MemberDTO)session.getAttribute("user") !=null) {
+										%>
+											<!-- 싫어요 눌러져 있음 -->
+											<input type="hidden" id="heart_click" value="Y">
+											<p id="e_dislike_heart_n" class="e_dislike_heart" style="display:none;">
+												<img src="/all/resources/service/img/dislike_blank.png" style="width:35px; height:35px;">
+											</p>
+											<p id="e_dislike_heart_y" class="e_dislike_heart">
+												<img src="/all/resources/service/img/dislike_full.png" style="width:35px; height:35px;">
+											</p>
+										<%
+											} else if (request.getAttribute("dislike_click")!=null
+											&& request.getAttribute("dislike_click").equals("N")
+											&& (e_MemberDTO)session.getAttribute("user") !=null) {
+										%>
+											<!-- 싫어요 눌러져 있지 않음 -->
+											<input type="hidden" id="heart_click" value="N">
+											<p id="e_dislike_heart_n" class="e_dislike_heart">
+												<img src="/all/resources/service/img/dislike_blank.png" style="width:35px; height:35px;">
+											</p>
+											<p id="e_dislike_heart_y" class="e_dislike_heart" style="display:none;">
+												<img src="/all/resources/service/img/dislike_full.png" style="width:35px; height:35px;">
+											</p>
+										<%
+											} else {
+										%>
+											<!-- 로그인 안 되어있음 (누를 수 없게 함) -->
+											<p class="e_like_heart">
+												<img src="/all/resources/service/img/dislike_blank.png" style="width:35px; height:35px;">
+											</p>
+											<!-- null 값 방지 -->
+											<input type="hidden" id="heart_click" value="none">
+											<p id="e_dislike_heart_n" class="e_dislike_heart" style="display:none;">
+												<img src="/all/resources/service/img/dislike_blank.png" style="width:35px; height:35px;">
+											</p>
+											<p id="e_dislike_heart_y" class="e_dislike_heart" style="display:none;">
+												<img src="/all/resources/service/img/dislike_full.png" style="width:35px; height:35px;">
+											</p>
+										<%
+											}
+										%>
+											<p class="e_dislike_num"><%=s_dto.getDislike_check()%></p>
+									</div>
 								</div>
 								
 							</div>
@@ -233,10 +273,8 @@
 						<%
 							// 게시판 관련 메서드 불러오기
 							e_ServiceService s_service = new e_ServiceServiceimpl();
-							// 글 작성자와 동일한지
-							if ((e_MemberDTO)session.getAttribute("user") !=null
-							&& s_dto.getNickname().equals(m_dto.getNickname())){
-							// 게시물 수정, 삭제 버튼 보이기 여부
+							if ((e_MemberDTO)session.getAttribute("user") !=null){
+								if(s_dto.getAdmin_type().equals("origin")){
 						%>
 							<!-- 답글 쓰기, 게시물 수정, 삭제 버튼 -->
 							<div class="e_hidden" id="e_hidden_reply">
@@ -247,6 +285,19 @@
 									<input type="submit" id="e_btn_reply" class="e_btn_css" value="답글 쓰기">
 								</form>
 							</div>
+						<%
+								} else {
+						%>
+							<div class="e_hidden" id="e_hidden_reply" style="display:none;"></div>
+						<%
+								}
+						%>
+						<%
+							// 글 작성자와 동일한지
+							// 게시물 수정, 삭제 버튼 보이기 여부
+							if(s_dto.getNickname().equals(m_dto.getNickname())){
+						%>
+							<div class="e_hidden" id="e_hidden_reply" style="display:none;"></div>
 							<div class="e_hidden" id="e_hidden_fix">
 								<form name="e_btn_fix_form">
 									<!-- 게시판 데이터 보내기 -->
@@ -263,6 +314,13 @@
 								</form>
 							</div>
 						<%
+								} else {
+							
+						%>
+							<div class="e_hidden" id="e_hidden_fix" style="display:none;"></div>
+							<div class="e_hidden" id="e_hidden_del" style="display:none;"></div>
+						<%
+								}
 							}
 						%>
 							

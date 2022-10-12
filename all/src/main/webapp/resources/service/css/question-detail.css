@@ -97,7 +97,7 @@
 	height: 100px;
 	border-radius: 100px;
 	text-align: center;
-	color: red;
+	color: #E21E2E;
 	margin: 0 auto;
 }
 
@@ -114,7 +114,8 @@
 
 .e_like_num {
 	line-height: 0px;
-	font-size: 17px;
+	font-size: 15px;
+    font-weight: bold;
 }
 
 /* 첨부파일 */

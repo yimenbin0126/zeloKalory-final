@@ -137,16 +137,14 @@
 									if((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")!=null
 									&& ((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")).size()!=0){
 										s_dto_list = (ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list");
-										int j = s_page.getBoard_NowStartBno();
 										for(int i=0; i<s_dto_list.size(); i++){
-											if (j <= s_page.getBoard_NowEndBno()){
 												e_ServiceDTO s_dto = new e_ServiceDTO();
 												s_dto = s_dto_list.get(i);
-												if (s_dto.getGroup_order()==0) {
+												if (s_dto.getAdmin_type().equals("origin")) {
 								%>
 								<!-- 원글일 경우 -->
 								<ul class="e_boardlist">
-									<li value="<%=s_dto.getBno()%>"><%=j%></li>
+									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
 									<li><%=s_dto.getTitle()%></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
@@ -154,12 +152,12 @@
 									<li><%=s_dto.getLike_check()%></li>
 								</ul>
 								<%
-												} else {
+												} else if (s_dto.getAdmin_type().equals("reply")) {
 								%>
 								<!-- 답글일 경우 -->
 								<ul class="e_boardlist">
-									<li value="<%=s_dto.getBno()%>"><%=j%></li>
-									<li>└ <%=s_dto.getTitle()%></li>
+									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
+									<li><b>└[답글]</b> <%=s_dto.getTitle()%></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>
@@ -167,8 +165,6 @@
 								</ul>
 								<%
 												}
-												j++;
-											}
 										}
 									} else {
 								%>
@@ -193,8 +189,10 @@
 										if((e_MemberDTO)session.getAttribute("user") !=null){
 								%>
 									<div>
-										<input type="button"  value="내가 쓴 글 보기" class="e_hd_top_write_mylist"
-										onclick="location.href='/all/service/question-public-write-mylist'">								
+										<form name="myboard_form">
+											<input type="button"  value="내가 쓴 글 보기" class="e_hd_top_write_myboard"
+											onclick="location.href='/all/service/question-public-myboard'">								
+										</form>
 									</div>
 									<div>
 										<input type="button"  value="글쓰기" class="e_hd_top_write"

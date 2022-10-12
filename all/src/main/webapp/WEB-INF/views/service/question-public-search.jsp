@@ -143,24 +143,34 @@
 									if((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")!=null
 									&& ((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")).size()!=0){
 										s_dto_list = (ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list");
-										int j = s_searchdto.getBoard_NowStartBno();
 										for(int i=0; i<s_dto_list.size(); i++){
-											if (j <= s_searchdto.getBoard_NowEndBno()){
 												e_ServiceDTO s_dto = new e_ServiceDTO();
 												s_dto = s_dto_list.get(i);
+												if (s_dto.getAdmin_type().equals("origin")) {
 								%>
+								<!-- 원글일 경우 -->
 								<ul class="e_boardlist">
-									<li value="<%=s_dto.getBno()%>"><%=j%></li>
+									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
 									<li><%=s_dto.getTitle()%></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>
 									<li><%=s_dto.getLike_check()%></li>
 								</ul>
-								<!-- 답글이 있을 경우 -->
 								<%
-												j++;
-											}
+												} else if (s_dto.getAdmin_type().equals("reply")) {
+								%>
+								<!-- 답글일 경우 -->
+								<ul class="e_boardlist">
+									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
+									<li><b>└[답글]</b> <%=s_dto.getTitle()%></li>
+									<li><%=s_dto.getNickname()%></li>
+									<li><%=s_dto.getCreate_time()%></li>
+									<li><%=s_dto.getView_no()%></li>
+									<li><%=s_dto.getLike_check()%></li>
+								</ul>
+								<%
+												}
 										}
 									} else {
 								%>
@@ -186,7 +196,7 @@
 								%>
 									<div>
 										<input type="button"  value="내가 쓴 글 보기" class="e_hd_top_write_mylist"
-										onclick="location.href='/all/service/question-public-write-mylist'">								
+										onclick="location.href='/all/service/question-public-myboard'">								
 									</div>
 									<div>
 										<input type="button"  value="글쓰기" class="e_hd_top_write"
@@ -205,7 +215,7 @@
 								// 클릭 가능 여부
 								if (s_page.isPage_prev()){
 							%>
-							<div onclick="location.href='/all/service/question-guide-search?page_NowBno=<%=s_page.getPage_StartBno()-5%>
+							<div onclick="location.href='/all/service/question-public-search?page_NowBno=<%=s_page.getPage_StartBno()-5%>
 							&search_time=<%=s_searchdto.getSearch_time()%>&search_type=<%=s_searchdto.getSearch_type()%>
 							&search_content=<%=URLEncoder.encode(s_searchdto.getSearch_content(), "UTF-8")%>'"
 							 class="e_paging_btnleft" id="e_paging_btnleft_yes">&lt;</div>
@@ -232,7 +242,7 @@
 							<%
 									} else {
 							%>
-								<a href="/all/service/question-guide-search
+								<a href="/all/service/question-public-search
 								?page_NowBno=<%=i%>
 								&search_time=<%=s_searchdto.getSearch_time()%>
 								&search_type=<%=s_searchdto.getSearch_type()%>
@@ -247,7 +257,7 @@
 								// 클릭 가능 여부
 								if (s_page.isPage_next()){
 							%>
-							<div onclick="location.href='/all/service/question-guide-search?page_NowBno=<%=s_page.getPage_EndBno()+1%>
+							<div onclick="location.href='/all/service/question-public-search?page_NowBno=<%=s_page.getPage_EndBno()+1%>
 							&search_time=<%=s_searchdto.getSearch_time()%>&search_type=<%=s_searchdto.getSearch_type()%>
 							&search_content=<%=URLEncoder.encode(s_searchdto.getSearch_content(), "UTF-8")%>'"
 							class="e_paging_btnright" id="e_paging_btnright_yes">&gt;</div>
