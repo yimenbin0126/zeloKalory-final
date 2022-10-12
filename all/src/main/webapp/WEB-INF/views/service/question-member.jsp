@@ -147,7 +147,7 @@
 								%>
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
-									<li><%=s_dto.getTitle()%></li>
+									<li class="blist_title"><%=s_dto.getTitle()%></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>

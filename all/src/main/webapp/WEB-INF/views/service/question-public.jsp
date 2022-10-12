@@ -145,7 +145,7 @@
 								<!-- 원글일 경우 -->
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
-									<li><%=s_dto.getTitle()%></li>
+									<li><span class="blist_title"><%=s_dto.getTitle()%></span></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>
@@ -157,7 +157,7 @@
 								<!-- 답글일 경우 -->
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
-									<li><b>└[답글]</b> <%=s_dto.getTitle()%></li>
+									<li><b>└[답글]</b> <span class="blist_title"><%=s_dto.getTitle()%></span></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>

@@ -5,9 +5,11 @@ window.onload = function(){
 
 // 뷰 데이터 전달
 function form(){
+	console.log("드러");
 	// 좋아요 버튼 누를시
 	// 좋아요 X -> 좋아요 누르기
 	document.querySelector('#e_like_heart_n img').addEventListener('click', (event)=>{
+	console.log("드러22");
 		$.ajax({
 	        url: "/all/service/question-public-detail",
 	        type:"POST",
@@ -29,6 +31,7 @@ function form(){
 	
 	// 좋아요 O -> 좋아요 누르기
 	document.querySelector('#e_like_heart_y img').addEventListener('click', (event)=>{
+	console.log("드러23");
 		$.ajax({
 	        url: "/all/service/question-public-detail",
 	        type:"POST",
@@ -91,7 +94,6 @@ function form(){
 }
 
 function btn(){	
-	console.log("드러옴");
 	// 버튼 클릭
 	// 글 답글 쓰기 버튼
 	document.querySelector('#e_btn_reply').addEventListener('click', (event)=>{

@@ -9,9 +9,9 @@ function form(){
 	document.querySelector('#e_bno_val').value = "none";
 	
 	// 게시물을 각각 선택시 글상세로 넘어감
-	const e_boardlist = document.querySelectorAll(".e_boardlist");
-	for (const e_board of e_boardlist) {
-	  e_board.addEventListener('click', function(e) {
+	const e_blist_title = document.querySelectorAll(".blist_title");
+	for (const e_title of e_blist_title) {
+	  e_title.addEventListener('click', function(e) {
 	    var val = e.target.parentElement.firstElementChild.value;
 		document.querySelector('#e_bno_val').value = val;
 		sub();

@@ -126,7 +126,7 @@
 								if(s_dto.getAdmin_type().equals("reply")){
 							%>
 							<div class="origin_board">
-								<a href="/all/service/question-public-detail?bno=<%=s_dto.getGroup_origin()%>">원본 게시물로 이동</a>
+								<a href="/all/service/question-public-detail?bno=<%=s_dto.getGroup_origin()%>">[원본 게시물로 이동]</a>
 							</div>
 							<%
 								}

@@ -636,6 +636,7 @@ public class e_ServiceController {
 		return mv;
 	}
 	
+	// 좋아요순, 조회수순
 	@PostMapping("/question-public")
 	public void postQuestion_public(HttpServletRequest request)
 			throws Exception {

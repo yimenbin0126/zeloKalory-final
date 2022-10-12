@@ -28,7 +28,7 @@ function file() {
     // 첨부파일 추가
     // 현재 선택된 파일 갯수, 첨부 가능한 파일 갯수 중 최솟값 (추가 가능한 갯수까지 한정으로 추가) 
 	// 다중 선택시 파일 개별 선택
-   for (const file of document.querySelector('#e_file_detail_input').files) {
+   	for (const file of document.querySelector('#e_file_detail_input').files) {
         file.is_delete = false;
         filesArr.push(file);
         // 파일 내용 읽기
@@ -66,7 +66,6 @@ function deleteFile(num) {
 // 글쓰기 데이터 전달
 function form(){
 
-
 	// 기본 선택값 초기화
 	var select = $('#e_con_choice option:selected').val();
 	document.querySelector('#e_choice_val').value = select;
@@ -89,6 +88,14 @@ function form(){
 	            formData.append('file'+i, filesArr[i]);
 	        }
 	    }
+	    
+	    // 빈값 체크
+		if(!document.querySelector('#e_ti_detail_input').value){
+			document.querySelector('#e_ti_detail_input').value = " ";
+		} 
+		if(!document.querySelector('#e_cont_detail_input').value){
+			document.querySelector('#e_cont_detail_input').value = " ";
+		} 
 		// 제목
 		formData.append('title', document.querySelector('#e_ti_detail_input').value);
 		// 내용
@@ -103,7 +110,18 @@ function form(){
 		    dataType:'text',
 		    data: formData,
 		    success: function(result){
+		    	// 데이터 null 값 없이 잘 전달됨
+		    	if(result=="title_null"){
+		    		alert('제목을 입력해 주세요.');
+		    	} else if(result=="title_full") {
+		    		alert('제목은 최대 50자 이하로 입력해주세요.');
+		    	} else if(result=="description_null") {
+		    		alert('내용을 입력해 주세요.');
+		    	} else if(result=="description_full") {
+		    		alert('내용은 최대 1000자 이하로 입력해주세요.');
+		    	} else {
 		    		location.href="/all/service/question-member";
+		    	}
 		    }
 		});
 	});
