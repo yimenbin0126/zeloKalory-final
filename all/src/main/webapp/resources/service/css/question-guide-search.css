@@ -38,6 +38,7 @@
 }
 
 .e_hd_top {
+	font-size: 13px;
 	padding: 25px 30px 30px 0px;
 	text-align: right;
 }
@@ -147,12 +148,21 @@
 	width: 50px;
 }
 
-.e_content ul li:nth-child(2) {
+.e_content ul:first-child li:nth-child(2) {
 	padding: 10px 5px 10px 10px;
-	width: 250px;
+	width: 250px;	
 	overflow:hidden;
     text-overflow:ellipsis;
-    white-space:nowrap;		
+    white-space:nowrap;	
+}
+
+.e_content ul:not(:first-child) li:nth-child(2) {
+	text-align: left;
+	padding: 10px 5px 10px 10px;
+	width: 250px;	
+	overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;	
 }
 
 .e_content ul li:nth-child(3) {

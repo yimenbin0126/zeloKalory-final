@@ -38,6 +38,7 @@
 }
 
 .e_hd_top {
+	font-size: 13px;
 	padding: 25px 30px 30px 0px;
 	text-align: right;
 }
@@ -134,6 +135,15 @@
 /* 카데고리별 */
 .e_content {
 	margin: 0px 60px 0px 50px;
+}
+
+/* 나열 유형 선택 */
+#e_con_choice {
+	font-size: 13px;
+	border: 1px solid lightgray;
+	outline: none;
+	padding: 10px 5px 10px 10px;
+	margin: 10px 0px 15px 0px;
 }
 
 /* 회원정보 관리 */

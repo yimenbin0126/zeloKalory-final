@@ -28,6 +28,7 @@
 }
 
 .e_ct_header {
+	font-size: 13px;
 	padding: 25px 30px 30px 0px;
 	text-align: right;
 }
@@ -39,7 +40,6 @@
 
 .e_ct_top h4 {
 	font-size: 30px;
-	padding-bottom: 15px;
 }
 
 /* 설명 */
@@ -52,18 +52,28 @@
 }
 
 .e_question, .e_onebyone {
-	margin: 30px 0px 0px 50px;
+	margin: 30px 50px 0px 50px;
 	padding-bottom: 30px;
 	border-bottom: 1px solid gray;
 }
 
 .e_que_title, .e_one_title {
-	font-size: 20px;
-	background-color: lightgray;
-	width: 200px;
-	height: 120px;
+	font-size: 19px;
+	font-weight: bold;
+	border-radius: 10px;
+	color: white;
+	background-color: gray;
+	width: 180px;
+	height: 100px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	margin-right: 20px;
+}
+
+.e_que_content, .e_one_content {
+	font-weight: bold;
+	font-size: 13px;
+	display: flex;
+	align-items: center;
 }

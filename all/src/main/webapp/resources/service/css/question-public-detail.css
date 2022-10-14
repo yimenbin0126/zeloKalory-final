@@ -37,6 +37,7 @@
 }
 
 .e_hd_top {
+	font-size: 13px;
 	padding: 25px 30px 30px 0px;
 	text-align: right;
 }
@@ -166,6 +167,165 @@
 	padding-top: 10px;
 }
 
+/* 댓글 */
+/* 댓글 개수 */
+.e_comment {
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
+.e_comment .com_num {
+	margin: 40px 0px 30px 10px;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.com_num .c_n_color {
+	color: red;
+	margin-left: 4px;
+	margin-right: 1px;
+}
+
+/* 댓글 리스트 */
+.com_list {
+	border-top: 1px solid gray;
+	border-bottom: 1px solid gray;
+}
+
+/* 댓글 : 기본 */
+/* 전체 */
+.c_l_comment, .c_l_reply {
+	padding: 20px;
+	background-color: rgb(245,245,245);
+}
+
+.c_l_reply .reply_blank {
+	width: 100px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.c_l_reply {
+	display: flex;
+	border-top: 1px solid lightgray;
+	background-color: rgb(230,230,230);
+}
+
+/* 프로필 이미지 */
+.com_profile img, .reply_profile img {
+	width: 60px;
+	height: 60px;
+	border-radius: 100px;
+	padding-right: 30px;
+}
+
+/* 닉네임 */
+.com_nick_time, .reply_nick_time {
+	display: flex;
+	align-items: center;
+}
+
+.com_nickname, .reply_nickname {
+	font-weight: bold;
+}
+
+.com_nickname .nickname_writer,
+.reply_nickname .nickname_writer {
+	font-size: 11px;
+	padding: 5px 7px 5px 7px;
+	border-radius: 3px;
+	color: white;
+	background-color: gray;
+}
+
+/* 작성 시간 */
+.com_createtime, .reply_createtime {
+	font-size: 13px;
+	margin-left: 15px;
+}
+
+/* 댓글 내용 */
+.c_l_comment, .reply_content {
+	display: flex;
+}
+
+.com_nick_time {
+	display:flex;
+}
+
+.com_pro_next .com_content,
+.reply_content {
+	padding-right: 10px;
+	padding-top: 10px;
+	font-size: 13px;
+}
+
+/* 댓글 버튼 */
+.com_btn, .reply_btn {
+	color: gray;
+	padding-top: 15px;
+	font-size: 13px;
+	display:flex;
+}
+
+.com_btn div:not(:last-child),
+.reply_btn div:not(:last-child) {
+	margin-right: 4px;
+}
+
+/* 답글 */
+/* 답글 새로 작성 */
+.c_l_reply_new {
+	padding: 20px 40px 20px 40px;
+	display: flex;
+	border-top: 1px solid lightgray;
+	background-color: rgb(230,230,230);
+}
+
+.r_new_content {
+	display: flex;
+}
+
+.r_new_content textarea,
+.c_i_textarea textarea {
+	margin-left: 15px;
+	margin-right: 5px;
+	width: 550px;
+	height: 84px;
+}
+
+textarea {
+	padding: 10px;
+	resize: none;
+}
+
+.c_i_new_btn button, .c_i_btn button {
+	font-size: 15px;
+	color: white;
+	background-color: gray;
+	border-radius: 2px;
+	border: none;
+	width: 100px;
+	height: 105px;
+}
+
+/* 댓글 입력창 */
+.com_input_title {
+	margin: 40px 0px 30px 10px;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.com_input {
+	display: flex;
+	border-top: 1px solid lightgray;
+	border-bottom: 1px solid lightgray;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	padding: 20px 40px 20px 40px;
+	background-color: rgb(230,230,230);
+}
+
 /* 글 버튼 */
 .e_button {
 	display: flex;
@@ -186,7 +346,7 @@
 
 #e_btn_reply {
 	color: white;
-	background-color: gray;
+	background-color: lightgray;
 }
 
 #e_btn_delete, #e_btn_fix {

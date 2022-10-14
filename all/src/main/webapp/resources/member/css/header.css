@@ -50,6 +50,7 @@ body{
 
 /*캘린더~운동 묶음*/
 #j_list {
+	cursor: pointer;
     font-size: 15px;
     margin-top: 30px;
     padding: 0px;
@@ -61,14 +62,11 @@ body{
     vertical-align:top;
 }
 
-#j_list li {
-    float: left;
-}
-
 .j_menu{
     padding: 5px 25px;
     margin: 5px 25px; 
     transition: opacity 0.4s ease-in-out;
+    float: left; 
 }
 
 .j_menu:hover{
@@ -76,19 +74,17 @@ body{
 }
 
 
+
 #j_wrap {
     text-align: center;
-	display:flex;
-	justify-content: space-around;
-    padding-left: 0px;
+    height: 1450px;
 }
 
+
 #j_box{
-    display: flex;
     width: 1100px;
     background-color: rgb(228, 234, 253);
     display: inline-block;
     margin-bottom: 30px;
     margin-top: 20px;
-    padding-left: 0px;
 }

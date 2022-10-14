@@ -1,7 +1,7 @@
 body {
     margin: 0px;
     padding: 0px;
-    background-image: url('../img/sports.jpeg');
+    background-image: url('./img/sports.jpeg') ;
     background-repeat: no-repeat;
     background-size:cover;
     background-position: -230px; 
@@ -23,6 +23,7 @@ body {
 
 /*캘린더~운동 묶음*/
 #j_list {
+	cursor: pointer;
     font-size: 15px;
     margin: 0px;
     padding: 0px;
