@@ -1,10 +1,10 @@
-package eunbin.DAO;
+package com.zerocalorie.member.dao;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import eunbin.DTO.e_MemberDTO;
+import com.zerocalorie.member.dto.e_MemberDTO;
 
 @Repository
 public class e_MemberDAOimpl implements e_MemberDAO {

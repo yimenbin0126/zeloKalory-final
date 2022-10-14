@@ -25,7 +25,7 @@ function form(){
 	const e_blist_title = document.querySelectorAll(".blist_title");
 	for (const e_title of e_blist_title) {
 	  e_title.addEventListener('click', function(e) {
-	    var val = e.target.parentElement.firstElementChild.value;
+	    var val = e.target.parentElement.parentElement.firstElementChild.value;
 		document.querySelector('#e_bno_val').value = val;
 		sub();
 	  })
@@ -54,34 +54,34 @@ function del(){
 	    	$("input:checkbox[name=check_list]:checked").each(function() {
             	array_del.push($(this).val());
 			});
+			
+			var con_del = confirm('정말 글을 삭제하시겠습니까?');
+			if (con_del == true) {
+					// 글쓰기 유형 선택
+				$.ajax({
+				    url: '/all/service/question-public-myboard-delete',
+				    type: 'POST',
+				    dataType:'text',
+				    contentType: 'application/json',
+				    data: JSON.stringify(array_del),
+				    success: function(result){
+				    	console.log(result);
+				    	if (result=="X"){
+				    		event.preventDefault();
+	        				alert('삭제할 게시물을 선택해 주세요.');
+				    	} else {
+					    	location.href="/all/service/question-public-myboard";
+				    	}
+				    }
+				});
+			} else {
+				event.preventDefault();
+			}
         } else {
         	// 없으면 담으라고 명령하기
         	event.preventDefault();
         	alert('삭제할 게시물을 선택해 주세요.');
         }
-        console.log(array_del);
-		var con_del = confirm('정말 글을 삭제하시겠습니까?');
-		if (con_del == true) {
-				// 글쓰기 유형 선택
-			$.ajax({
-			    url: '/all/service/question-public-myboard-delete',
-			    type: 'POST',
-			    dataType:'text',
-			    contentType: 'application/json',
-			    data: JSON.stringify(array_del),
-			    success: function(result){
-			    	console.log(result);
-			    	if (result=="X"){
-			    		event.preventDefault();
-        				alert('삭제할 게시물을 선택해 주세요.');
-			    	} else {
-				    	location.href="/all/service/question-public-myboard";
-			    	}
-			    }
-			});
-		} else {
-			event.preventDefault();
-		}
 	});
 }
 

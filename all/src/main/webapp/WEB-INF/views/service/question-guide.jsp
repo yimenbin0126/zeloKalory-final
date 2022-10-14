@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
-	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO,eunbin.DTO.e_SvPagingViewDTO,eunbin.service.e_ServiceService,eunbin.service.e_ServiceServiceimpl,java.util.List,java.util.ArrayList" %>
+	import="com.zerocalorie.member.dto.e_MemberDTO,com.zerocalorie.svservice.dto.e_ServiceDTO,com.zerocalorie.svservice.dto.e_SvPagingViewDTO,com.zerocalorie.svservice.service.e_ServiceService,com.zerocalorie.svservice.service.e_ServiceServiceimpl,java.util.List,java.util.ArrayList" %>
 <!DOCTYPE html>
 <html>
 <head>

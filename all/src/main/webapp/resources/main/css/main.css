@@ -1,7 +1,7 @@
 body {
     margin: 0px;
     padding: 0px;
-    background-image: url('./img/sports.jpeg') ;
+    background-image: url('../img/sports.jpeg') ;
     background-repeat: no-repeat;
     background-size:cover;
     background-position: -230px; 

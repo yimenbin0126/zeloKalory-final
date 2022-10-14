@@ -5,6 +5,7 @@
 
 /* 왼쪽 카데고리 */
 .e_nav {
+	cursor: pointer;
 	width:250px;
 	background-color: lightgray;
 }
@@ -175,6 +176,7 @@
 }
 
 .e_btn_fix input {
+	cursor: pointer;
 	font-weight: bold;
 	font-size: 15px;
 	width: 100px;

@@ -42,7 +42,7 @@
 	</select>
 	
 	<!-- 회원정보 불러오기 (아이디. 로그인용) -->
-	<select id="id_loadMember" resultType="eunbin.DTO.e_MemberDTO">
+	<select id="id_loadMember" resultType="com.zerocalorie.member.dto.e_MemberDTO">
 		SELECT *  
 		FROM T_member
 		WHERE id = #{id}
@@ -50,7 +50,7 @@
 	
 	
 	<!-- 회원정보 불러오기 (member_no 이용) -->
-	<select id="member_no_loadMember" resultType="eunbin.DTO.e_MemberDTO">
+	<select id="member_no_loadMember" resultType="com.zerocalorie.member.dto.e_MemberDTO">
 		SELECT *  
 		FROM T_member
 		WHERE member_no = #{member_no}

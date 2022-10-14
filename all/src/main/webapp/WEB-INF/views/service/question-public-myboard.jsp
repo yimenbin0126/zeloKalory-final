@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
-	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO,eunbin.DTO.e_SvPagingViewDTO,eunbin.service.e_ServiceService,eunbin.service.e_ServiceServiceimpl,java.util.List,java.util.ArrayList" %>
+	import="com.zerocalorie.member.dto.e_MemberDTO,com.zerocalorie.svservice.dto.e_ServiceDTO,com.zerocalorie.svservice.dto.e_SvPagingViewDTO,com.zerocalorie.svservice.service.e_ServiceService,com.zerocalorie.svservice.service.e_ServiceServiceimpl,java.util.List,java.util.ArrayList" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -112,6 +112,14 @@
 
 						<!-- 게시물 불러오기 - 회원 정보 관리 -->
 						<div class="e_content">
+							<!-- 게시물 타입 -->
+							<div class="e_content_choice">
+								<select id="e_con_choice">
+									<option value="new">최신순</option>
+									<option value="view">조회수순</option>
+									<option value="like">좋아요순</option>
+								</select>
+							</div>
 							<!-- 게시물 번호 보내기 - 상세보기 -->
 							<form name="e_bno_val_form" id="e_bno_val_form">
 								<input type="hidden" name="bno" id="e_bno_val">
@@ -146,7 +154,7 @@
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><input type="checkbox" class="check_list" name="check_list" value="<%=s_dto.getBno()%>"></li>
 									<li><%=s_dto.getBno()%></li>
-									<li class="blist_title"><%=s_dto.getTitle()%></li>
+									<li><span class="blist_title"><%=s_dto.getTitle()%></span></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>
 									<li><%=s_dto.getLike_check()%></li>
@@ -158,7 +166,7 @@
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><input type="checkbox" class="check_list" name="check_list" value="<%=s_dto.getBno()%>"></li>
 									<li><%=s_dto.getBno()%></li>
-									<li class="blist_title"><b>[<%=s_dto.getGroup_origin()%> 번의 답글]</b> <%=s_dto.getTitle()%></li>
+									<li><b onclick="location.href='/all/service/question-public-detail?bno=<%=s_dto.getGroup_origin()%>'">[<%=s_dto.getGroup_origin()%> 번의 답글]</b> <span class="blist_title"><%=s_dto.getTitle()%></span></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>
 									<li><%=s_dto.getLike_check()%></li>

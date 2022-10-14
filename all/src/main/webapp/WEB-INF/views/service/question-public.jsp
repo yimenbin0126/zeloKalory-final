@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
-	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO,eunbin.DTO.e_SvPagingViewDTO,eunbin.service.e_ServiceService,eunbin.service.e_ServiceServiceimpl,java.util.List,java.util.ArrayList" %>
+	import="com.zerocalorie.member.dto.e_MemberDTO,com.zerocalorie.svservice.dto.e_ServiceDTO,com.zerocalorie.svservice.dto.e_SvPagingViewDTO,com.zerocalorie.svservice.service.e_ServiceService,com.zerocalorie.svservice.service.e_ServiceServiceimpl,java.util.List,java.util.ArrayList" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="java.net.URLEncoder" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -110,8 +112,23 @@
 							
 						</div>
 
+						<%
+							// 게시물 리스트 객체 생성
+							List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
+							e_SvPagingViewDTO s_page = new e_SvPagingViewDTO();
+							s_page = (e_SvPagingViewDTO)request.getAttribute("s_page");
+						%>
 						<!-- 게시물 불러오기 - 회원 정보 관리 -->
 						<div class="e_content">
+							<!-- 게시물 타입 -->
+							<div class="e_content_choice">
+								<select id="e_con_choice">
+									<c:set var="standard" value="<%=s_page.getStandard()%>" />
+									<option value="new" <c:if test="${standard == 'new'}">selected</c:if>>최신순</option>
+									<option value="view" <c:if test="${standard == 'view'}">selected</c:if>>조회수순</option>
+									<option value="like" <c:if test="${standard == 'like'}">selected</c:if>>좋아요순</option>
+								</select>
+							</div>
 							<!-- 게시물 번호 보내기 - 상세보기 -->
 							<form name="e_bno_val_form" id="e_bno_val_form">
 								<input type="hidden" name="bno" id="e_bno_val">
@@ -127,12 +144,6 @@
 									<li>좋아요</li>
 								</ul>
 								<%
-
-									// 게시물 리스트 객체 생성
-									List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
-									e_SvPagingViewDTO s_page = new e_SvPagingViewDTO();
-									s_page = (e_SvPagingViewDTO)request.getAttribute("s_page");
-									System.out.println(s_page.toString());
 									// 게시물들 불러오기
 									if((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")!=null
 									&& ((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")).size()!=0){
@@ -153,8 +164,9 @@
 								</ul>
 								<%
 												} else if (s_dto.getAdmin_type().equals("reply")) {
+													if(s_page.getStandard().equals("new")){
 								%>
-								<!-- 답글일 경우 -->
+								<!-- 답글일 경우 : 기본 -->
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
 									<li><b>└[답글]</b> <span class="blist_title"><%=s_dto.getTitle()%></span></li>
@@ -164,6 +176,20 @@
 									<li><%=s_dto.getLike_check()%></li>
 								</ul>
 								<%
+													
+													} else {
+								%>
+								<!-- 답글일 경우 : 조회수, 좋아요 순 -->
+								<ul class="e_boardlist">
+									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
+									<li><b onclick="location.href='/all/service/question-public-detail?bno=<%=s_dto.getGroup_origin()%>'">[<%=s_dto.getGroup_origin()%> 번의 답글]</b> <span class="blist_title"><%=s_dto.getTitle()%></span></li>
+									<li><%=s_dto.getNickname()%></li>
+									<li><%=s_dto.getCreate_time()%></li>
+									<li><%=s_dto.getView_no()%></li>
+									<li><%=s_dto.getLike_check()%></li>
+								</ul>
+								<%
+													}
 												}
 										}
 									} else {
@@ -199,7 +225,6 @@
 										onclick="location.href='/all/service/question-public-write'">
 									</div>
 								<%
-	
 									}
 								%>
 						
@@ -211,7 +236,8 @@
 								// 클릭 가능 여부
 								if (s_page.isPage_prev()){
 							%>
-							<div onclick="location.href='/all/service/question-public?page_NowBno=<%=s_page.getPage_StartBno()-5%>'"
+							<div onclick="location.href='/all/service/question-public?page_NowBno=<%=s_page.getPage_StartBno()-5%>
+							&standard=<%=s_page.getStandard()%>'"
 							 class="e_paging_btnleft" id="e_paging_btnleft_yes">&lt;</div>
 							<%
 								} else {
@@ -231,12 +257,13 @@
 								for (int i=page_StartBno; i <= page_EndBno; i++) {
 									if(i==page_NowBno){									
 							%>
-								<div id="page_NowBno"><%=i%></div>
+								<a id="page_NowBno"><%=i%></a>
 							<%
 									} else {
 							%>
-								<div onclick="location.href='/all/service/question-public?page_NowBno=<%=i%>'"
-								class="page_Bno" id="page_Bno<%=i%>"><%=i%></div>
+								<a href="/all/service/question-public?page_NowBno=<%=i%>
+								&standard=<%=s_page.getStandard()%>"
+								class="page_Bno" id="page_Bno<%=i%>"><%=i%></a>
 							<%
 									}
 								}
@@ -246,7 +273,8 @@
 								// 클릭 가능 여부
 								if (s_page.isPage_next()){
 							%>
-							<div onclick="location.href='/all/service/question-public?page_NowBno=<%=s_page.getPage_EndBno()+1%>'"
+							<div onclick="location.href='/all/service/question-public?page_NowBno=<%=s_page.getPage_EndBno()+1%>
+							&standard=<%=s_page.getStandard()%>'"
 							class="e_paging_btnright" id="e_paging_btnright_yes">&gt;</div>
 							<%
 								} else {

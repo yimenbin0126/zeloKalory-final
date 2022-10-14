@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
-    isELIgnored="false" import="eunbin.DTO.e_MemberDTO"%>
+    isELIgnored="false" import="com.zerocalorie.member.dto.e_MemberDTO"%>
 <html>
 <head>
     <meta charset="UTF-8">

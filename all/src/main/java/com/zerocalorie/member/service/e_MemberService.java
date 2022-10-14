@@ -1,6 +1,6 @@
-package eunbin.service;
+package com.zerocalorie.member.service;
 
-import eunbin.DTO.e_MemberDTO;
+import com.zerocalorie.member.dto.e_MemberDTO;
 
 public interface e_MemberService {
 

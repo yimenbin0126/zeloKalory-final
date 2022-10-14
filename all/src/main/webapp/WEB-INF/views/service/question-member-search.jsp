@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
-	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO,eunbin.DTO.e_SvPagingViewDTO,
-	eunbin.service.e_ServiceService, eunbin.service.e_ServiceServiceimpl,
-	java.util.List, java.util.ArrayList, eunbin.DTO.e_SvSearchDTO" %>
+	import="com.zerocalorie.member.dto.e_MemberDTO,com.zerocalorie.svservice.dto.e_ServiceDTO,com.zerocalorie.svservice.dto.e_SvPagingViewDTO,com.zerocalorie.svservice.service.e_ServiceService,com.zerocalorie.svservice.service.e_ServiceServiceimpl,
+	java.util.List, java.util.ArrayList,com.zerocalorie.svservice.dto.e_SvSearchDTO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.net.URLEncoder" %>
 <%@ page import="java.net.URLDecoder"%>
@@ -156,7 +155,7 @@
 								%>
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
-									<li><%=s_dto.getTitle()%></li>
+									<li class="blist_title"><%=s_dto.getTitle()%></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>

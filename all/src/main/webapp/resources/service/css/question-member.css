@@ -6,6 +6,7 @@
 
 /* 왼쪽 카데고리 */
 .e_nav {
+	cursor: pointer;
 	width:250px;
 	background-color: lightgray;
 }
@@ -76,6 +77,7 @@
 }
 
 .e_hd_top_write {
+	cursor: pointer;
 	font-weight: bold;
 	font-size: 15px;
 	padding: 10px 25px 10px 25px;
@@ -102,6 +104,7 @@
 }
 
 .e_hd_choice div {
+	cursor: pointer;
 	font-size: 17px;
 	background-color: lightgray;
 	padding: 20px 132px 20px 132px;
@@ -119,6 +122,10 @@
 }
 
 /* 회원정보 관리 */
+.blist_title {
+	cursor: pointer;
+}
+
 .e_boardlist li {
 	font-size: 14px;
 }
@@ -194,6 +201,10 @@
 	justify-content: center;
 }
 
+.e_paging div {
+	cursor: pointer;
+}
+
 .e_paging div:not(.e_paging_btnright) {
 	margin-right: 10px;
 }
@@ -234,6 +245,10 @@
 
 /* 검색 */
 /* 전체 */
+#s_content_btn {
+	cursor: pointer;
+}
+
 .e_search {
 	margin-bottom: 100px;
 	justify-content: center;

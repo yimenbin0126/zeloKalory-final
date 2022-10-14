@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
-	import="eunbin.DTO.e_MemberDTO, eunbin.DTO.e_ServiceDTO,eunbin.DTO.e_SvPagingViewDTO,
-	eunbin.service.e_ServiceService, eunbin.service.e_ServiceServiceimpl,
-	java.util.List, java.util.ArrayList, eunbin.DTO.e_SvSearchDTO" %>
+	import="com.zerocalorie.member.dto.e_MemberDTO,com.zerocalorie.svservice.dto.e_ServiceDTO,com.zerocalorie.svservice.dto.e_SvPagingViewDTO,com.zerocalorie.svservice.service.e_ServiceService,com.zerocalorie.svservice.service.e_ServiceServiceimpl,
+	java.util.List, java.util.ArrayList,com.zerocalorie.svservice.dto.e_SvSearchDTO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.net.URLEncoder" %>
 <!DOCTYPE html>
@@ -103,12 +102,12 @@
 					<!-- 오른쪽 내용 -->
 					<div class="e_right">
 						<!-- 상단 -->
-						<div class="e_hd_top">고객센터 &gt; 공개 건의함</div>
+						<div class="e_hd_top">고객센터 &gt; 공개 건의함 &gt; 내가 작성한 글</div>
 						<div class="e_header">
-							<div class="e_hd_top_que">공개 건의함</div>
+							<div class="e_hd_top_que">내가 작성한 글</div>
 							<div class="e_hd_top_con">
-								<span> 공개건의함은 관리자, 회원 등<br>모든 회원이 로그인 한 상태라면<br>
-									건의 관련 글을 쓰고 댓글을 남길수 있는 소통 공간입니다.
+								<span> 내가 작성한 글은 관리자, 회원 등<br>모든 회원이 로그인 한 상태라면<br>
+									자신의 게시물을 수정, 삭제할 수 있는 공간입니다.
 								</span>
 							</div>
 							
@@ -152,7 +151,7 @@
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><input type="checkbox" class="check_list" name="check_list" value="<%=s_dto.getBno()%>"></li>
 									<li><%=s_dto.getBno()%></li>
-									<li class="blist_title"><%=s_dto.getTitle()%></li>
+									<li><span class="blist_title"><%=s_dto.getTitle()%></span></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>
 									<li><%=s_dto.getLike_check()%></li>
@@ -164,7 +163,7 @@
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><input type="checkbox" class="check_list" name="check_list" value="<%=s_dto.getBno()%>"></li>
 									<li><%=s_dto.getBno()%></li>
-									<li class="blist_title"><b>[<%=s_dto.getGroup_origin()%> 번의 답글]</b> <%=s_dto.getTitle()%></li>
+									<li><b onclick="location.href='/all/service/question-public-detail?bno=<%=s_dto.getGroup_origin()%>'">[<%=s_dto.getGroup_origin()%> 번의 답글]</b> <span class="blist_title"><%=s_dto.getTitle()%></span></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>
 									<li><%=s_dto.getLike_check()%></li>

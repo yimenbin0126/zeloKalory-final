@@ -9,7 +9,7 @@
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	<!-- 팀 패키지 넣는 곳 -->
-	<context:component-scan base-package="eunbin.*" />
+	<context:component-scan base-package="com.zerocalorie.*" />
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />

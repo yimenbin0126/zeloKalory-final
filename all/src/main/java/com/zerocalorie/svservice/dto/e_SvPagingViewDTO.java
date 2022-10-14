@@ -1,4 +1,4 @@
-package eunbin.DTO;
+package com.zerocalorie.svservice.dto;
 
 // 회원정보 테이블
 public class e_SvPagingViewDTO {
@@ -33,6 +33,10 @@ public class e_SvPagingViewDTO {
 	private int group_origin;
 	// 멤버번호 (내 게시물만 불러올 때 사용)
 	private int member_no;
+	
+	// 조회수, 좋아요순
+	// view, like
+	private String standard;
 	
 	public e_SvPagingViewDTO () {
 	}
@@ -207,6 +211,13 @@ public class e_SvPagingViewDTO {
 		this.member_no = member_no;
 	}
 	
+	public String getStandard() {
+		return standard;
+	}
+	public void setStandard(String standard) {
+		this.standard = standard;
+	}
+	
 	@Override
 	public String toString() {
 		return "e_SvPagingViewDTO [sv_type=" + sv_type + ", page_NowBno=" + page_NowBno + ", page_StartBno="
@@ -214,7 +225,6 @@ public class e_SvPagingViewDTO {
 				+ ", page_AllCount=" + page_AllCount + ", page_prev=" + page_prev + ", page_next=" + page_next
 				+ ", board_NowBnoSize=" + board_NowBnoSize + ", board_AllCount=" + board_AllCount
 				+ ", board_NowStartBno=" + board_NowStartBno + ", board_NowEndBno=" + board_NowEndBno
-				+ ", group_origin=" + group_origin + ", member_no=" + member_no + "]";
+				+ ", group_origin=" + group_origin + ", member_no=" + member_no + ", standard=" + standard + "]";
 	}
-	
 }

@@ -1,4 +1,4 @@
-package eunbin.controller;
+package com.zerocalorie.member.controller;
 
 import java.io.PrintWriter;
 import java.sql.Date;
@@ -21,9 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
-
-import eunbin.DTO.e_MemberDTO;
-import eunbin.service.e_MemberService;
+import com.zerocalorie.member.dto.e_MemberDTO;
+import com.zerocalorie.member.service.e_MemberService;
 
 @Controller
 @RequestMapping("/member/*")

@@ -1,4 +1,4 @@
-package eunbin.DTO;
+package com.zerocalorie.svservice.dto;
 
 import java.sql.Date;
 

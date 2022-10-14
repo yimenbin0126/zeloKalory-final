@@ -1,17 +1,18 @@
-package eunbin.service;
+package com.zerocalorie.svservice.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import eunbin.DAO.e_ServiceDAO;
-import eunbin.DTO.e_ServiceDTO;
-import eunbin.DTO.e_SvFileDTO;
-import eunbin.DTO.e_SvLikecheckDTO;
-import eunbin.DTO.e_SvPagingViewDTO;
-import eunbin.DTO.e_SvSearchDTO;
-import eunbin.DTO.e_SvViewcheckDTO;
+import com.zerocalorie.svservice.dao.e_ServiceDAO;
+import com.zerocalorie.svservice.dto.e_ServiceDTO;
+import com.zerocalorie.svservice.dto.e_SvCommentDTO;
+import com.zerocalorie.svservice.dto.e_SvFileDTO;
+import com.zerocalorie.svservice.dto.e_SvLikecheckDTO;
+import com.zerocalorie.svservice.dto.e_SvPagingViewDTO;
+import com.zerocalorie.svservice.dto.e_SvSearchDTO;
+import com.zerocalorie.svservice.dto.e_SvViewcheckDTO;
 
 @Service
 public class e_ServiceServiceimpl implements e_ServiceService {
@@ -202,4 +203,40 @@ public class e_ServiceServiceimpl implements e_ServiceService {
  	public List<e_ServiceDTO> board_search_All(e_SvSearchDTO s_searchdto) throws Exception {
  		return s_dao.board_search_All(s_searchdto);
  	}
+ 	
+ 	// 검색한 게시물 갯수 가져오기 - myboard
+ 	public int myboard_search_count_All(e_SvSearchDTO s_searchdto) throws Exception {
+ 		return s_dao.myboard_search_count_All(s_searchdto);
+ 	}
+ 	
+ 	// 검색한 게시물 전체 가져오기 : 페이징 적용 - myboard
+ 	public List<e_ServiceDTO> myboard_search_All(e_SvSearchDTO s_searchdto) throws Exception {
+ 		return s_dao.myboard_search_All(s_searchdto);
+ 	}
+ 	
+ 	// 댓글
+ 	// 댓글 시퀀스 가져오기
+  	public int comment_c_code() throws Exception {
+  		return s_dao.comment_c_code();
+  	}
+ 	
+   	// 댓글 전부 가져오기
+   	public List<e_SvCommentDTO> comment_load_All(e_SvCommentDTO s_commentDTO) throws Exception {
+   		return s_dao.comment_load_All(s_commentDTO);
+   	}
+   	
+   	// 댓글 작성
+	public void comment_insert(e_SvCommentDTO s_commentDTO) throws Exception {
+		s_dao.comment_insert(s_commentDTO);
+	}
+	
+	// 댓글 수정
+	public void comment_update(e_SvCommentDTO s_commentDTO) throws Exception {
+		s_dao.comment_update(s_commentDTO);
+	}
+	
+	// 댓글 삭제
+	public void comment_delete(e_SvCommentDTO s_commentDTO) throws Exception {
+		s_dao.comment_delete(s_commentDTO);
+	}
 }

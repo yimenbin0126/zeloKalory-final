@@ -5,6 +5,7 @@
 
 /* 왼쪽 카데고리 */
 .e_nav {
+	cursor: pointer;
 	width:250px;
 	background-color: lightgray;
 }
@@ -58,6 +59,7 @@
 }
 
 .e_que_title, .e_one_title {
+	cursor: pointer;
 	font-size: 19px;
 	font-weight: bold;
 	border-radius: 10px;

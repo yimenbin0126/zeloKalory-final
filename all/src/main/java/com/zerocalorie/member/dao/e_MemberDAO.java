@@ -1,6 +1,6 @@
-package eunbin.DAO;
+package com.zerocalorie.member.dao;
 
-import eunbin.DTO.e_MemberDTO;
+import com.zerocalorie.member.dto.e_MemberDTO;
 
 public interface e_MemberDAO {
 

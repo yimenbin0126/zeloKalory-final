@@ -1,4 +1,4 @@
-package eunbin.DAO;
+package com.zerocalorie.svservice.dao;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,12 +12,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import eunbin.DTO.e_ServiceDTO;
-import eunbin.DTO.e_SvFileDTO;
-import eunbin.DTO.e_SvLikecheckDTO;
-import eunbin.DTO.e_SvPagingViewDTO;
-import eunbin.DTO.e_SvSearchDTO;
-import eunbin.DTO.e_SvViewcheckDTO;
+import com.zerocalorie.svservice.dto.e_ServiceDTO;
+import com.zerocalorie.svservice.dto.e_SvCommentDTO;
+import com.zerocalorie.svservice.dto.e_SvFileDTO;
+import com.zerocalorie.svservice.dto.e_SvLikecheckDTO;
+import com.zerocalorie.svservice.dto.e_SvPagingViewDTO;
+import com.zerocalorie.svservice.dto.e_SvSearchDTO;
+import com.zerocalorie.svservice.dto.e_SvViewcheckDTO;
 
 @Repository
 public class e_ServiceDAOimpl implements e_ServiceDAO {
@@ -150,14 +151,37 @@ public class e_ServiceDAOimpl implements e_ServiceDAO {
 	// 글 삭제
 	public void board_delete(e_ServiceDTO s_dto) throws Exception {
 		System.out.println("e_ServiceDAOimpl - board_delete - 글 삭제");
-		// 게시물 삭제 - 좋아요 테이블
-		sql.delete("serviceMapper.like_delete", s_dto);
-		// 게시물 삭제 - 조회수 테이블
-		sql.delete("serviceMapper.view_delete", s_dto);
-		// 게시물 삭제 - 첨부파일 테이블
-		sql.delete("serviceMapper.board_delete_file", s_dto);
-		// 게시물 삭제 - 원본
-		sql.delete("serviceMapper.board_delete", s_dto);
+		// 원글이면 답글 불러오기
+		s_dto = sql.selectOne("serviceMapper.board_one", s_dto);
+		if (s_dto.getAdmin_type()!= null
+				&& s_dto.getAdmin_type().equals("origin")) {
+			List<Integer> board_list = new ArrayList<Integer>();
+			board_list = sql.selectList("serviceMapper.board_bno_reply", s_dto);
+			// list 갯수 최소 1개 이상 (원글 포함)
+			for (int i=0; i<board_list.size(); i++) {
+				e_ServiceDTO _s_dto = new e_ServiceDTO();
+				_s_dto.setBno(board_list.get(i));
+				_s_dto = sql.selectOne("serviceMapper.board_one", _s_dto);
+				
+				// 게시물 삭제 - 좋아요 테이블
+				sql.delete("serviceMapper.like_delete", _s_dto);
+				// 게시물 삭제 - 조회수 테이블
+				sql.delete("serviceMapper.view_delete", _s_dto);
+				// 게시물 삭제 - 첨부파일 테이블
+				sql.delete("serviceMapper.board_delete_file", _s_dto);
+				// 게시물 삭제 - 원본
+				sql.delete("serviceMapper.board_delete", _s_dto);
+			}
+		} else {
+			// 게시물 삭제 - 좋아요 테이블
+			sql.delete("serviceMapper.like_delete", s_dto);
+			// 게시물 삭제 - 조회수 테이블
+			sql.delete("serviceMapper.view_delete", s_dto);
+			// 게시물 삭제 - 첨부파일 테이블
+			sql.delete("serviceMapper.board_delete_file", s_dto);
+			// 게시물 삭제 - 원본
+			sql.delete("serviceMapper.board_delete", s_dto);
+		}
 	}
 	
 	// 글 수정
@@ -179,6 +203,7 @@ public class e_ServiceDAOimpl implements e_ServiceDAO {
 		 System.out.println("e_ServiceDAOimpl - board_viewCheck - 조회수 증가 가능 여부 체크 - member_no");
 		 // 테이블 존재 확인
 		 if ((int)sql.selectOne("serviceMapper.view_alive_mNo", s_viewCheck) == 0) {
+			 System.out.println("11");
 			 // 테이블이 존재하지 않으면 테이블 생성
 			 sql.insert("serviceMapper.view_insert_mNo", s_viewCheck);
 			 return true;
@@ -186,9 +211,10 @@ public class e_ServiceDAOimpl implements e_ServiceDAO {
 		 // 테이블 불러오기
 		 e_SvViewcheckDTO new_s_viewCheck = new e_SvViewcheckDTO();
 		 new_s_viewCheck = sql.selectOne("serviceMapper.view_load_mNo", s_viewCheck);
-		 
+		 System.out.println("ddd");
 		 // 테이블 날짜 체크 - 하루 지났는지 확인
 		 if ((int)sql.selectOne("serviceMapper.view_dateCheck", new_s_viewCheck) >= 1) {
+			 System.out.println("122");
 			 // 테이블의 날짜 변경하기
 			 sql.update("serviceMapper.view_save_mNo", new_s_viewCheck);
 			 // 하루 지났음
@@ -340,5 +366,60 @@ public class e_ServiceDAOimpl implements e_ServiceDAO {
  		System.out.println("e_ServiceDAOimpl - board_search_All - 검색한 게시물 전체 가져오기 : 페이징 적용");
  		return sql.selectList("serviceMapper.board_search_All", s_searchdto);
  	}
+ 	
+ 	// 검색한 게시물 갯수 가져오기 - myboard
+  	public int myboard_search_count_All(e_SvSearchDTO s_searchdto) throws Exception {
+  		System.out.println("e_ServiceDAOimpl - myboard_search_count_All - 검색한 게시물 갯수 가져오기");
+  		return sql.selectOne("serviceMapper.myboard_search_count_All", s_searchdto);
+  	}
+  	
+  	// 검색한 게시물 전체 가져오기 : 페이징 적용 - myboard
+  	public List<e_ServiceDTO> myboard_search_All(e_SvSearchDTO s_searchdto) throws Exception {
+  		System.out.println("e_ServiceDAOimpl - myboard_search_All - 검색한 게시물 전체 가져오기 : 페이징 적용");
+  		return sql.selectList("serviceMapper.myboard_search_All", s_searchdto);
+  	}
+  	
+  	// 댓글
+  	// 댓글 시퀀스 가져오기
+  	public int comment_c_code() throws Exception {
+ 		System.out.println("e_ServiceDAOimpl - comment_c_code - 댓글 시퀀스 가져오기");
+ 		return sql.selectOne("serviceMapper.comment_c_code");
+ 	}
+  	
+  	// 댓글 전부 가져오기
+  	public List<e_SvCommentDTO> comment_load_All(e_SvCommentDTO s_commentDTO) throws Exception {
+ 		System.out.println("e_ServiceDAOimpl - comment_load_All - 댓글 전부 가져오기");
+ 		return sql.selectList("serviceMapper.comment_load_All", s_commentDTO);
+ 	}
+  	
+  	// 댓글 작성
+   	public void comment_insert(e_SvCommentDTO s_commentDTO) throws Exception {
+  		System.out.println("e_ServiceDAOimpl - comment_insert - 댓글 작성");
+  		sql.insert("serviceMapper.comment_insert", s_commentDTO);
+  	}
+   	
+   	// 댓글 수정
+   	public void comment_update(e_SvCommentDTO s_commentDTO) throws Exception {
+  		System.out.println("e_ServiceDAOimpl - comment_update - 댓글 수정");
+  		if(s_commentDTO.getType_code().equals("comment")) {
+  			s_commentDTO.setType_code("comment_update");
+  		} else if (s_commentDTO.getType_code().equals("reply")) {
+  			s_commentDTO.setType_code("reply_update");
+  		}
+  		sql.update("serviceMapper.comment_update", s_commentDTO);
+  	}
+   	
+   	// 댓글 삭제
+   	public void comment_delete(e_SvCommentDTO s_commentDTO) throws Exception {
+  		System.out.println("e_ServiceDAOimpl - comment_delete - 댓글 삭제");
+  		// 댓글의 오리지널 코드로 대댓글도 전부 삭제
+  		if (s_commentDTO.getType_code().equals("comment")
+  				|| s_commentDTO.getType_code().equals("comment_update")) {
+  			sql.delete("serviceMapper.comment_delete", s_commentDTO);
+  		} else {
+  			// 답글이라면 답글만 삭제
+  			sql.delete("serviceMapper.reply_delete", s_commentDTO);
+  		}
+  	}
   	
 }

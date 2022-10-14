@@ -1,12 +1,12 @@
-package eunbin.service;
+package com.zerocalorie.member.service;
 
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import eunbin.DAO.e_MemberDAO;
-import eunbin.DTO.e_MemberDTO;
+import com.zerocalorie.member.dao.e_MemberDAO;
+import com.zerocalorie.member.dto.e_MemberDTO;
 
 @Service
 public class e_MemberServiceimpl implements e_MemberService {
