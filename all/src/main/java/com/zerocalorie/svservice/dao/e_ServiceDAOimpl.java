@@ -211,7 +211,6 @@ public class e_ServiceDAOimpl implements e_ServiceDAO {
 		 // 테이블 불러오기
 		 e_SvViewcheckDTO new_s_viewCheck = new e_SvViewcheckDTO();
 		 new_s_viewCheck = sql.selectOne("serviceMapper.view_load_mNo", s_viewCheck);
-		 System.out.println("ddd");
 		 // 테이블 날짜 체크 - 하루 지났는지 확인
 		 if ((int)sql.selectOne("serviceMapper.view_dateCheck", new_s_viewCheck) >= 1) {
 			 System.out.println("122");
@@ -412,6 +411,7 @@ public class e_ServiceDAOimpl implements e_ServiceDAO {
    	// 댓글 삭제
    	public void comment_delete(e_SvCommentDTO s_commentDTO) throws Exception {
   		System.out.println("e_ServiceDAOimpl - comment_delete - 댓글 삭제");
+  		System.out.println(s_commentDTO.toString());
   		// 댓글의 오리지널 코드로 대댓글도 전부 삭제
   		if (s_commentDTO.getType_code().equals("comment")
   				|| s_commentDTO.getType_code().equals("comment_update")) {

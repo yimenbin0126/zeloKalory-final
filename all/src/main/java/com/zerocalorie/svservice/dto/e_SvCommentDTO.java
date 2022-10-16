@@ -1,7 +1,5 @@
 package com.zerocalorie.svservice.dto;
 
-import java.sql.Date;
-
 public class e_SvCommentDTO {
 	private int c_code;
 	private int origin_code;
@@ -9,9 +7,10 @@ public class e_SvCommentDTO {
 	private String to_nickname;
 	private String nickname;
 	private String comment_code;
-	private Date create_time;
+	private String create_time;
 	private int bno;
 	private int member_no;
+	private String pro_img;
 	
 	public int getC_code() {
 		return c_code;
@@ -49,10 +48,10 @@ public class e_SvCommentDTO {
 	public void setComment_code(String comment_code) {
 		this.comment_code = comment_code;
 	}
-	public Date getCreate_time() {
+	public String getCreate_time() {
 		return create_time;
 	}
-	public void setCreate_time(Date create_time) {
+	public void setCreate_time(String create_time) {
 		this.create_time = create_time;
 	}
 	public int getBno() {
@@ -68,10 +67,19 @@ public class e_SvCommentDTO {
 		this.member_no = member_no;
 	}
 	
+	public String getPro_img() {
+		return pro_img;
+	}
+	public void setPro_img(String pro_img) {
+		this.pro_img = pro_img;
+	}
+	
 	@Override
 	public String toString() {
 		return "e_SvCommentDTO [c_code=" + c_code + ", origin_code=" + origin_code + ", type_code=" + type_code
 				+ ", to_nickname=" + to_nickname + ", nickname=" + nickname + ", comment_code=" + comment_code
-				+ ", create_time=" + create_time + ", bno=" + bno + ", member_no=" + member_no + "]";
+				+ ", create_time=" + create_time + ", bno=" + bno + ", member_no=" + member_no + ", pro_img=" + pro_img
+				+ "]";
 	}
+	
 }

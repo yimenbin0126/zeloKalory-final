@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
-	import="com.zerocalorie.member.dto.e_MemberDTO,com.zerocalorie.svservice.dto.e_ServiceDTO,com.zerocalorie.svservice.dto.e_SvFileDTO,com.zerocalorie.svservice.service.e_ServiceService,com.zerocalorie.svservice.service.e_ServiceServiceimpl,com.zerocalorie.svservice.dto.e_SvCommentDTO,
+	import="com.zerocalorie.member.dto.e_MemberDTO,com.zerocalorie.svservice.dto.e_ServiceDTO,com.zerocalorie.svservice.dto.e_SvFileDTO,
+	com.zerocalorie.svservice.service.e_ServiceService,com.zerocalorie.svservice.service.e_ServiceServiceimpl,
+	com.zerocalorie.svservice.dto.e_SvCommentDTO, com.zerocalorie.member.dao.e_MemberDAOimpl,
 	java.util.List, java.util.ArrayList" %>
+	
 <!DOCTYPE html>
 <html>
 <head>
@@ -270,33 +273,42 @@
 						
 						<!-- 댓글 -->
 						<div class="e_comment">
+							<!-- 데이터 전달용 -->
+							<input type="hidden" id="hidden_bno" value="<%=s_dto.getBno()%>">
+							<%
+								if (((ArrayList<e_SvCommentDTO>)request.getAttribute("comment_list")).size() == 0) {
+							%>
 							<!-- 댓글 개수 -->
 							<div class="com_num">
-								<span class="basic_span">댓글</span><span class="c_n_color">4</span><span class="basic_span">개</span>
+								<span class="basic_span">댓글</span><span class="c_n_color">0</span><span class="basic_span">개</span>
 							</div>
-							
 							<%
-								if (((ArrayList<e_SvCommentDTO>)request.getAttribute("comment_list")).size() != 0) {
+								} else if (((ArrayList<e_SvCommentDTO>)request.getAttribute("comment_list")).size() != 0) {
 									List<e_SvCommentDTO> comment_list = new ArrayList<e_SvCommentDTO>();
 									comment_list = (ArrayList<e_SvCommentDTO>)request.getAttribute("comment_list");
+							%>
+							<!-- 댓글 개수 -->
+							<div class="com_num">
+								<span class="basic_span">댓글</span><span class="c_n_color"><%=comment_list.size()%></span><span class="basic_span">개</span>
+							</div>
+							<%
 									for (int i=0; i<comment_list.size(); i++){
 										e_SvCommentDTO s_commentDTO = new e_SvCommentDTO();
 										s_commentDTO = comment_list.get(i);
 							%>
 							<!-- 댓글 리스트 -->
 							<div class="com_list">
-								<!-- 데이터 전달용 -->
-								<input type="hidden" id="hidden_bno" value="<%=s_dto.getBno()%>">
 							<%
 										// 댓글일 경우
-										if(s_commentDTO.getType_code().equals("comment")){
+										if(s_commentDTO.getType_code().equals("comment")
+												|| s_commentDTO.getType_code().equals("comment_update")){
 							%>
 								<!-- 댓글 -->
 								<!-- 댓글 : 기본 -->
 								<div class="c_l_comment">
 									<!-- 프로필 이미지 -->
 									<div class="com_profile">
-										<img src="/all/resources/service/img/like_full.png">
+										<img src="/all/service/load-proimg?fileName=<%=s_commentDTO.getPro_img()%>">
 									</div>
 									<!-- 프로필 옆 -->
 									<!-- 닉네임, 작성시간 -->
@@ -320,8 +332,15 @@
 										</div>
 										<!-- 댓글 내용 -->
 										<div class="com_content">
-											<%=s_commentDTO.getComment_code()%>
+											<pre><%=s_commentDTO.getComment_code()%></pre>
 										</div>
+										<%
+											// 로그인 유무
+												if((e_MemberDTO)session.getAttribute("user") !=null){
+           											m_dto = (e_MemberDTO)session.getAttribute("user");
+													// 로그인한 정보와 비교
+													if(m_dto.getMember_no()==s_commentDTO.getMember_no()){
+										%>
 										<!-- 버튼 -->
 										<div class="com_btn">
 											<input type="hidden" value="<%=s_commentDTO.getC_code()%>">
@@ -340,22 +359,39 @@
 												<a>삭제</a>
 											</div>
 										</div>
+										<%
+													} else {
+										%>
+										<!-- 버튼 -->
+										<div class="com_btn">
+											<input type="hidden" value="<%=s_commentDTO.getC_code()%>">
+											<input type="hidden" value="<%=s_commentDTO.getNickname()%>">
+											<input type="hidden" value="<%=s_commentDTO.getComment_code()%>">
+											<!-- 답글 -->
+											<div class="com_btn_reply">
+												<a>답글</a>
+											</div>
+										</div>
+										<%
+													}
+												}
+										%>
 									</div>
 								</div>
 								<%
 										// 답글일 경우
-										} else if (s_commentDTO.getType_code().equals("reply")){
+										} else if (s_commentDTO.getType_code().equals("reply")
+												|| s_commentDTO.getType_code().equals("reply_update")){
 								%>
 								<!-- 답글일 경우 -->
-								<!-- 답글 : 보여짐 -->
 								<div class="c_l_reply">
 									<!-- 꺽쇠 여백 -->
 									<div class="reply_blank">
 										↳
 									</div>
 									<!-- 프로필 이미지 -->
-									<div class="reply_profile">
-										<img src="/all/resources/service/img/like_full.png">
+									<div class="com_profile">
+										<img src="/all/service/load-proimg?fileName=<%=s_commentDTO.getPro_img()%>">
 									</div>
 									<!-- 프로필 옆 -->
 									<!-- 닉네임, 작성시간 -->
@@ -379,13 +415,24 @@
 										</div>
 										<!-- 답글 내용 -->
 										<div class="reply_content">
-											<%=s_commentDTO.getComment_code()%>
+											<div style="padding-bottom: 5px; font-weight:bold; color:gray;">
+												@<%=s_commentDTO.getTo_nickname()%>
+											</div>
+											<div><pre><%=s_commentDTO.getComment_code()%></pre></div>
 										</div>
+										<%
+											// 로그인 유무
+												if((e_MemberDTO)session.getAttribute("user") !=null){
+           											m_dto = (e_MemberDTO)session.getAttribute("user");
+													// 로그인한 정보와 비교
+													if(m_dto.getMember_no()==s_commentDTO.getMember_no()){
+										%>
 										<!-- 버튼 -->
 										<div class="reply_btn">
 											<input type="hidden" value="<%=s_commentDTO.getOrigin_code()%>">
 											<input type="hidden" value="<%=s_commentDTO.getNickname()%>">
 											<input type="hidden" value="<%=s_commentDTO.getComment_code()%>">
+											<input type="hidden" value="<%=s_commentDTO.getC_code()%>">
 											<!-- 답글 -->
 											<div class="reply_btn_reply">
 												<a>답글</a>
@@ -399,6 +446,23 @@
 												<a>삭제</a>
 											</div>
 										</div>
+										<%
+													} else {
+										%>
+										<!-- 버튼 -->
+										<div class="reply_btn">
+											<input type="hidden" value="<%=s_commentDTO.getOrigin_code()%>">
+											<input type="hidden" value="<%=s_commentDTO.getNickname()%>">
+											<input type="hidden" value="<%=s_commentDTO.getComment_code()%>">
+											<!-- 답글 -->
+											<div class="reply_btn_reply">
+												<a>답글</a>
+											</div>
+										</div>
+										<%
+													}
+												}
+										%>
 									</div>
 								</div>
 								<%
@@ -408,20 +472,39 @@
 							<%
 									}
 								}
+								// 로그인 되어있지 않을때
+								if((e_MemberDTO)session.getAttribute("user") !=null){
 							%>
 							<!-- 댓글 입력창 -->
-							<div class="com_input_title">댓글 작성하기</div>
 							<div class="com_input">
 								<!-- 댓글 입력창 -->
 								<div class="c_i_textarea">
-									<textarea placeholder="댓글을 작성해 주세요."
+									<textarea wrap="hard" placeholder="댓글을 작성해 주세요."
 										name="description" id="e_cont_detail_input"></textarea>
 								</div>
 								<!-- 댓글 등록 버튼 -->
 								<div class="c_i_btn">
-									<button>등록</button>
+									<button class="c_i_btn_Y">등록</button>
 								</div>
 							</div>
+							<%
+								} else {
+							%>
+							<!-- 댓글 입력창 -->
+							<div class="com_input">
+								<!-- 댓글 입력창 -->
+								<div class="c_i_textarea">
+									<textarea wrap="hard" placeholder="로그인 후 댓글을 작성해 주세요."
+										name="description" id="e_cont_detail_input" disabled></textarea>
+								</div>
+								<!-- 댓글 등록 버튼 -->
+								<div class="c_i_btn">
+									<button class="c_i_btn_N">등록</button>
+								</div>
+							</div>
+							<%
+								}
+							%>
 						</div>
 						<!-- 댓글 끝 -->
 

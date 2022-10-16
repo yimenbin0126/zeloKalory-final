@@ -152,7 +152,33 @@ function comment() {
     // 글 번호
     var hidden_bno = document.querySelector('#hidden_bno').value;
 
-    // 댓글
+	console.log(document.querySelector('.com_input .c_i_textarea textarea').value);
+	// 댓글 입력창
+    if (document.querySelector('.com_input .c_i_btn .c_i_btn_Y')) {
+        document.querySelector('.com_input .c_i_btn .c_i_btn_Y').addEventListener('click', function (event) {
+	        var comment_code = document.querySelector('.com_input .c_i_textarea textarea').value;
+        	if (comment_code.length == 0) {
+            comment_code = " ";
+            }
+            $.ajax({
+                url: "/all/service/question-public-comment/insert",
+                type: 'get',
+                data: {
+                    "bno": hidden_bno,
+                    "comment_code": comment_code
+                },
+                success: function (result) {
+                    if (result == "X") {
+                        alert('댓글 내용을 제대로 입력해주세요.');
+                    } else {
+                        location.href = "/all/service/question-public-detail?bno=" + hidden_bno;
+                    }
+                }
+            });
+        });
+    }
+
+    // 댓글의 답글
     if (document.querySelector('.com_btn .com_btn_reply')) {
         // 댓글의 답글 시작
         // 각각 답글 객체
@@ -160,47 +186,60 @@ function comment() {
         for (const com_reply of comment_reply_list) {
             com_reply.addEventListener('click', function (e) {
                 // 답글이 하나만 떠있어야함. 이미 존재하면 취소.
-                if (!document.querySelector('.c_l_reply_new')) {
+                if (!document.querySelector('.c_l_comment_new') && !document.querySelector('.c_l_reply_new')
+                && !document.querySelector('.c_l_reply_fix') && !document.querySelector('.c_l_comment_fix')) {
                     // 아래에 답글 작성 폼 생김
-                    var html = '<div class="c_l_reply_new">';
+                    var html = '<div class="c_l_comment_new">';
                     html += '<div class="reply_new_blank">↳</div>';
                     html += '<div class="r_new_content">';
-                    html += '<textarea placeholder="내용을 입력해 주세요." id="e_cont_detail_input"></textarea>';
+                    html += '<textarea wrap="hard" placeholder="내용을 입력해 주세요." id="e_cont_detail_input"></textarea>';
                     html += '<div class="c_i_new_btn"><button>등록</button></div>';
                     html += '</div></div></div>';
-                    e.target.parentElement.parentElement.parentElement.parentElement.after('html');
-                    // 댓글 원본 코드, 닉네임, 내용
-                    var origin_code_re = e.target.parentElement.parentElement.firstElementChild.value;
-                    var to_nickname_re = e.target.parentElement.parentElement.children[1].value;
-                    var comment_code_re = document.querySelector('.r_new_content textarea').value;
-                    // 작성 완료시
-                    document.querySelector('.c_i_new_btn button').addEventListener('click', function (event) {
-                        var con_del = confirm('정말 답글을 작성하시겠습니까?');
-                        if (con_del == true) {
-                            $.ajax({
-                                url: "/all/service/question-public-reply/insert",
-                                type: 'get',
-                                data: {
-                                    "bno": hidden_bno,
-                                    "origin_code": origin_code_re,
-                                    "comment_code": comment_code_re,
-                                    "to_nickname": to_nickname_re
-                                },
-                                success: function (result) {
-                                    if (result == "X") {
-                                        alert('댓글 내용을 제대로 입력해주세요.');
-                                    } else {
-                                        location.href = "/all/service/question-public-detail?bno=" + hidden_bno;
-                                    }
-                                }
-                            });
-                        } else {
-                            event.preventDefault();
-                        }
+                    $(e.target).parent().parent().parent().parent().after(html);
+                    
+                    // 답글 취소폼으로 만들기
+                   	$(e.target).after('<a class="com_reply_del_click"><b>답글취소</b></a>');
+                   	$(e.target).css('display', 'none')
+                    // 답글 취소시
+                    $('.com_reply_del_click').click(function(){
+                    	$('.com_reply_del_click').remove();
+                    	$('.c_l_comment_new').remove();
+                   		$(e.target).css('display', 'block');
                     });
+                    // 작성 완료시
+                    if(document.querySelector('.c_i_new_btn button')){
+	                    document.querySelector('.c_i_new_btn button').addEventListener('click', function (event) {
+	                    	// 댓글 원본 코드, 닉네임, 내용
+		                    var origin_code_re = e.target.parentElement.parentElement.firstElementChild.value;
+		                    var to_nickname_re = e.target.parentElement.parentElement.children[1].value;
+		                    var comment_code_re = document.querySelector('.r_new_content textarea').value;
+	                        var con_del = confirm('정말 답글을 작성하시겠습니까?');
+	                        if (con_del == true) {
+	                            $.ajax({
+	                                url: "/all/service/question-public-reply/insert",
+	                                type: 'get',
+	                                data: {
+	                                    "bno": hidden_bno,
+	                                    "origin_code": origin_code_re,
+	                                    "comment_code": comment_code_re,
+	                                    "to_nickname": to_nickname_re
+	                                },
+	                                success: function (result) {
+	                                    if (result == "X") {
+	                                        alert('댓글 내용을 제대로 입력해주세요.');
+	                                    } else {
+	                                        location.href = "/all/service/question-public-detail?bno=" + hidden_bno;
+	                                    }
+	                                }
+	                            });
+	                        } else {
+	                            event.preventDefault();
+	                        }
+	                    });
+                	}
                 } else {
                     // 답글이 이미 있다
-                    alert("답글을 작성해주세요.");
+                    alert("댓글을 작성해주세요.");
                 }
                 // 답글 취소시
             })
@@ -213,9 +252,11 @@ function comment() {
         // 각각 댓글 객체
         const comment_fix_list = document.querySelectorAll(".com_btn .com_btn_fix a");
         for (const com_fix of comment_fix_list) {
+        
             com_fix.addEventListener('click', function (e) {
                 // 댓글이 수정폼으로 바뀌어야함. 수정폼은 한개.
-                if (!document.querySelector('.c_l_comment_fix')) {
+                if (!document.querySelector('.c_l_comment_new') && !document.querySelector('.c_l_reply_new')
+                && !document.querySelector('.c_l_reply_fix') && !document.querySelector('.c_l_comment_fix')) {
                     // 수정폼 생성 + 원본 가리기
                     // 원본 코멘트
                     var origin_comment = e.target.parentElement.parentElement.children[2].value;
@@ -223,42 +264,57 @@ function comment() {
                     e.target.parentElement.parentElement.parentElement.parentElement.style.display = "none";
                     // 수정폼 생성
                     var html = '<div class="c_l_comment_fix">';
-                    html += '<div class="c_fix_content">';
-                    html += '<textarea placeholder="내용을 입력해 주세요." name="description" id="fix_con_input">' + origin_comment + '</textarea>';
+                    html += '<div class="c_l_comment_fix_content">';
+                    html += '<div class="c_fix_textarea">';
+                    html += '<textarea wrap="hard" placeholder="내용을 입력해 주세요." name="description" id="fix_con_input">' + origin_comment + '</textarea>';
+                    html += '</div>';
                     html += '<div class="fix_con_btn"><button>수정하기</button></div>';
-                    html += '</div></div>';
-                    e.target.parentElement.parentElement.parentElement.parentElement.after('html');
-                    // 수정폼 완료시 + 수정폼 삭제 + 원본 보여주기
-                    // 댓글 원본 코드, 내용
-                    var c_code_fix = e.target.parentElement.parentElement.firstElementChild.value;
-                    var comment_code_fix = document.querySelector('.c_fix_content textarea').value;
-                    // 수정 완료시
-                    document.querySelector('.c_fix_content .fix_con_btn button').addEventListener('click', function (event) {
-                        var con_fix = confirm('정말 답글을 수정하시겠습니까?');
-                        if (con_fix == true) {
-                            $.ajax({
-                                url: "/all/service/question-public-comment/fix",
-                                type: 'get',
-                                data: {
-                                    "bno": hidden_bno,
-                                    "c_code": c_code_fix,
-                                    "comment_code": comment_code_fix,
-                                },
-                                success: function (result) {
-                                    if (result == "X") {
-                                        alert('댓글 내용을 제대로 입력해주세요.');
-                                    } else {
-                                        location.href = "/all/service/question-public-detail?bno=" + hidden_bno;
-                                    }
-                                }
-                            });
-                        } else {
-                            event.preventDefault();
-                        }
+                    html += '</div>';
+                    html += '</div>';
+                    $(e.target).parent().parent().parent().parent().after(html);
+                    
+                    // 수정 취소폼으로 만들기
+                   	$('.c_l_comment_fix').append('<a class="com_fix_del_click" style="text-decoration:none"><b style="font-size:13px; color: gray;">수정취소</b></a>');
+                    // 수정 취소시
+                    $('.com_fix_del_click').click(function(){
+                    	$('.com_fix_del_click').remove();
+                    	$('.c_l_comment_fix').remove();
+                   		e.target.parentElement.parentElement.parentElement.parentElement.style.display = "flex";
                     });
+                    
+                    // 수정폼 완료시 + 수정폼 삭제 + 원본 보여주기
+                    // 수정 완료시
+                    if (document.querySelector('.c_l_comment_fix_content .fix_con_btn button')){
+	                    document.querySelector('.c_l_comment_fix_content .fix_con_btn button').addEventListener('click', function (event) {
+	                    	// 댓글 원본 코드, 내용
+	                    	var c_code_fix = e.target.parentElement.parentElement.firstElementChild.value;
+	                    	var comment_code_fix = document.querySelector('.c_fix_textarea textarea').value;
+	                        var con_fix = confirm('정말 답글을 수정하시겠습니까?');
+	                        if (con_fix == true) {
+	                            $.ajax({
+	                                url: "/all/service/question-public-comment/fix",
+	                                type: 'get',
+	                                data: {
+	                                    "bno": hidden_bno,
+	                                    "c_code": c_code_fix,
+	                                    "comment_code": comment_code_fix,
+	                                },
+	                                success: function (result) {
+	                                    if (result == "X") {
+	                                        alert('댓글 내용을 제대로 입력해주세요.');
+	                                    } else {
+	                                        location.href = "/all/service/question-public-detail?bno=" + hidden_bno;
+	                                    }
+	                                }
+	                            });
+	                        } else {
+	                            event.preventDefault();
+	                        }
+	                    });
+                    }
                 } else {
                     // 답글이 이미 있다
-                    alert("댓글을 수정해주세요.");
+                    alert("댓글을 작성해주세요.");
                 }
                 // 답글 취소시
             })
@@ -305,27 +361,39 @@ function comment() {
     if (document.querySelector('.c_l_reply')) {
         // 각각 답글 객체
         // 답글의 답글 시작
-        const reply_reply_list = document.querySelectorAll(".com_btn .com_btn_reply a");
+        const reply_reply_list = document.querySelectorAll(".reply_btn .reply_btn_reply a");
         for (const reply_reply of reply_reply_list) {
             reply_reply.addEventListener('click', function (e) {
                 // 답글이 하나만 떠있어야함. 이미 존재하면 취소.
-                if (!document.querySelector('.c_l_reply_new')) {
+                if (!document.querySelector('.c_l_comment_new') && !document.querySelector('.c_l_reply_new')
+                && !document.querySelector('.c_l_reply_fix') && !document.querySelector('.c_l_comment_fix')) {
                     // 아래에 답글 작성 폼 생김
                     var html = '<div class="c_l_reply_new">';
                     html += '<div class="reply_new_blank">↳</div>';
                     html += '<div class="r_new_content">';
-                    html += '<textarea placeholder="내용을 입력해 주세요." id="e_cont_detail_input"></textarea>';
+                    html += '<textarea wrap="hard" placeholder="내용을 입력해 주세요." id="e_cont_detail_input"></textarea>';
                     html += '<div class="c_i_new_btn"><button>등록</button></div>';
                     html += '</div></div></div>';
-                    e.target.parentElement.parentElement.parentElement.parentElement.after('html');
-                    // 답글 원본 코드, 닉네임, 내용
-                    var origin_code_reply = e.target.parentElement.parentElement.firstElementChild.value;
-                    var to_nickname_reply = e.target.parentElement.parentElement.children[1].value;
-                    var comment_code_reply = document.querySelector('.r_new_content textarea').value;
+                    $(e.target).parent().parent().parent().parent().after(html);
+                    
+                    // 답글 취소폼으로 만들기
+                   	$(e.target).after('<a class="reply_reply_del_click"><b>답글취소</b></a>');
+                   	$(e.target).css('display', 'none')
+                    // 답글 취소시
+                    $('.reply_reply_del_click').click(function(){
+                    	$('.reply_reply_del_click').remove();
+                    	$('.c_l_reply_new').remove();
+                   		$(e.target).css('display', 'block');
+                    });
+                    
                     // 작성 완료시
                     document.querySelector('.c_i_new_btn button').addEventListener('click', function (event) {
-                        var con_del = confirm('정말 답글을 작성하시겠습니까?');
-                        if (con_del == true) {
+                    	// 답글 원본 코드, 닉네임, 내용
+                   		var origin_code_reply = e.target.parentElement.parentElement.firstElementChild.value;
+                    	var to_nickname_reply = e.target.parentElement.parentElement.children[1].value;
+                    	var comment_code_reply = document.querySelector('.r_new_content textarea').value;
+                        var c_reply_del = confirm('정말 답글을 작성하시겠습니까?');
+                        if (c_reply_del == true) {
                             $.ajax({
                                 url: "/all/service/question-public-reply/insert",
                                 type: 'get',
@@ -347,9 +415,9 @@ function comment() {
                             event.preventDefault();
                         }
                     });
-                } else {
+                } else if (document.querySelectorAll('.c_l_reply_new').length==1) {
                     // 답글이 이미 있다
-                    alert("답글을 작성해주세요.");
+                    alert("댓글을 작성해주세요.");
                 }
                 // 답글 취소시
             })
@@ -364,7 +432,8 @@ function comment() {
         for (const reply_fix of reply_fix_list) {
             reply_fix.addEventListener('click', function (e) {
                 // 댓글이 수정폼으로 바뀌어야함. 수정폼은 한개.
-                if (!document.querySelector('.c_l_reply_fix')) {
+                if (!document.querySelector('.c_l_comment_new') && !document.querySelector('.c_l_reply_new')
+                && !document.querySelector('.c_l_reply_fix') && !document.querySelector('.c_l_comment_fix')) {
                     // 수정폼 생성 + 원본 가리기
                     // 원본 코멘트
                     var reply_origin_comment = e.target.parentElement.parentElement.children[2].value;
@@ -373,41 +442,58 @@ function comment() {
                     // 수정폼 생성
                     var html = '<div class="c_l_reply_fix">';
                     html += '<div class="r_fix_content">';
-                    html += '<textarea placeholder="내용을 입력해 주세요." name="description" id="fix_reply_input">' + reply_origin_comment + '</textarea>';
-                    html += '<div class="fix_con_btn"><button>수정하기</button></div>';
-                    html += '</div></div>';
-                    e.target.parentElement.parentElement.parentElement.parentElement.after('html');
-                    // 수정폼 완료시 + 수정폼 삭제 + 원본 보여주기
-                    // 댓글 원본 코드, 내용
-                    var c_code_fix_reply = e.target.parentElement.parentElement.firstElementChild.value;
-                    var comment_code_fix_reply = document.querySelector('.r_fix_content textarea').value;
-                    // 수정 완료시
-                    document.querySelector('.r_fix_content .fix_con_btn button').addEventListener('click', function (event) {
-                        var con_fix = confirm('정말 답글을 수정하시겠습니까?');
-                        if (con_fix == true) {
-                            $.ajax({
-                                url: "/all/service/question-public-comment/fix",
-                                type: 'get',
-                                data: {
-                                    "bno": hidden_bno,
-                                    "c_code": c_code_fix_reply,
-                                    "comment_code": comment_code_fix_reply,
-                                },
-                                success: function (result) {
-                                    if (result == "X") {
-                                        alert('답글 내용을 제대로 입력해주세요.');
-                                    } else {
-                                        location.href = "/all/service/question-public-detail?bno=" + hidden_bno;
-                                    }
-                                }
-                            });
-                        } else {
-                            event.preventDefault();
-                        }
+                    html += '<div class="reply_blank">↳</div>';
+                    html += '<div class="r_fix_textarea">';
+                    html += '<textarea wrap="hard" placeholder="내용을 입력해 주세요." name="description" id="fix_reply_input">' + reply_origin_comment + '</textarea>';
+                    html += '</div>';
+                    html += '<div class="fix_reply_btn"><button>수정하기</button></div>';
+                    html += '</div>';
+                    html += '</div>';
+                    $(e.target).parent().parent().parent().parent().after(html);
+                    
+                    // 수정 취소폼으로 만들기
+                   	$('.c_l_reply_fix').append('<a class="reply_fix_del_click" style="text-decoration:none"><b style="font-size:13px; color: gray; margin-left:20px;">수정취소</b></a>');
+                    // 수정 취소시
+                    $('.reply_fix_del_click').click(function(){
+                    	$('.reply_fix_del_click').remove();
+                    	$('.c_l_reply_fix').remove();
+                   		e.target.parentElement.parentElement.parentElement.parentElement.style.display = "flex";
                     });
+                    
+                    // 수정폼 완료시 + 수정폼 삭제 + 원본 보여주기
+                    // 수정 완료시
+                    if (document.querySelector('.r_fix_content .fix_reply_btn button')){
+	                    document.querySelector('.r_fix_content .fix_reply_btn button').addEventListener('click', function (event) {
+	                    // 댓글 원본 코드, 내용
+                    	var c_code_fix_reply = e.target.parentElement.parentElement.children[3].value;
+                    	var comment_code_fix_reply = document.querySelector('.r_fix_textarea textarea').value;
+                    	console.log(comment_code_fix_reply);
+	                        var c_reply_fix = confirm('정말 답글을 수정하시겠습니까?');
+	                        if (c_reply_fix == true) {
+	                            $.ajax({
+	                                url: "/all/service/question-public-reply/fix",
+	                                type: 'get',
+	                                data: {
+	                                    "bno": hidden_bno,
+	                                    "c_code": c_code_fix_reply,
+	                                    "comment_code": comment_code_fix_reply
+	                                },
+	                                success: function (result) {
+	                                    if (result == "X") {
+	                                        alert('답글 내용을 제대로 입력해주세요.');
+	                                    } else {
+	                                        location.href = "/all/service/question-public-detail?bno=" + hidden_bno;
+	                                    }
+	                                }
+	                            });
+	                        } else {
+	                            event.preventDefault();
+	                        }
+	                    });
+	                }
                 } else {
                     // 답글이 이미 있다
-                    alert("답글을 수정해주세요.");
+                    alert("댓글을 작성해주세요.");
                 }
             })
         }
@@ -420,16 +506,16 @@ function comment() {
         const reply_del_list = document.querySelectorAll(".reply_btn .reply_btn_del a");
         for (const reply_del of reply_del_list) {
             reply_del.addEventListener('click', function (e) {
-                var c_code_del = e.target.parentElement.parentElement.firstElementChild.value;
+                var c_code_del_reply = e.target.parentElement.parentElement.children[3].value;
                 // 답글을 삭제함
-                var con_del = confirm('정말 답글을 삭제하시겠습니까?');
-                if (con_del == true) {
+                var c_reply_del = confirm('정말 답글을 삭제하시겠습니까?');
+                if (c_reply_del == true) {
                     $.ajax({
                         url: "/all/service/question-public-reply/delete",
                         type: 'get',
                         data: {
                             "bno": hidden_bno,
-                            "c_code": c_code_del
+                            "c_code": c_code_del_reply
                         },
                         success: function (result) {
                             if (result == "X") {
@@ -445,31 +531,6 @@ function comment() {
             });
         }
         // 답글 삭제 끝
-        // 댓글 입력창
-        if (document.querySelector('.c_i_btn button')) {
-            var input_btn = document.querySelector('.c_i_btn button');
-            var comment_code = document.querySelector('.com_input .c_i_textarea textarea').value;
-
-            if (comment_code.length == 0) {
-                comment_code = " ";
-            }
-            $.ajax({
-                url: "/all/service/question-public-comment/insert",
-                type: 'get',
-                data: {
-                    "bno": hidden_bno,
-                    "comment_code": comment_code
-                },
-                success: function (result) {
-                    if (result == "X") {
-                        alert('댓글 내용을 제대로 입력해주세요.');
-                    } else {
-                        location.href = "/all/service/question-public-detail?bno=" + hidden_bno;
-                    }
-                }
-            });
-        }
-
     }
     // 답글 끝
 }

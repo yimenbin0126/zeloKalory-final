@@ -181,6 +181,51 @@ public class e_ServiceController {
         }
 	}
 	
+	// 프로필 이미지 불러오기
+	@GetMapping("/load-proimg")
+	public void getLoad_proimg(
+			HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String fileName
+			)
+			throws Exception {
+		System.out.println("ServiceController - getFileDownload - 첨부파일 다운로드");
+		
+		// 객체에서 정보 가져오기 (이름, 경로)
+		String filePath = "C:\\zerokalory_file";
+		// 파일 객체 선언 (파일 경로, 파일 이름)
+        File file = new File(filePath, fileName);
+        int fileLength = (int)file.length();
+        
+        if (fileLength > 0) {
+        	// 파일 학장자 체크
+        	if (file.getName().endsWith(".jpg") || file.getName().endsWith(".jpeg")) {
+        		response.setContentType("image/jpeg");
+        		} else if (file.getName().endsWith(".png")) {
+        		response.setContentType("image/png");
+        		} 
+        	response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\";");
+            response.setHeader("Content-Transfer-Encoding", "binary");
+            response.setHeader("Content-Length", "" + fileLength);
+            response.setHeader("Pragma", "no-cache;");
+            response.setHeader("Expires", "-1;");
+            
+            // FileInputStream : 파일을 바이트 스트림으로 읽어줌
+			try (FileInputStream fis = new FileInputStream(file);
+					OutputStream out = response.getOutputStream();) {
+				int readCount = 0;
+				byte[] buffer = new byte[1024];
+				// fis.read(buffer) : 파일 바이트 타입으로 읽기
+				// -1 : 파일 다 읽었을 때
+				// write : 읽어들인 파일의 바이트를 출력
+				while ((readCount = fis.read(buffer)) != -1) {
+					out.write(buffer, 0, readCount);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
+	}
+	
 	// 자주하는 질문 - 상세보기
 	@GetMapping("/question-detail")
 	public ModelAndView getQuestion_detail(
@@ -737,6 +782,7 @@ public class e_ServiceController {
 		// 댓글도 가져오기
 		List<e_SvCommentDTO> comment_list = new ArrayList<e_SvCommentDTO>();
 		e_SvCommentDTO s_commentDTO = new e_SvCommentDTO();
+		s_commentDTO.setBno(bno);
 		comment_list = s_service.comment_load_All(s_commentDTO);
 		// 로그인한 경우 (작성자와 같은 아이디 아닐시 증가)
 		HttpSession session = request.getSession();
@@ -1311,6 +1357,8 @@ public class e_ServiceController {
 		s_commentDTO.setNickname(m_dto.getNickname());
 		// 댓글 내용
 		s_commentDTO.setComment_code(comment_code);
+		// 프로필 이미지
+		s_commentDTO.setPro_img(m_dto.getPro_img());
 		// bno
 		s_commentDTO.setBno(bno);
 		// member_no
@@ -1347,6 +1395,8 @@ public class e_ServiceController {
 		e_MemberDTO m_dto = new e_MemberDTO();
 		m_dto = (e_MemberDTO)session.getAttribute("user");
 		s_commentDTO.setNickname(m_dto.getNickname());
+		// 프로필 이미지
+		s_commentDTO.setPro_img(m_dto.getPro_img());
 		// to_nickname
 		s_commentDTO.setTo_nickname(to_nickname);
 		// 댓글 내용
@@ -1409,6 +1459,7 @@ public class e_ServiceController {
 		s_commentDTO.setBno(bno);
 		s_commentDTO.setC_code(c_code);
 		s_commentDTO.setComment_code(comment_code);
+		System.out.println(s_commentDTO.toString());
 		s_service.comment_update(s_commentDTO);
 		return "O";
 	}

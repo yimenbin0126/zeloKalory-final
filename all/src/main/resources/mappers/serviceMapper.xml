@@ -721,6 +721,7 @@
 		, create_time
 		, bno
 		, member_no
+		, pro_img
 		)
 		VALUES
 		(#{c_code}
@@ -729,9 +730,10 @@
 		, #{to_nickname}
 		, #{nickname}
 		, #{comment_code}
-		, (SELECT sysdate + (INTERVAL '9' HOUR) FROM dual)
+		, (TO_CHAR(sysdate + (INTERVAL '9' HOUR), 'YYYY-MM-DD HH24:MI'))
 		, #{bno}
 		, #{member_no}
+		, #{pro_img}
 		)
 	</insert>
 	
@@ -739,7 +741,7 @@
 	<update id="comment_update">
 		UPDATE sv_comment
 		SET comment_code = #{comment_code},
-		create_time = (SELECT sysdate + (INTERVAL '9' HOUR) FROM dual),
+		create_time = (TO_CHAR(sysdate + (INTERVAL '9' HOUR), 'YYYY-MM-DD HH24:MI')),
 		type_code = #{type_code}
 		WHERE c_code = #{c_code}
 	</update>
