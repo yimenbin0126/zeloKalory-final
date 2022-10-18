@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="todoListMapper">
+
+	<!-- 월간 todolist 읽기 (달력표시용) -->
+	<select id="readMonth" parameterType="com.zerocalorie.calender.dto.TodoListDTO" resultType="com.zerocalorie.calender.dto.TodoListDTO">
+		SELECT * FROM T_TODOLIST WHERE MEMBER_NO = #{member_no} AND TO_CHAR(TDL_DATE,'yyyy-fmmm')= #{tdl_date}
+	</select>
+	
+	
+	<select id="read" parameterType="com.zerocalorie.calender.dto.TodoListDTO" resultType="com.zerocalorie.calender.dto.TodoListDTO">
+		SELECT * FROM T_TODOLIST 
+		WHERE MEMBER_NO = #{member_no}
+		AND TO_CHAR(TDL_DATE,'yyyy-fmmm-dd')= #{tdl_date}
+	</select>
+	
+	
+	<insert id="add" parameterType="com.zerocalorie.calender.dto.TodoListDTO" >
+		INSERT INTO T_TODOLIST
+		(TDL_NO,TDL_DATE,TDL_CONTENTS,TDL_CATEGORY,MEMBER_NO)
+		VALUES(T_TODOLIST_SEQUENCE.NEXTVAL,TO_DATE(#{tdl_date},'yyyy-fmmm-dd'),#{tdl_contents},#{tdl_category},#{member_no})
+	</insert>
+	
+	<delete id="del" parameterType="com.zerocalorie.calender.dto.TodoListDTO" >
+		DELETE FROM T_TODOLIST
+		WHERE TDL_NO = #{tdl_no}
+	</delete>
+	
+	<update id="mod" parameterType="com.zerocalorie.calender.dto.TodoListDTO" >
+		UPDATE T_TODOLIST
+		SET TDL_CONTENTS = #{tdl_contents}, TDL_CATEGORY = #{tdl_category}
+		WHERE TDL_NO = #{tdl_no}
+	</update>
+	
+</mapper>
