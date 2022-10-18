@@ -328,6 +328,13 @@
 											<!-- 작성 시간 -->
 											<div class="com_createtime">
 												<%=s_commentDTO.getCreate_time()%>
+												<%
+													if (s_commentDTO.getType_code().equals("comment_update")){
+												%>
+												<span style="padding-left:3px; font-size:11px; color:gray;">수정됨</span>
+												<%
+													}
+												%>
 											</div>
 										</div>
 										<!-- 댓글 내용 -->
@@ -411,6 +418,13 @@
 											<!-- 작성 시간 -->
 											<div class="com_createtime">
 												<%=s_commentDTO.getCreate_time()%>
+												<%
+													if (s_commentDTO.getType_code().equals("reply_update")){
+												%>
+												<span style="padding-left:3px; font-size:11px; color:gray;">수정됨</span>
+												<%
+													}
+												%>
 											</div>
 										</div>
 										<!-- 답글 내용 -->
