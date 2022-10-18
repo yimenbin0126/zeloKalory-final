@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="mypageChartMapper">
+
+	<!-- 몸무게 정보 조회(read) -->
+	<select id="read" parameterType="com.zerocalorie.mypage.dto.MypageChartDTO" resultType="com.zerocalorie.mypage.dto.MypageChartDTO">
+		select * from T_WEIGHT_RCD WHERE MEMBER_NO  = #{member_no} order by WEIGHT_NO 
+	</select>
+	
+	<insert id="add" parameterType="com.zerocalorie.mypage.dto.MypageChartDTO" >
+		INSERT INTO T_WEIGHT_RCD 
+		VALUES(T_WEIGHT_RCD_SEQUENCE.NEXTVAL, #{current_weight}, #{target_weight}, sysdate, #{member_no} )
+	</insert>
+	
+	<update id="mod" parameterType="com.zerocalorie.mypage.dto.MypageChartDTO" >
+		UPDATE T_WEIGHT_RCD 
+		SET CURRENT_WEIGHT=#{current_weight}, TARGET_WEIGHT = #{target_weight}
+		WHERE MEMBER_NO =#{member_no} and to_char(WEIGHT_DATE,'yyyy-mm-dd') = to_char(sysdate,'yyyy-mm-dd') 
+	</update>
+	
+</mapper>
