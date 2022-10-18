@@ -107,6 +107,9 @@ public interface e_ServiceDAO {
 	public List<e_ServiceDTO> myboard_search_All(e_SvSearchDTO s_searchdto) throws Exception;
 	
 	// 댓글
+	// 댓글 갯수 불러오기
+  	public int comment_count_load_All(e_ServiceDTO s_dto) throws Exception;
+	
 	// 댓글 시퀀스 가져오기
  	public int comment_c_code() throws Exception;
 	

@@ -215,6 +215,11 @@ public class e_ServiceServiceimpl implements e_ServiceService {
  	}
  	
  	// 댓글
+ 	// 댓글 갯수 불러오기
+   	public int comment_count_load_All(e_ServiceDTO s_dto) throws Exception {
+   		return s_dao.comment_count_load_All(s_dto);
+   	}
+ 	
  	// 댓글 시퀀스 가져오기
   	public int comment_c_code() throws Exception {
   		return s_dao.comment_c_code();

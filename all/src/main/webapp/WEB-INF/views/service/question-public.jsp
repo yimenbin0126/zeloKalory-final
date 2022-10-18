@@ -144,19 +144,30 @@
 									<li>좋아요</li>
 								</ul>
 								<%
+									// 댓글 갯수
+									List<Integer> comment_List = new ArrayList<Integer>();
 									// 게시물들 불러오기
 									if((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")!=null
-									&& ((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")).size()!=0){
+									&& ((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")).size()!=0
+									&& ((ArrayList<Integer>)request.getAttribute("comment_List")).size()!=0){
 										s_dto_list = (ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list");
+										comment_List = (ArrayList<Integer>)request.getAttribute("comment_List");
 										for(int i=0; i<s_dto_list.size(); i++){
-												e_ServiceDTO s_dto = new e_ServiceDTO();
-												s_dto = s_dto_list.get(i);
-												if (s_dto.getAdmin_type().equals("origin")) {
+											int com_count = 0;
+											// 댓글 0개인지 확인
+											if(comment_List == null || comment_List.size()==0){
+												com_count = 0;
+											} else {
+												com_count = comment_List.get(i);
+											}
+											e_ServiceDTO s_dto = new e_ServiceDTO();
+											s_dto = s_dto_list.get(i);
+											if (s_dto.getAdmin_type().equals("origin")) {
 								%>
 								<!-- 원글일 경우 -->
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
-									<li><span class="blist_title"><%=s_dto.getTitle()%></span></li>
+									<li><div class="blist_title"><%=s_dto.getTitle()%></div> <div class="blist_comment" style="color:#1649B0;">[<%=com_count%>]</div></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>
@@ -169,7 +180,7 @@
 								<!-- 답글일 경우 : 기본 -->
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
-									<li><b>└[답글]</b> <span class="blist_title"><%=s_dto.getTitle()%></span></li>
+									<li><div style="font-weight:bold;">└[답글]</div> <div class="blist_title"><%=s_dto.getTitle()%></div> <div class="blist_comment" style="color:#1649B0;">[<%=com_count%>]</div></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>
@@ -182,7 +193,7 @@
 								<!-- 답글일 경우 : 조회수, 좋아요 순 -->
 								<ul class="e_boardlist">
 									<li value="<%=s_dto.getBno()%>"><%=s_dto.getBno()%></li>
-									<li><b onclick="location.href='/all/service/question-public-detail?bno=<%=s_dto.getGroup_origin()%>'">[<%=s_dto.getGroup_origin()%> 번의 답글]</b> <span class="blist_title"><%=s_dto.getTitle()%></span></li>
+									<li><div style="font-weight:bold;" onclick="location.href='/all/service/question-public-detail?bno=<%=s_dto.getGroup_origin()%>'">[<%=s_dto.getGroup_origin()%> 번의 답글]</div> <div class="blist_title"><%=s_dto.getTitle()%></div> <div style="color:#1649B0;">[<%=com_count%>]</div></li>
 									<li><%=s_dto.getNickname()%></li>
 									<li><%=s_dto.getCreate_time()%></li>
 									<li><%=s_dto.getView_no()%></li>

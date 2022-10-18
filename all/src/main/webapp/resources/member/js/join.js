@@ -27,11 +27,12 @@ function id_pass() {
 		        url: "/all/member/join",
 		        type:"POST",
 		        data: {
-		            e_Check_click : "Y",
+		            e_Check_click : "e_join_idcheck",
 		            e_input : document.querySelector('#e_input_id').value
 		        },
 		        success : function(data){
 		        	if(data==0){
+		        	console.log(data);
 		        		document.querySelector('#e_id_check').style.display ="block";
 		        	} else {
 		        		alert('이미 존재하는 아이디 입니다.');
@@ -134,7 +135,7 @@ function nickname() {
 		        url: "/all/member/join",
 		        type:"POST",
 		        data: {
-		            e_Check_click : "Y",
+		            e_Check_click : "e_join_nickcheck",
 		            e_input : document.querySelector('#e_input_nickname').value
 		        },
 		        success : function(data){

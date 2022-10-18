@@ -379,6 +379,11 @@ public class e_ServiceDAOimpl implements e_ServiceDAO {
   	}
   	
   	// 댓글
+  	// 댓글 갯수 불러오기
+  	public int comment_count_load_All(e_ServiceDTO s_dto) throws Exception {
+  		return sql.selectOne("serviceMapper.comment_count_load_All", s_dto);
+  	}
+  	
   	// 댓글 시퀀스 가져오기
   	public int comment_c_code() throws Exception {
  		System.out.println("e_ServiceDAOimpl - comment_c_code - 댓글 시퀀스 가져오기");

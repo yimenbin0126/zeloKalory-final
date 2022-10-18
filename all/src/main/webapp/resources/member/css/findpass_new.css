@@ -1,0 +1,84 @@
+
+
+/* 로고 */
+.e_logo {
+    font-size: 25px;
+    font-weight: bold;
+    padding: 80px 80px 60px 80px;
+    /* border-bottom: 1px solid gray; */
+    text-align: center;
+
+    /*j*/
+    border-bottom: 1px solid rgb(39, 56, 104);
+}
+
+/* 아이디 비밀번호 찾기 */
+.e_hd_choice {
+	margin-top:50px;
+	display: flex;
+	justify-content: center;
+}
+
+#e_choice_id {
+	cursor: pointer;
+	font-size: 17px;
+	background-color: lightgray;
+	padding: 20px 70px 20px 70px;
+}
+
+#e_choice_pass {
+	cursor: pointer;
+	font-size: 17px;
+	color: white;
+	background-color: gray;
+	padding: 20px 70px 20px 70px;
+}
+
+/* 입력칸 */
+.e_h_input {
+	justify-content: center;
+}
+
+.e_input_code input, .e_input_code_re input {
+	width: 445px;
+	padding: 15px;
+	margin-bottom: 10px;
+}
+
+.input_sub input {
+	margin-bottom: 200px;
+	padding: 15px 192px 15px 192px;
+	font-size: 15px;
+	font-weight: bold;
+	border: none;
+	color: white;
+	background-color: gray;
+}
+
+/* 설명 */
+.e_h_content {
+	padding-top: 30px;
+	padding-bottom: 20px;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+/* 로그인 버튼 */
+#e_login_btn {
+     /*j*/
+    width: 470px;
+    margin: 10px 0px 50px 45px;
+    padding: 15px;
+    border: 1px solid rgb(39, 56, 104);
+    background-color: rgba(245, 245, 220, 0);
+    font-size: 12px;
+    color: rgb(39, 56, 104);
+    transition: background 0.4s ease-in-out,
+                color 0.4s ease-in-out;
+}
+
+#e_login_btn:hover{
+    /*j*/
+    background: rgb(39, 56, 104);;
+    color: aliceblue;
+}

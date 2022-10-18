@@ -24,4 +24,10 @@ public interface e_MemberDAO {
 	
 	// 회원정보 변경
 	public int id_updateMember(e_MemberDTO dto) throws Exception;
+	
+	// 아이디 찾기 - 이메일
+	public e_MemberDTO findid_email(e_MemberDTO dto) throws Exception;
+	
+	// 아이디 찾기 - 이메일, 아이디
+	public e_MemberDTO findid_email_id(e_MemberDTO dto) throws Exception;
 }

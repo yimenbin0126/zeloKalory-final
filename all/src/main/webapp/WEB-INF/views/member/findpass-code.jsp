@@ -10,8 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인</title>
     <link href="/all/resources/member/css/header.css" rel="stylesheet">
-    <link href="/all/resources/member/css/login.css" rel="stylesheet">
-    <script src="/all/resources/member/js/login.js"></script>
+    <link href="/all/resources/member/css/findpass_code.css" rel="stylesheet">
+    <script src="/all/resources/member/js/findpass_code.js"></script>
     <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
@@ -76,46 +76,42 @@
     </div>
     <!-- 헤더 끝 -->
 
-    <section>
+	<section>
 		<div id="j_wrap">
 			<div id="j_box">
 				<!-- 로고 -->
-				<div class="e_logo">로그인</div>
-
-				<form name="e_loginform">
-					<!-- 아이디, 비밀번호 입력창 -->
-					<div class="e_id">
-						<h4 id="e_h4_id">아이디</h4>
-						<input type="text" name="id" id="e_input_id"
-							placeholder="아이디를 입력해 주세요." onfocus="this.placeholder=''"
-							onblur="this.placeholder='아이디를 입력해 주세요.'">
+				<div class="e_logo">아이디/비밀번호 찾기</div>
+				<%
+					if (request.getAttribute("code") != null
+					&& (e_MemberDTO)request.getAttribute("m_dto") != null){
+						e_MemberDTO _m_dto = new e_MemberDTO();
+						_m_dto = (e_MemberDTO)request.getAttribute("m_dto");
+				%>
+					<input type="hidden" id="code" value="<%=request.getAttribute("code")%>">
+					<input type="hidden" id="member_no" value="<%=_m_dto.getMember_no()%>">
+				<%
+					}
+				%>
+				<!-- 내용 -->
+				<div class="e_hd_content">
+					<!-- 인증 -->
+					<div class="e_h_content">
+						이메일로 전송한<br>
+						인증번호를 정확하게 입력해주세요.
 					</div>
-
-					<div class="e_password">
-						<h4 id="e_h4_pass">비밀번호</h4>
-						<input type="password" name="pw" id="e_input_pass"
-							placeholder="비밀번호를 입력해 주세요." onfocus="this.placeholder=''"
-							onblur="this.placeholder='비밀번호를 입력해 주세요.'">
+					<!-- 인증코드 입력 -->
+					<div class="e_h_input" id="e_h_input_new">
+						<input type="hidden" id="e_h_input_code_val" value="">
+						<div class="input_code">
+							<input type="text" id="e_input_code"
+								placeholder="인증번호를 입력해 주세요." onfocus="this.placeholder=''"
+								onblur="this.placeholder='인증번호를 입력해 주세요.'">
+						</div>
+						<div class="input_sub" id="input_sub_code">
+							<input type="submit" id="e_input_sub" value="인증하기">
+						</div>
 					</div>
-
-					<!-- 자동로그인 -->
-					<div class="e_auto_login">
-						<input type="hidden" name="e_auto_login_check" id="e_auto_login_check" value="N">
-						<input type="checkbox" name="e_auto_login"> <span
-							id="e_auto_login">자동 로그인</span>
-					</div>
-
-					<!-- 로그인 버튼-->
-					<div class="e_login">
-						<input type="submit" id="e_login_btn" value="로그인">
-					</div>
-
-					<!-- 회원가입, 비밀번호 찾기 -->
-					<div class="e_other">
-						<a class="e_join_member" href="/all/member/join">회원가입</a> <a
-							class="e_find_pass" href="/all/member/findid">아이디/비밀번호 찾기</a>
-					</div>
-				</form>
+				</div>
 			</div>
 		</div>
 	</section>

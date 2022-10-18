@@ -33,12 +33,11 @@
 		)
 	</insert>
 
-	<!-- 로그인 체크 (아이디, 비밀번호) -->
+	<!-- 로그인 체크 (아이디) -->
 	<select id="loginMember" resultType="int">
 		SELECT count(*) 
 		FROM T_member
 		WHERE id = #{id}
-		AND pw = #{pw}
 	</select>
 	
 	<!-- 회원정보 불러오기 (아이디. 로그인용) -->
@@ -82,5 +81,20 @@
 		height = #{height}
 		WHERE id = #{id}
 	</update>
+	
+	<!-- 이메일 존재 확인 -->
+	<select id="findid_email" resultType="com.zerocalorie.member.dto.e_MemberDTO">
+		SELECT *  
+		FROM T_member
+		WHERE email = #{email}
+	</select>
+	
+	<!-- 이메일, 아이디 존재 확인 -->
+	<select id="findid_email_id" resultType="com.zerocalorie.member.dto.e_MemberDTO">
+		SELECT *  
+		FROM T_member
+		WHERE email = #{email}
+		AND id = #{id}
+	</select>
 
 </mapper>

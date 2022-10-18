@@ -92,7 +92,18 @@ function form(){
 		    dataType:'text',
 		    data: formData,
 		    success: function(result){
+		    	// 데이터 null 값 없이 잘 전달됨
+		    	if(result=="title_null"){
+		    		alert('제목을 입력해 주세요.');
+		    	} else if(result=="title_full") {
+		    		alert('제목은 최대 50자 이하로 입력해주세요.');
+		    	} else if(result=="description_null") {
+		    		alert('내용을 입력해 주세요.');
+		    	} else if(result=="description_full") {
+		    		alert('내용은 최대 1000자 이하로 입력해주세요.');
+		    	} else {
 		    		location.href="/all/service/question-public";
+		    	}
 		    }
 		});
 	});

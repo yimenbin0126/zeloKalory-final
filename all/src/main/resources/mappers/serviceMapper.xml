@@ -696,6 +696,14 @@
 	</select>
 	
 	<!-- 댓글 -->
+	<!-- 댓글 갯수 불러오기 -->
+	<select id="comment_count_load_All" resultType="int">
+		SELECT count(*)
+		FROM sv_comment
+		WHERE bno = #{bno}
+		ORDER BY origin_code, c_code
+	</select>
+	
 	<!-- 댓글 전체 불러오기 -->
 	<select id="comment_load_All" resultType="com.zerocalorie.svservice.dto.e_SvCommentDTO">
 		SELECT *

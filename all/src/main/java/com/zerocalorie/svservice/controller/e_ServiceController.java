@@ -688,12 +688,20 @@ public class e_ServiceController {
 		s_page.setStandard(standard);
 		// 페이지 내 게시물 목록 불러오기
 		s_dto_list = s_service.board_paging_origin_reply(s_page);
+		// 댓글 갯수 가져오기
+		List<Integer> comment_List = new ArrayList<Integer>();
+		for (int i=0; i<s_dto_list.size(); i++) {
+			e_ServiceDTO _s_dto = new e_ServiceDTO();
+			_s_dto = s_dto_list.get(i);
+			comment_List.add(s_service.comment_count_load_All(_s_dto));
+		}
 		// 게시물 원글, 답글 가져오기
 		if (s_dto_list != null && s_dto_list.size() != 0) {
 			System.out.println("ServiceController - getQuestion_public - 존재하는 게시물 있음");
 		} else {
 			System.out.println("ServiceController - getQuestion_public - 존재하는 게시물 없음");
 		}
+		mv.addObject("comment_List", comment_List);
 		mv.addObject("s_page", s_page);
 		mv.addObject("s_dto_list", s_dto_list);
 		mv.setViewName("/service/question-public");
@@ -733,12 +741,20 @@ public class e_ServiceController {
 			// 페이지 내 게시물 목록 불러오기
 			s_page.setMember_no(m_dto.getMember_no());
 			s_dto_list = s_service.myboard_paging_origin_reply(s_page);
+			// 댓글 갯수 가져오기
+			List<Integer> comment_List = new ArrayList<Integer>();
+			for (int i=0; i<s_dto_list.size(); i++) {
+				e_ServiceDTO _s_dto = new e_ServiceDTO();
+				_s_dto = s_dto_list.get(i);
+				comment_List.add(s_service.comment_count_load_All(_s_dto));
+			}
 			// 게시물 원글, 답글 가져오기
 			if (s_dto_list != null && s_dto_list.size() != 0) {
 				System.out.println("ServiceController - getQuestion_public_myboard - 존재하는 게시물 있음");
 			} else {
 				System.out.println("ServiceController - getQuestion_public_myboard - 존재하는 게시물 없음");
 			}
+			mv.addObject("comment_List", comment_List);
 			mv.addObject("s_page", s_page);
 			mv.addObject("s_dto_list", s_dto_list);
 			mv.setViewName("/service/question-public-myboard");
@@ -1162,7 +1178,7 @@ public class e_ServiceController {
 	
 	@ResponseBody
 	@PostMapping("/question-public-reply")
-	public void postQuestion_public_reply(
+	public String postQuestion_public_reply(
 			HttpServletRequest request)
 			throws Exception {
 		System.out.println("ServiceController - postQuestion_public_reply");
@@ -1203,36 +1219,48 @@ public class e_ServiceController {
 		s_dto.setTitle(multi.getParameter("title"));
 		s_dto.setDescription(multi.getParameter("description").replace("\r\n","<br>"));
 		
-		// 답글 원글 번호 불러오기
-		System.out.println(multi.getParameter("e_bno"));
-		int group_origin = Integer.valueOf(multi.getParameter("e_bno"));
-		s_dto.setGroup_origin(group_origin);
-		// 글 시퀀스 불러오기
-		int bno = s_service.board_write_bno();
-		s_dto.setBno(bno);
-		// 답글 작성
-		s_service.board_reply(s_dto);
-		// 첨부 파일 불러오기 - (2)
-		// getFileNames() : 파일 이름들 받아오기
-		Enumeration enumeration = multi.getFileNames();
-		String fileName = "";
-		String f_path = "";
-		int i = 0;
-		// 데이터가 있을때, 불러오기
-		while(enumeration.hasMoreElements()){
-			i++;
-			// 파일 객체 불러오기
-			e_SvFileDTO s_filedto = new e_SvFileDTO();
-			s_filedto.setBno(bno);
-			s_filedto.setFile_date(date_re);
-			fileName = multi.getFilesystemName((String) enumeration.nextElement());
-			s_filedto.setFilename(fileName);
-			// 파일의 전체 경로
-			f_path = savePath + "/" + fileName;
-			s_filedto.setF_path(f_path);
-			s_filedto.setFile_order(i);
-			// 첨부파일 생성
-			s_service.board_write_file(s_filedto);
+		// 제목, 내용 검사
+		if (multi.getParameter("title").trim().length()==0) {
+			return "title_null";
+		} else if (multi.getParameter("title").length()>50) {
+			return "title_full";
+		} else if (multi.getParameter("description").trim().length()==0) {
+			return "description_null";
+		} else if (multi.getParameter("description").length()>1000) {
+			return "description_full";
+		} else {
+		
+			// 답글 원글 번호 불러오기
+			int group_origin = Integer.valueOf(multi.getParameter("e_bno"));
+			s_dto.setGroup_origin(group_origin);
+			// 글 시퀀스 불러오기
+			int bno = s_service.board_write_bno();
+			s_dto.setBno(bno);
+			// 답글 작성
+			s_service.board_reply(s_dto);
+			// 첨부 파일 불러오기 - (2)
+			// getFileNames() : 파일 이름들 받아오기
+			Enumeration enumeration = multi.getFileNames();
+			String fileName = "";
+			String f_path = "";
+			int i = 0;
+			// 데이터가 있을때, 불러오기
+			while(enumeration.hasMoreElements()){
+				i++;
+				// 파일 객체 불러오기
+				e_SvFileDTO s_filedto = new e_SvFileDTO();
+				s_filedto.setBno(bno);
+				s_filedto.setFile_date(date_re);
+				fileName = multi.getFilesystemName((String) enumeration.nextElement());
+				s_filedto.setFilename(fileName);
+				// 파일의 전체 경로
+				f_path = savePath + "/" + fileName;
+				s_filedto.setF_path(f_path);
+				s_filedto.setFile_order(i);
+				// 첨부파일 생성
+				s_service.board_write_file(s_filedto);
+			}
+			return "success";
 		}
 	}
 	
@@ -1266,12 +1294,19 @@ public class e_ServiceController {
 		List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
 		// 페이지 내 게시물 목록 불러오기
 		s_dto_list = s_service.board_search_All(s_searchdto);
-		
+		// 댓글 갯수 가져오기
+		List<Integer> comment_List = new ArrayList<Integer>();
+		for (int i=0; i<s_dto_list.size(); i++) {
+			e_ServiceDTO _s_dto = new e_ServiceDTO();
+			_s_dto = s_dto_list.get(i);
+			comment_List.add(s_service.comment_count_load_All(_s_dto));
+		}
 		if (s_dto_list != null && s_dto_list.size() != 0) {
 			System.out.println("ServiceController - getQuestion_public_search - 존재하는 게시물 있음");
 		} else {
 			System.out.println("ServiceController - getQuestion_public_search - 존재하는 게시물 없음");
 		}
+		mv.addObject("comment_List", comment_List);
 		mv.addObject("s_searchdto", s_searchdto);
 		mv.addObject("s_page", s_pageviewdto);
 		mv.addObject("s_dto_list", s_dto_list);
@@ -1317,12 +1352,19 @@ public class e_ServiceController {
 		List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
 		// 페이지 내 게시물 목록 불러오기
 		s_dto_list = s_service.myboard_search_All(s_searchdto);
-		
+		// 댓글 갯수 가져오기
+		List<Integer> comment_List = new ArrayList<Integer>();
+		for (int i=0; i<s_dto_list.size(); i++) {
+			e_ServiceDTO _s_dto = new e_ServiceDTO();
+			_s_dto = s_dto_list.get(i);
+			comment_List.add(s_service.comment_count_load_All(_s_dto));
+		}
 		if (s_dto_list != null && s_dto_list.size() != 0) {
 			System.out.println("ServiceController - getQuestion_public_myboard_search - 존재하는 게시물 있음");
 		} else {
 			System.out.println("ServiceController - getQuestion_public_myboard_search - 존재하는 게시물 없음");
 		}
+		mv.addObject("comment_List", comment_List);
 		mv.addObject("s_searchdto", s_searchdto);
 		mv.addObject("s_page", s_pageviewdto);
 		mv.addObject("s_dto_list", s_dto_list);
