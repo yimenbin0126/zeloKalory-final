@@ -6,7 +6,7 @@ import com.zerocalorie.mypage.dto.MypageChartDTO;
 
 public interface MypageChartDAO {
 	
-	public List<MypageChartDTO> read(MypageChartDTO mypageChartDTO);
+	public List<MypageChartDTO> read(int member_no);
 
 	public void add(MypageChartDTO mypageChartDTO);
 	

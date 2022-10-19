@@ -31,84 +31,47 @@ public class MypageController {
 	@Autowired
 	MypageChartService mypageChartService;
 	
+	// mypage 
 	@RequestMapping("/mypage")
 	public ModelAndView mypageController(HttpServletRequest request, HttpServletResponse response
-			, @ModelAttribute MypageChartDTO mypageChartDTO
-			, @RequestParam(value = "command", required = false) String command) {
-		/* 
-		// 지수씨 부분: 이전소스 안건드리고 그대로 가져온것
-		MemberDAO dao = new MemberDAO();
-		String command = request.getParameter("command");
-		*/
-		
-		
-		if(request.getParameter("command")!=null && "editMember".equals(command)) {
-			/*
-			// 지수씨 부분
-			String id = request.getParameter("id");
-			String name = request.getParameter("name");
-			String nickname = request.getParameter("nickname");
-			String gender = request.getParameter("gender");
-			int height = Integer.parseInt(request.getParameter("height"));
-			String tel = request.getParameter("tel");
-			String email = request.getParameter("email");
-			
-			
-					
-			MemberVO vo = new MemberVO();
-			vo.setId(id);
-			vo.setName(name);
-			vo.setNickname(nickname);
-			vo.setGender(gender);
-			vo.setHeigth(height);
-			vo.setTel(tel);
-			vo.setEmail(email);
-			
-			dao.editMember(vo);
-			System.out.println("editmember 실행");
-			*/
-			
-			// 소연 부분
-		}else if ((command != null && command.equals("weightAdd"))) {
-			
-			// jsp에서 넘어온 CURRENT_WEIGHT, TARGET_WEIGHT 등이 int 변환에 문제가 생길수 있어서..
-			try {
+			, @ModelAttribute MypageChartDTO mypageChartDTO) {
 
-				e_MemberDTO sessionUserDTO = new e_MemberDTO();	// 접속자 정보
-				sessionUserDTO = (e_MemberDTO)request.getSession().getAttribute("user");
-				mypageChartDTO.setMember_no(sessionUserDTO.getMember_no());
-				
-				mypageChartService.weightAdd(mypageChartDTO);
-				
-			} catch (Exception e) {e.printStackTrace();}
-			
-		}else if ((command != null && command.equals("weightMod"))) {
-			 
-			// jsp에서 넘어온 CURRENT_WEIGHT, TARGET_WEIGHT 등이 int 변환에 문제가 생길수 있어서..
-			try {
-				e_MemberDTO sessionUserDTO = new e_MemberDTO();	// 접속자 정보
-				sessionUserDTO = (e_MemberDTO)request.getSession().getAttribute("user");
-				mypageChartDTO.setMember_no(sessionUserDTO.getMember_no());
-
-				mypageChartService.weightMod(mypageChartDTO);
-			} catch (Exception e) {e.printStackTrace();}
-		}
-		
-		
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("mypage/mypage");
 		return mav;
 	}
 	
+	// mypage 몸무게 추가
+	@RequestMapping("/weightAdd")
+	public String weightAdd(HttpServletRequest request
+			, @ModelAttribute MypageChartDTO mypageChartDTO) {
+		// jsp에서 넘어온 CURRENT_WEIGHT, TARGET_WEIGHT 등이 int 변환에 문제 try 해..
+		
+		System.out.println("mypage > /weightAdd ");
+		mypageChartService.weightAdd(request, mypageChartDTO);
+
+		return "mypage/mypage";
+	}			
+	
+	// mypage 몸무게 수정
+	@RequestMapping("/weightMod")
+	public String weightMod(HttpServletRequest request
+			, @ModelAttribute MypageChartDTO mypageChartDTO) {
+		
+		System.out.println("mypage > /weightMod ");
+		mypageChartService.weightMod(request, mypageChartDTO);
+
+		return "mypage/mypage";
+	}
+	
+	// mypage chart JSON  부분
 	@RequestMapping("/chartJSON")
 	@ResponseBody
-	public List MypageChartJSON(HttpServletRequest request) {
+	public List MypageChartJSON(@RequestParam(value = "member_no") int member_no) {
 		
 		System.out.println("MypageController > MypageChartJSON");
-		e_MemberDTO sessionUserDTO  = (e_MemberDTO)request.getSession().getAttribute("user"); // 접속자 정보
 
-		System.out.println("user: "+sessionUserDTO.getMember_no());
-		List<MypageChartDTO> MypageChartlist = mypageChartService.weightread(sessionUserDTO.getMember_no());
+		List<MypageChartDTO> MypageChartlist = mypageChartService.weightread(member_no);
 		
 		List list = new ArrayList();
 		for(int i = 0; i<MypageChartlist.size(); i++) {

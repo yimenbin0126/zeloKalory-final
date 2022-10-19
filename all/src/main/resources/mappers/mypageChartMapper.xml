@@ -6,8 +6,8 @@
 <mapper namespace="mypageChartMapper">
 
 	<!-- 몸무게 정보 조회(read) -->
-	<select id="read" parameterType="com.zerocalorie.mypage.dto.MypageChartDTO" resultType="com.zerocalorie.mypage.dto.MypageChartDTO">
-		select * from T_WEIGHT_RCD WHERE MEMBER_NO  = #{member_no} order by WEIGHT_NO 
+	<select id="read" parameterType="int" resultType="com.zerocalorie.mypage.dto.MypageChartDTO">
+		select * from T_WEIGHT_RCD WHERE MEMBER_NO  = #{_parameter} order by WEIGHT_NO 
 	</select>
 	
 	<insert id="add" parameterType="com.zerocalorie.mypage.dto.MypageChartDTO" >

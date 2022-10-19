@@ -14,8 +14,8 @@ public class MypageChartDAOImpl implements MypageChartDAO {
 	SqlSession sqlSession;
 
 	@Override
-	public List<MypageChartDTO> read(MypageChartDTO mypageChartDTO) {
-		return sqlSession.selectList("mypageChartMapper.read",mypageChartDTO);
+	public List<MypageChartDTO> read(int member_no) {
+		return sqlSession.selectList("mypageChartMapper.read",member_no);
 	}
 
 	@Override

@@ -184,7 +184,7 @@
 		}else{
 
 	 		document.add_weight.method = "post";
-			document.add_weight.action = "";
+			document.add_weight.action = "weightAdd";
 			document.add_weight.submit(); 	 
 		}	
 	}
@@ -216,7 +216,7 @@
 		}else{
 
 	 		document.mod_weight.method = "post";
-			document.mod_weight.action = "";
+			document.mod_weight.action = "weightMod";
 			document.mod_weight.submit(); 	 
 		}	
 	}
@@ -261,7 +261,7 @@
 		<div style="color: white; font-size: 13px;">
         		<%=sessionUser.getNickname()%>님 환영합니다.
         	</div>
-		<input type='button' class="j_btn3 j_btn" onclick="location.href='/all/logout'"
+		<input type='button' class="j_btn3 j_btn" onclick="location.href='/all/member/logout'"
 				value="로그아웃">
 		<input type='button' class="j_btn2 j_btn"
 				onclick="location.href='/all/mypage/mypage'" value="마이페이지"> 
