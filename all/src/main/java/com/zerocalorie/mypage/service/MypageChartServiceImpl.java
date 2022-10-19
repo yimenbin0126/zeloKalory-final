@@ -24,22 +24,12 @@ public class MypageChartServiceImpl implements MypageChartService {
 	
 	@Override
 	public void weightAdd(MypageChartDTO mypageChartDTO) {
-		/*MypageChartDTO mypageChartDTO = new MypageChartDTO();
-		mypageChartDTO.setCurrent_weight(0);
-		mypageChartDTO.setTarget_weight(0);
-		mypageChartDTO.setMember_no(0);*/
-		mypageChartDAO.add(mypageChartDTO);
-		
+		mypageChartDAO.add(mypageChartDTO);		
 	}
 	
 	@Override
 	public void weightMod(MypageChartDTO mypageChartDTO) {
-		/*MypageChartDTO mypageChartDTO = new MypageChartDTO();
-		mypageChartDTO.setCurrent_weight(0);
-		mypageChartDTO.setTarget_weight(0);
-		mypageChartDTO.setMember_no(0);*/
-		mypageChartDAO.mod(mypageChartDTO);
-		
+		mypageChartDAO.mod(mypageChartDTO);	
 	}
 
 }

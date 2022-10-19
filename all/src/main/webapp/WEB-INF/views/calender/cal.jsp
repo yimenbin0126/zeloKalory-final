@@ -234,7 +234,7 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 			<input type='button' class="j_btn3 j_btn"
 					onclick="location.href='/all/member/logout'"  value="로그아웃">
 			<input type='button' class="j_btn2 j_btn" 
-					onclick="location.href='/all/mypage'" value="마이페이지">
+					onclick="location.href='/all/mypage/mypage'" value="마이페이지">
 		</div>
 	</div>
 

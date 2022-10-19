@@ -31,7 +31,7 @@ public class MypageController {
 	@Autowired
 	MypageChartService mypageChartService;
 	
-	@RequestMapping("")
+	@RequestMapping("/mypage")
 	public ModelAndView mypageController(HttpServletRequest request, HttpServletResponse response
 			, @ModelAttribute MypageChartDTO mypageChartDTO
 			, @RequestParam(value = "command", required = false) String command) {
@@ -104,12 +104,11 @@ public class MypageController {
 	@ResponseBody
 	public List MypageChartJSON(HttpServletRequest request) {
 		
-		System.out.println("제이슨 들어왓다");
+		System.out.println("MypageController > MypageChartJSON");
 		e_MemberDTO sessionUserDTO  = (e_MemberDTO)request.getSession().getAttribute("user"); // 접속자 정보
 
 		System.out.println("user: "+sessionUserDTO.getMember_no());
 		List<MypageChartDTO> MypageChartlist = mypageChartService.weightread(sessionUserDTO.getMember_no());
-		System.out.println("MypageChartlist.size() : "+ MypageChartlist.size());
 		
 		List list = new ArrayList();
 		for(int i = 0; i<MypageChartlist.size(); i++) {

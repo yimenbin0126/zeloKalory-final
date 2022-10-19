@@ -7,10 +7,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<%	// 지수씨
-	// MemberDAO_e dao = new MemberDAO_e();
-%>
-
 <% // 소연
 	e_MemberDTO sessionUser = (e_MemberDTO)session.getAttribute("user"); %>	
 
@@ -250,14 +246,7 @@
    <!-- 헤더 시작 -->
 	<div id="j_hi">
 		<!-- <img src="./img/logo.png" id="j_logo"> -->
-		<%
-		/*
-                // 데이터 불러오기 위한 선언
-                MemberDTO_e m_dto = new MemberDTO_e();
-                MemberDAO_e m_dao = new MemberDAO_e();
-                m_dto = (MemberDTO_e)session.getAttribute("user");
-        */
-        %>
+
 
 		<ul id="j_list">
 			<li class=" j_menu"
@@ -275,7 +264,7 @@
 		<input type='button' class="j_btn3 j_btn" onclick="location.href='/all/logout'"
 				value="로그아웃">
 		<input type='button' class="j_btn2 j_btn"
-				onclick="location.href='/all/mypage'" value="마이페이지"> 
+				onclick="location.href='/all/mypage/mypage'" value="마이페이지"> 
 		</div>
 	</div>
 	<!-- 헤더 끝 -->
@@ -283,11 +272,23 @@
     <div id="j_wrap">
         <div id="j_box">
         
-            
+        	<!--  지수씨 부분 시작 -->    
 			<div id="j_sec1">
-			<!--//////////// 지수씨 파트 주석을 다 칠수 없어서 저장 해놓음 //////////////-->
+			<!--//////////// 지수씨 파트 주석을 다 칠수 없어서 나머지는 일단 다른곳에 저장 해놓음 //////////////-->
+		<%	// 지수씨
+			// MemberDAO_e dao = new MemberDAO_e();%>
+		<%
+		/*
+                // 데이터 불러오기 위한 선언
+                MemberDTO_e m_dto = new MemberDTO_e();
+                MemberDAO_e m_dao = new MemberDAO_e();
+                m_dto = (MemberDTO_e)session.getAttribute("user");
+        */
+        %>
+			
 
 			</div>
+			<!--  지수씨 부분 끝 -->
         
         
             <!-- 소연씨 파트 -->
