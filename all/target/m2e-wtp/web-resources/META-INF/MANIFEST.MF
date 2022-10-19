@@ -1,5 +1,10 @@
 Manifest-Version: 1.0
+<<<<<<< Updated upstream
 Built-By: admin
 Build-Jdk: 11.0.15
+=======
+Built-By: PC User
+Build-Jdk: 11.0.16
+>>>>>>> Stashed changes
 Created-By: Maven Integration for Eclipse
 
