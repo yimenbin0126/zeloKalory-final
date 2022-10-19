@@ -444,7 +444,7 @@ public class e_MemberController {
 		// 비밀번호 수정된거 업데이트
 		String pwd = pwdEncoder.encode(pass);
 		m_dto.setPw(pwd);
-		m_service.id_updateMember(m_dto);
+		m_service.pw_updateMember(m_dto);
 		// 세션 삭제
 		session.removeAttribute("member_findid");
 		return "O";

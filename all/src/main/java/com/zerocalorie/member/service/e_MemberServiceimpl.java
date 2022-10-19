@@ -111,6 +111,12 @@ public class e_MemberServiceimpl implements e_MemberService {
 		return dao.id_updateMember(dto);
 	}
 	
+	// 회원정보 변경 - 비밀번호
+	public int pw_updateMember(e_MemberDTO dto) throws Exception {
+		System.out.println("e_MemberServiceimpl - pw_updateMember - 회원정보 변경");
+		return dao.pw_updateMember(dto);
+	}
+	
 	// 아이디 찾기 - 이메일
 	public e_MemberDTO findid_email(e_MemberDTO dto) throws Exception {
 		System.out.println("e_MemberServiceimpl - findid_email - 아이디 찾기 - 이메일");

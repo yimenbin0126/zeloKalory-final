@@ -28,6 +28,9 @@ public interface e_MemberService {
 	// 회원정보 변경
 	public int id_updateMember(e_MemberDTO dto) throws Exception;
 	
+	// 회원정보 변경
+	public int pw_updateMember(e_MemberDTO dto) throws Exception;
+	
 	// 아이디 찾기 - 이메일
 	public e_MemberDTO findid_email(e_MemberDTO dto) throws Exception;
 	

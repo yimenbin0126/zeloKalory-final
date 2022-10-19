@@ -82,6 +82,14 @@
 		WHERE id = #{id}
 	</update>
 	
+	<!-- 회원정보 변경 -->
+	<update id="pw_updateMember">
+		UPDATE T_member  
+		set
+		pw = #{pw}
+		WHERE id = #{id}
+	</update>
+	
 	<!-- 이메일 존재 확인 -->
 	<select id="findid_email" resultType="com.zerocalorie.member.dto.e_MemberDTO">
 		SELECT *  

@@ -54,6 +54,12 @@ public class e_MemberDAOimpl implements e_MemberDAO {
 		return sql.update("memberMapper.id_updateMember", dto);
 	}
 	
+	// 회원정보 변경 - 비밀번호
+	public int pw_updateMember(e_MemberDTO dto) throws Exception {
+		System.out.println("e_MemberDAOimpl - pw_updateMember - 회원정보 변경");
+		return sql.update("memberMapper.pw_updateMember", dto);
+	}
+	
 	// 아이디 찾기 - 이메일
 	public e_MemberDTO findid_email(e_MemberDTO dto) throws Exception {
 		System.out.println("e_MemberDAOimpl - findid_email - 아이디 찾기 - 이메일");
