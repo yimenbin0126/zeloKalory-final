@@ -53,7 +53,7 @@ public class CalenderController {
 		String pageId; // 페이지 id
 		pageId = calenderService.findId(request);
 		System.out.println("pageId 되냐: "+pageId);
-//////////////////////////
+////////////////////////////////////////////////
 
 		
 		boolean mypage; // 내 페이지 인지 확인하는 변수(세션id=페이지id)
@@ -154,7 +154,6 @@ public class CalenderController {
 			, @PathVariable("pageId") String pageId) {
 
 		calenderService.todoListAdd(request, pageId);
-
 		return "redirect:/cal/"+pageId;
 	}
 	
@@ -165,7 +164,6 @@ public class CalenderController {
 			, @PathVariable("pageId") String pageId) {
 
 		calenderService.todoListDel(request);
-
 		return "redirect:/cal/"+pageId;
 	}
 		
