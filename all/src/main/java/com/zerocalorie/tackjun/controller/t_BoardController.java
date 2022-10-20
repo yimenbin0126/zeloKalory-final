@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 public interface t_BoardController {
-	
+	// 구현 전
 	public ModelAndView listArticles(HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
 	public ResponseEntity addNewArticle(MultipartHttpServletRequest multipartRequest,HttpServletResponse response) throws Exception;
