@@ -12,7 +12,7 @@
 	</select>
 	
 	<!-- 특정 게시물 불러오기 - 번호 (bno) -->
-	<select id="board_one" resultType="eunbin.DTO.e_ServiceDTO">
+	<select id="board_one" resultType="com.zerocalorie.svservice.dto.e_ServiceDTO">
 		SELECT * 
 		FROM sv_board 
 		WHERE bno = #{bno}
@@ -34,7 +34,7 @@
 	</select>
 	
 	<!-- 특정 게시물 묶음 불러오기 - 페이징 -->
-	<select id="board_paging" resultType="eunbin.DTO.e_ServiceDTO">
+	<select id="board_paging" resultType="com.zerocalorie.svservice.dto.e_ServiceDTO">
 		SELECT bno, sv_type, group_origin, group_order,
 		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
 		from
@@ -62,8 +62,16 @@
 		AND group_origin = #{group_origin}
 	</select>
 	
+	<!-- 게시물 번호 가져오기 - 답글 번호들 -->
+	<select id="board_bno_reply" resultType="int">
+		SELECT bno 
+		FROM sv_board 
+		WHERE sv_type = #{sv_type}
+		AND group_origin = #{group_origin}
+	</select>
+	
 	<!-- 게시물 원글+답글 묶음 불러오기 - 페이징 - 내 게시물만 -->
-	<select id="myboard_paging_origin_reply" resultType="eunbin.DTO.e_ServiceDTO">
+	<select id="myboard_paging_origin_reply" resultType="com.zerocalorie.svservice.dto.e_ServiceDTO">
 		SELECT bno, sv_type, group_origin, group_order,
 		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
 		from
@@ -85,7 +93,7 @@
 	</select>
 	
 	<!-- 게시물 원글+답글 묶음 불러오기 - 페이징 -->
-	<select id="board_paging_origin_reply" resultType="eunbin.DTO.e_ServiceDTO">
+	<select id="board_paging_origin_reply" resultType="com.zerocalorie.svservice.dto.e_ServiceDTO">
 		SELECT bno, sv_type, group_origin, group_order,
 		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
 		from
@@ -98,7 +106,19 @@
 				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
 				FROM sv_board
 				WHERE sv_type = #{sv_type}
-				ORDER BY group_origin DESC, bno
+				ORDER BY
+				<!-- 순번 기준 -->
+				<choose>
+					<when test="standard == 'new'">
+						group_origin DESC, bno
+					</when>
+					<when test="standard == 'view'">
+						view_no DESC, bno DESC
+					</when>
+					<when test="standard == 'like'">
+						like_check DESC, bno DESC
+					</when>
+				</choose>
 				)
 			)
 		WHERE r
@@ -204,7 +224,7 @@
 	</insert>
 	
 	<!-- 첨부파일 전부 불러오기 -->
-	<select id="board_load_file" resultType="eunbin.DTO.e_SvFileDTO">
+	<select id="board_load_file" resultType="com.zerocalorie.svservice.dto.e_SvFileDTO">
 		SELECT * 
 		FROM sv_file 
 		WHERE bno = #{bno}
@@ -212,7 +232,7 @@
 	</select>
 	
 	<!-- 첨부파일 부분 불러오기 -->
-	<select id="board_load_file_one" resultType="eunbin.DTO.e_SvFileDTO">
+	<select id="board_load_file_one" resultType="com.zerocalorie.svservice.dto.e_SvFileDTO">
 		SELECT * 
 		FROM sv_file 
 		WHERE file_order = #{file_order}
@@ -303,12 +323,12 @@
 		(#{bno}
 		, to_char(sysdate, 'yyyymmdd')
 		, #{member_ip}
-		, 0
+		, null
 		)
 	</insert>
 	
 	<!-- 테이블 불러오기 : member_no -->
-	<select id="view_load_mNo" resultType="eunbin.DTO.e_SvViewcheckDTO">
+	<select id="view_load_mNo" resultType="com.zerocalorie.svservice.dto.e_SvViewcheckDTO">
 		SELECT * 
 		FROM sv_viewcheck  
 		WHERE bno = #{bno}
@@ -316,7 +336,7 @@
 	</select>
 	
 	<!-- 테이블 불러오기 : member_ip -->
-	<select id="view_load_mIp" resultType="eunbin.DTO.e_SvViewcheckDTO">
+	<select id="view_load_mIp" resultType="com.zerocalorie.svservice.dto.e_SvViewcheckDTO">
 		SELECT * 
 		FROM sv_viewcheck  
 		WHERE bno = #{bno}
@@ -396,7 +416,7 @@
 	</update>
 	
 	<!-- 좋아요 불러오기 : 회원별 -->
-	<select id="like_load" resultType="eunbin.DTO.e_SvLikecheckDTO">
+	<select id="like_load" resultType="com.zerocalorie.svservice.dto.e_SvLikecheckDTO">
 		SELECT *
 		FROM sv_likecheck
 		WHERE bno = #{bno}
@@ -494,10 +514,8 @@
 		</where>
 	</select>
 	
-	
-	
 	<!-- 검색한 게시물 전체 가져오기 : 페이징 적용 -->
-	<select id="board_search_All" resultType="eunbin.DTO.e_ServiceDTO">
+	<select id="board_search_All" resultType="com.zerocalorie.svservice.dto.e_ServiceDTO">
 		SELECT bno, sv_type, group_origin, group_order,
 		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
 		from
@@ -546,11 +564,208 @@
 						</when>
 					</choose>
 				</where>
-				ORDER BY bno desc
+				<!-- 순번 기준 -->
+				<choose>
+					<when test="standard == 'new'">
+						ORDER BY bno desc
+					</when>
+					<when test="standard == 'view'">
+						ORDER BY view_no DESC, bno DESC
+					</when>
+					<when test="standard == 'like'">
+						ORDER BY like_check DESC, bno DESC
+					</when>
+				</choose>
 				)
 		)
 		WHERE r
 		BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
 	</select>
+	
+	<!-- question-public-myboard -->
+	<!-- 검색한 게시물 갯수 가져오기 -->
+	<select id="myboard_search_count_All" resultType="int">
+		SELECT count(*)
+		FROM sv_board 
+		<where>
+			sv_type = #{sv_type}
+			AND member_no = #{member_no}
+			<!-- 검색 타입 -->
+			<choose>
+				<!-- 제목 + 내용 -->
+				<when test="search_content != '' and search_type == 'title_content' and search_type != null">
+					AND (
+					instr(title, #{search_content}) > 0
+					OR instr(description, #{search_content}) > 0
+					)
+				</when>
+				<!-- 제목 -->
+				<when test="search_content != '' and search_type == 'title' and search_type != null">
+					AND instr(title, #{search_content}) > 0
+				</when>
+				<!-- 글 작성자 -->
+				<when test="search_content != '' and search_type == 'writer' and search_type != null">
+					AND instr(nickname, #{search_content}) > 0
+				</when>
+			</choose>
+			<!-- 검색 기간 -->
+			<choose>
+				<!-- 1일 -->
+				<when test="search_time == 'one_day' and search_time != null">
+					AND create_time BETWEEN SYSDATE-1 AND SYSDATE
+				</when>
+				<!-- 1주일 -->
+				<when test="search_time == 'one_week' and search_time != null">
+					AND create_time BETWEEN SYSDATE-7 AND SYSDATE
+				</when>
+				<!-- 1개월 -->
+				<when test="search_time == 'one_month' and search_time != null">
+					AND create_time BETWEEN to_date(add_months(sysdate, -1)) and sysdate
+				</when>
+			</choose>
+		</where>
+	</select>
+	
+	<!-- 검색한 게시물 전체 가져오기 : 페이징 적용 -->
+	<select id="myboard_search_All" resultType="com.zerocalorie.svservice.dto.e_ServiceDTO">
+		SELECT bno, sv_type, group_origin, group_order,
+		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+		from
+			(
+			SELECT
+			rownum r, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+			from
+				(
+				SELECT rownum, bno, sv_type, group_origin, group_order,
+						admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+				FROM sv_board 
+				<where>
+					sv_type = #{sv_type}
+					AND member_no = #{member_no}
+					<!-- 검색 타입 -->
+					<choose>
+						<!-- 제목 + 내용 -->
+						<when test="search_content != '' and search_type == 'title_content' and search_type != null">
+							AND (
+							instr(title, #{search_content}) > 0
+							OR instr(description, #{search_content}) > 0
+							)
+						</when>
+						<!-- 제목 -->
+						<when test="search_content != '' and search_type == 'title' and search_type != null">
+							AND instr(title, #{search_content}) > 0
+						</when>
+						<!-- 글 작성자 -->
+						<when test="search_content != '' and search_type == 'writer' and search_type != null">
+							AND instr(nickname, #{search_content}) > 0
+						</when>
+					</choose>
+					<!-- 검색 기간 -->
+					<choose>
+						<!-- 1일 -->
+						<when test="search_time == 'one_day' and search_time != null">
+							AND create_time BETWEEN SYSDATE-1 AND SYSDATE
+						</when>
+						<!-- 1주일 -->
+						<when test="search_time == 'one_week' and search_time != null">
+							AND create_time BETWEEN SYSDATE-7 AND SYSDATE
+						</when>
+						<!-- 1개월 -->
+						<when test="search_time == 'one_month' and search_time != null">
+							AND create_time BETWEEN to_date(add_months(sysdate, -1)) and sysdate
+						</when>
+					</choose>
+				</where>
+				<!-- 순번 기준 -->
+				<choose>
+					<when test="standard == 'new'">
+						ORDER BY bno desc
+					</when>
+					<when test="standard == 'view'">
+						ORDER BY view_no DESC, bno DESC
+					</when>
+					<when test="standard == 'like'">
+						ORDER BY like_check DESC, bno DESC
+					</when>
+				</choose>
+				)
+		)
+		WHERE r
+		BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
+	</select>
+	
+	<!-- 댓글 -->
+	<!-- 댓글 갯수 불러오기 -->
+	<select id="comment_count_load_All" resultType="int">
+		SELECT count(*)
+		FROM sv_comment
+		WHERE bno = #{bno}
+		ORDER BY origin_code, c_code
+	</select>
+	
+	<!-- 댓글 전체 불러오기 -->
+	<select id="comment_load_All" resultType="com.zerocalorie.svservice.dto.e_SvCommentDTO">
+		SELECT *
+		FROM sv_comment
+		WHERE bno = #{bno}
+		ORDER BY origin_code, c_code
+	</select>
+	
+	<!-- 댓글 시퀀스 -->
+	<select id="comment_c_code" resultType="int">
+		SELECT sv_c_code_SEQUENCE.nextval AS c_code FROM dual
+	</select>
+	
+	<!-- 댓글 작성 -->
+	<insert id="comment_insert">
+		INSERT INTO sv_comment 
+		(c_code
+		, origin_code
+		, type_code
+		, to_nickname
+		, nickname
+		, comment_code
+		, create_time
+		, bno
+		, member_no
+		, pro_img
+		)
+		VALUES
+		(#{c_code}
+		, #{origin_code}
+		, #{type_code}
+		, #{to_nickname}
+		, #{nickname}
+		, #{comment_code}
+		, (TO_CHAR(sysdate + (INTERVAL '9' HOUR), 'YYYY-MM-DD HH24:MI'))
+		, #{bno}
+		, #{member_no}
+		, #{pro_img}
+		)
+	</insert>
+	
+	<!-- 댓글 수정 -->
+	<update id="comment_update">
+		UPDATE sv_comment
+		SET comment_code = #{comment_code},
+		create_time = (TO_CHAR(sysdate + (INTERVAL '9' HOUR), 'YYYY-MM-DD HH24:MI')),
+		type_code = #{type_code}
+		WHERE c_code = #{c_code}
+	</update>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="comment_delete">
+		DELETE
+		FROM sv_comment 
+		WHERE origin_code = #{c_code}
+	</delete>
+	
+	<!-- 답글 삭제 -->
+	<delete id="reply_delete">
+		DELETE
+		FROM sv_comment 
+		WHERE c_code = #{c_code}
+	</delete>
 	
 </mapper>
