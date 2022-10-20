@@ -79,7 +79,6 @@ public class MypageController {
 			vo = MypageChartlist.get(i);
 			list.add(vo);
 		}
-		
 		return list;
 	}
 }

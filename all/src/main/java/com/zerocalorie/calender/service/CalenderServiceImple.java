@@ -253,112 +253,28 @@ public Map getPagingList(CalPageMbDTO calPageMbDTO, int pageNum, int countPage, 
 	@Override
 	public List<CalSearchMbDTO> searchUser(HttpServletRequest request) {
 
-		CalSearchMbDTO vo = new CalSearchMbDTO();
 		return calSearchMbDAO.searchMembers(request.getParameter("serchID"));
 
 	}
 	
-	// command 값을 받아옴 (읽기, 추가 삭제 등이 들어오면 수행 (read, add, del))
-	public void reciveCommand(HttpServletRequest request, CalPageMbDTO calPageMbVO, e_MemberDTO sessionUserDTO) {
-		String command = request.getParameter("command");
-
-		// 응원메세지 추가
-		if (command != null && command.equals("cheerMsgAdd")) {
-			cheerMsgAdd(request, calPageMbVO, sessionUserDTO);
-			
-		// 응원메세지 삭제
-		} else if (command != null && command.equals("cheerMsgDel")) {
-			
-			
-			
-			// 페이징 db 한바퀴 돌아서 전부가져옴
-			List<CheerMsgDTO> cheerMsglist = chrPagingDAO.selectPagingList( calPageMbVO , 0, chrPagingDAO.selectListCount(calPageMbVO));
-
-			CheerMsgDTO cheerMsgDTO = new CheerMsgDTO();
-
-			ArrayList<Integer> pCHR_NOList = new ArrayList<Integer>() ;
-			
-			int nowDepth = 1;
-			int nextDepth = 1;	// 다음 댓글의 자식 유무 판단
-			for(int i =0; i<cheerMsglist.size(); i++) {
-				cheerMsgDTO = (CheerMsgDTO)cheerMsglist.get(i);
-				
-				// 받아온 chr_no의 i를 찾음
-				if(cheerMsgDTO.getChr_no()==Integer.parseInt(request.getParameter("CHR_NO"))){
-					
-					// 현재 depth를 저장
-					nowDepth = cheerMsgDTO.getDepth();
-					
-					// 다음 댓글의 번호가 1이면 자식(대댓글)이 없고, 2 이면 있는것
-					if (i< cheerMsglist.size()-2) {
-						
-						CheerMsgDTO nextVO = new CheerMsgDTO();
-                		nextVO = (CheerMsgDTO)cheerMsglist.get(i+1);
-                		nextDepth = nextVO.getDepth();
-                		
-                	// 다음 댓글이 없으면 자식이 없으므로 지워져도 되니까 다음댓글을 1로 줌
-					}else {
-						nextDepth = 1;
-					}
-					
-					// 지금 댓글의 원글 갯수와 정보를 보냄(parentsDapth)
-					// 레벨 은 1부터 시작, 현재 내 레벨 빼기 때문에 -1
-					// for 내 dapth-1 만큼 돌림 	
-					Loop1:
-					for( int pDapth = 1; pDapth<cheerMsgDTO.getDepth(); pDapth++){
-						
-						// if 이전 댓글이 null 인지? 맞으면 (같이 지울 삭제된 댓글 있는지?)
-						if(cheerMsglist.get(i-pDapth).getChr_msg() == null){
-							
-							// if depth가 내 depth -1인가  맞으면 (근데 그게 내 부모댓글 인지?)
-							if(cheerMsglist.get(i-pDapth).getDepth() == cheerMsgDTO.getDepth()-pDapth){
-								// chr_no 저장
-								pCHR_NOList.add(cheerMsglist.get(i-pDapth).getChr_no());
-								
-							}else{// else  : 돌필요 없음
-								// for문 끝냄
-								break Loop1;
-							}	
-						}
-						else{ // else : 돌필요 없음
-							// for문 끝냄
-							break;
-						}
-					 }
-				}
-			} 
-			
-			
-			// 대댓글이 없는 글이라면 삭제 (다음 댓글의 Depth가 현재 Depth 보다 작거나 같으면)
-			// 하고 위에 부모댓글도 내용이 없으면 삭제
-			if(nextDepth<=nowDepth) {
-				System.out.println("nextDepth : "+nextDepth);
-				cheerMsgDel(request, pCHR_NOList); 
-				
-			// 대댓글이 있다면 내용만 비움(삭제된 메세지입니다로 표시하게됨)
-			}else {
-				System.out.println("nextDepth : "+nextDepth);
-				cheerMsgEmpty(request);
-			}
-
-		// todolist 추가
-		} else if (command != null && "tdl_contentsAdd".equals(command)) {
-			todoListAdd(request, calPageMbVO);
-		// todolist 삭제
-		} else if (command != null && "tdl_contentsDel".equals(command)) {
-			todoListDel(request);
-		// todolist 수정	
-		} else if (command != null && "tdl_contentsMod".equals(command)) {
-			todoListMod(request);
-		}
-	}
 
 	
-	
+
 	// 응원 msg db에 추가
-	public void cheerMsgAdd(HttpServletRequest request, CalPageMbDTO calPageMbDTO, e_MemberDTO sessionUserDTO ) {
+	public void cheerMsgAdd(HttpServletRequest request, String pageId) {
 		try {
+			
 			System.out.println("cheerMsgAdd 요청");
+			
+			// 주소에서 pageid를 자겨옴
+			//String pageId = findId(request);
+			
+			// 페이지 id를 이용해서 회원정보 테이블에서 회원정보no, 닉넴 가져옴
+			CalPageMbDTO calPageMbDTO = idToMbNo(pageId);
+			
+			// 세션에서 접속자의 member_no()를 가져옴
+			e_MemberDTO sessionUserDTO = (e_MemberDTO) request.getSession().getAttribute("user");
+
 			CheerMsgDTO vo = new CheerMsgDTO();
 			vo.setChr_msg(request.getParameter("CHR_MSG"));
 			vo.setFr_member_no(sessionUserDTO.getMember_no());
@@ -370,6 +286,7 @@ public Map getPagingList(CalPageMbDTO calPageMbDTO, int pageNum, int countPage, 
 		}catch(Exception e) {e.printStackTrace();}
 	}
 	
+	//TODO
 	// 응원 msg db에서 삭제
 	public void cheerMsgDel(HttpServletRequest request, List<Integer> pCHR_NOList) {
 		try {
@@ -395,6 +312,87 @@ public Map getPagingList(CalPageMbDTO calPageMbDTO, int pageNum, int countPage, 
 		}catch(Exception e) {e.printStackTrace();}
 	}
 	
+	public void cheerMsgDelnMod(HttpServletRequest request, String pageId){
+		
+		// 페이지 id를 이용해서 회원정보 테이블에서 회원정보no, 닉넴 가져옴
+		CalPageMbDTO calPageMbDTO = idToMbNo(pageId);
+		
+		// 세션에서 접속자의 member_no()를 가져옴
+		e_MemberDTO sessionUserDTO = (e_MemberDTO) request.getSession().getAttribute("user");
+		
+					
+					
+		// 페이징 db 한바퀴 돌아서 전부가져옴
+		List<CheerMsgDTO> cheerMsglist = chrPagingDAO.selectPagingList( calPageMbDTO , 0, chrPagingDAO.selectListCount(calPageMbDTO));
+
+		CheerMsgDTO cheerMsgDTO = new CheerMsgDTO();
+
+		ArrayList<Integer> pCHR_NOList = new ArrayList<Integer>() ;
+		
+		int nowDepth = 1;
+		int nextDepth = 1;	// 다음 댓글의 자식 유무 판단
+		for(int i =0; i<cheerMsglist.size(); i++) {
+			cheerMsgDTO = (CheerMsgDTO)cheerMsglist.get(i);
+			
+			// 받아온 chr_no의 i를 찾음
+			if(cheerMsgDTO.getChr_no()==Integer.parseInt(request.getParameter("CHR_NO"))){
+				
+				// 현재 depth를 저장
+				nowDepth = cheerMsgDTO.getDepth();
+				
+				// 다음 댓글의 번호가 1이면 자식(대댓글)이 없고, 2 이면 있는것
+				if (i< cheerMsglist.size()-2) {
+					
+					CheerMsgDTO nextVO = new CheerMsgDTO();
+            		nextVO = (CheerMsgDTO)cheerMsglist.get(i+1);
+            		nextDepth = nextVO.getDepth();
+            		
+            	// 다음 댓글이 없으면 자식이 없으므로 지워져도 되니까 다음댓글을 1로 줌
+				}else {
+					nextDepth = 1;
+				}
+				
+				// 지금 댓글의 원글 갯수와 정보를 보냄(parentsDapth)
+				// 레벨 은 1부터 시작, 현재 내 레벨 빼기 때문에 -1
+				// for 내 dapth-1 만큼 돌림 	
+				Loop1:
+				for( int pDapth = 1; pDapth<cheerMsgDTO.getDepth(); pDapth++){
+					
+					// if 이전 댓글이 null 인지? 맞으면 (같이 지울 삭제된 댓글 있는지?)
+					if(cheerMsglist.get(i-pDapth).getChr_msg() == null){
+						
+						// if depth가 내 depth -1인가  맞으면 (근데 그게 내 부모댓글 인지?)
+						if(cheerMsglist.get(i-pDapth).getDepth() == cheerMsgDTO.getDepth()-pDapth){
+							// chr_no 저장
+							pCHR_NOList.add(cheerMsglist.get(i-pDapth).getChr_no());
+							
+						}else{// else  : 돌필요 없음
+							// for문 끝냄
+							break Loop1;
+						}	
+					}
+					else{ // else : 돌필요 없음
+						// for문 끝냄
+						break;
+					}
+				 }
+			}
+		} 
+		
+		
+		// 대댓글이 없는 글이라면 삭제 (다음 댓글의 Depth가 현재 Depth 보다 작거나 같으면)
+		// 하고 위에 부모댓글도 내용이 없으면 삭제
+		if(nextDepth<=nowDepth) {
+			System.out.println("nextDepth : "+nextDepth);
+			cheerMsgDel(request, pCHR_NOList); 
+			
+		// 대댓글이 있다면 내용만 비움(삭제된 메세지입니다로 표시하게됨)
+		}else {
+			System.out.println("nextDepth : "+nextDepth);
+			cheerMsgEmpty(request);
+		}
+	}
+	
 	// 응원 msg db에서 메세지만 비움
 	public void cheerMsgEmpty(HttpServletRequest request) {
 		try {
@@ -407,7 +405,7 @@ public Map getPagingList(CalPageMbDTO calPageMbDTO, int pageNum, int countPage, 
 	}
 	
 	// todoList 추가
-	public void todoListAdd(HttpServletRequest request, CalPageMbDTO calPageMbDTO) {
+	public void todoListAdd(HttpServletRequest request, String pageId) {
 		try {
 			TodoListDTO vo = new TodoListDTO();
 			
@@ -416,12 +414,14 @@ public Map getPagingList(CalPageMbDTO calPageMbDTO, int pageNum, int countPage, 
 			int pageDate = Integer.parseInt(request.getParameter("pageDate"));
 	
 			String tdl_date = pageYear+"-"+pageMonth+"-"+pageDate;
-			
 			vo.setTdl_contents( request.getParameter("tdl_contents") );
-			//vo.setTdl_contents( "ㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱ" );
 			vo.setTdl_category(request.getParameter("tdl_category") );
 			vo.setTdl_date(tdl_date);
-			vo.setMember_no(calPageMbDTO.getMember_no());
+			vo.setMember_no(idToMbNo(pageId).getMember_no());
+			
+			System.out.println("tdl_date : " + vo.getTdl_date());
+			System.out.println("tdl_contents : " + vo.getTdl_contents());
+			System.out.println("tdl_category : " + vo.getTdl_category());
 			todoListDAO.add(vo);
 		}catch(Exception e) {e.printStackTrace();}
 	}
@@ -441,6 +441,9 @@ public Map getPagingList(CalPageMbDTO calPageMbDTO, int pageNum, int countPage, 
 		vo.setTdl_contents( (request.getParameter("tdl_contents") ));
 		todoListDAO.mod(vo);
 	}
+
+
+
 	
 
 }

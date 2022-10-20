@@ -16,15 +16,11 @@ public class CalSearchMbDAOImpl implements CalSearchMbDAO {
 	@Override
 	public List<CalSearchMbDTO> searchMembers(String id) {
 
-		return sqlSession.selectList("calSearchMbMapper.searchMembers",id);
+		System.out.println(">>>>>>>>>>>>>>>> id : " + id);
+		List<CalSearchMbDTO> list = sqlSession.selectList("calSearchMbMapper.searchMembers",id);
+		
+		System.out.println(">>>>>>>>>>>>>>>> list: " + list.size());
+		
+		return list;
 	}
-	/*
-	@Override
-	public List<CalSearchMbDTO> searchMembers(String id) {
-		System.out.println("serchIDserchIDserchIDserchIDserchID : "+id);
-		CalSearchMbDTO calSearchMbDTO = new CalSearchMbDTO();
-		calSearchMbDTO.setId(id);
-		return sqlSession.selectList("calSearchMbMapper.searchMembers",calSearchMbDTO);
-	}
-*/
 }

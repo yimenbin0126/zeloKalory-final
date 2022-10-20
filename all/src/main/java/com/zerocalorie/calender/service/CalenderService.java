@@ -14,6 +14,8 @@ import com.zerocalorie.member.dto.e_MemberDTO;
 
 
 public interface CalenderService {
+	
+	// >>> 페이지관련
 
 	// 주소에서 id 가져옴
 	public String findId(HttpServletRequest request);
@@ -42,26 +44,32 @@ public interface CalenderService {
 	// 친구 검색
 	public List<CalSearchMbDTO> searchUser(HttpServletRequest request);
 	
-	// command 값을 받아옴 (읽기, 추가 삭제 등이 들어오면 수행 (read, add, del))
-	public void reciveCommand(HttpServletRequest request, CalPageMbDTO calPageMbVO, e_MemberDTO sessionUserDTO);
+
 	
-	// 응원 msg db에 추가
-	public void cheerMsgAdd(HttpServletRequest request, CalPageMbDTO calPageMbDTO, e_MemberDTO sessionUserDTO );
+	// >> 응원 메세지
 	
+	// 응원 msg 추가 >> 했음
+	public void cheerMsgAdd(HttpServletRequest request, String pageId);
 	
-	// 응원 msg db에서 삭제
+	// 응원 msg 삭제 또는 수정 >> 했음
+	public void cheerMsgDelnMod(HttpServletRequest request, String pageId);
+	
+	// 응원 msg db에서 삭제 >> cheerMsgDelnMod 했음
 	public void cheerMsgDel(HttpServletRequest request, List<Integer> pCHR_NOList);
 
-	// 응원 msg db에서 메세지만 비움
+	// 응원 msg db에서 메세지만 비움 >> cheerMsgDelnMod 했음
 	public void cheerMsgEmpty(HttpServletRequest request);
 	
-	// todoList 추가
-	public void todoListAdd(HttpServletRequest request, CalPageMbDTO calPageMbDTO);
 	
-	// todoList 삭제
+	// >> todolist
+	
+	// todoList 추가 >> 했음
+	public void todoListAdd(HttpServletRequest request, String pageId);
+	
+	// todoList 삭제 >> 했음
 	public void todoListDel(HttpServletRequest request);
 	
-	// todoList 수정
+	// todoList 수정 >> 했음
 	public void todoListMod(HttpServletRequest request);
 
 }

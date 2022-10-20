@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.zerocalorie.calender.dto.CalPageMbDTO;
 import com.zerocalorie.calender.dto.CalSearchMbDTO;
@@ -33,22 +36,35 @@ public class CalenderController {
 	@Autowired
 	CalenderService calenderService;
 
-	@RequestMapping("/*")
-	public ModelAndView calenderController(HttpServletRequest request, HttpServletResponse response
-	// , @ModelAttribute CalPageMbDTO calPageMbDTO
-			, @RequestParam(value = "command", required = false) String command) {
 
-		CalPageMbDTO calPageMbDTO;
-		e_MemberDTO sessionUserDTO;
+	// calender 페이지
+	@RequestMapping("/*")
+	public ModelAndView calenderController(HttpServletRequest request, 
+											HttpServletResponse response
+			//, @RequestParam(value = "command", required = false) String command) 
+			//, @PathVariable("pageId") String pageId
+			, @ModelAttribute (value = "serchMemberlist") ArrayList<CalSearchMbDTO> serchMemberlist
+			) throws Exception {
+				
+		System.out.println(">>>>>>>>>받는 serchMemberlist : "+ serchMemberlist);
+		
+		
+///////////////////////////  @PathVariable 로 대신한 부분
+		String pageId; // 페이지 id
+		pageId = calenderService.findId(request);
+		System.out.println("pageId 되냐: "+pageId);
+//////////////////////////
+
+		
 		boolean mypage; // 내 페이지 인지 확인하는 변수(세션id=페이지id)
 		int calPageMbNo; // 페이지 멤버no
 		String calPageMbNickName; // 페이지 멤버닉넴
-		String pageId; // 페이지 id
+		
 
 		Map pageDateInfo = new HashMap(); // 페이지 날짜정보 map
 
 		// 세션에서 접속자의 member_no()를 가져옴
-		sessionUserDTO = (e_MemberDTO) request.getSession().getAttribute("user");
+		e_MemberDTO sessionUserDTO = (e_MemberDTO) request.getSession().getAttribute("user");
 
 		System.out.println("sessionUserDTO 되냐: "+sessionUserDTO);
 
@@ -60,12 +76,9 @@ public class CalenderController {
 			return mav;
 		}
 
-		pageId = calenderService.findId(request);
-		
-		System.out.println("pageId 되냐: "+pageId);
 
 		// 페이지 id를 이용해서 회원정보 테이블에서 회원정보no, 닉넴 가져옴
-		calPageMbDTO = calenderService.idToMbNo(pageId);
+		CalPageMbDTO calPageMbDTO = calenderService.idToMbNo(pageId);
 
 		// 접속자가 본인 페이지 보는거면 true
 		mypage = calenderService.checkMyPage(pageId, sessionUserDTO);
@@ -73,18 +86,13 @@ public class CalenderController {
 		// JSP(뷰)에서 가져온 pageYear, pageMonth 있는지확인 후 있으면 해당날짜 돌려주고, 없으면 오늘날짜 세팅
 		pageDateInfo = calenderService.setPageDate(request);
 
-		/////////////////////////////////////////////////////////////
-		
-		// command 값을 받아옴 (읽기, 추가 삭제 등이 들어오면 수행 (read, add, del))
-		calenderService.reciveCommand(request, calPageMbDTO, sessionUserDTO );
-		
-		
+
 		//////////////// 창 새로고침 되면서 기본적으로 조회되는 것들	
 		// >>>>응원msg db에서 조회 
 		//TODO : 응원메세지 조회 대신 페이징
 //		//List<CheerMsgVO> cheerMsglist = cheerMsgRead (calPageMbVO);
 		
-		// 페이징
+		// 페이징 (응원메세지 조회)
 		Map chrPagingMap = calenderService.paging(request,  response, calPageMbDTO);
 		
 		// >>>>달력 db에서 조회 
@@ -94,13 +102,12 @@ public class CalenderController {
 		List<TodoListDTO> todoListlist = calenderService.TodoListRead(request, calPageMbDTO, pageDateInfo);
 		
 		// >>>> 회원 조회  
-		List<CalSearchMbDTO> serchMemberlist = calenderService.searchUser(request);
-				
-		
-		
+		// List<CalSearchMbDTO> serchMemberlist = calenderService.searchUser(request);
+
 		////////////////////////////////////////////////////////////////
 		ModelAndView mav = new ModelAndView();
 
+		mav.addObject("pageId", pageId);
 		mav.addObject("mypage", mypage);
 		mav.addObject("pageDateInfo", pageDateInfo);
 		mav.addObject("calPageMbDTO", calPageMbDTO);
@@ -110,9 +117,86 @@ public class CalenderController {
 		mav.addObject("calTodolist", calTodolist);
 		mav.addObject("serchMemberlist", serchMemberlist);
 		
+		
+		
 		mav.setViewName("calender/cal");
 		return mav;
 	}
+	
+	///////////////////// >> 응원 메세지 관련
+	
+	// calender 응원메세지 추가
+	@RequestMapping("/{pageId}/cheerMsgAdd")
+	public String cheerMsgAdd(HttpServletRequest request
+			, @PathVariable("pageId") String pageId) {
+
+		calenderService.cheerMsgAdd(request, pageId);
+		
+		//return "forward:/cal/"+pageId;
+		return "redirect:/cal/"+pageId;
+	}
+
+	// calender 응원메세지 삭제 & 수정
+	@RequestMapping("/{pageId}/cheerMsgDel")
+	public String cheerMsgDel(HttpServletRequest request
+			, @PathVariable("pageId") String pageId) {
+
+		calenderService.cheerMsgDelnMod(request, pageId);
+
+		return "redirect:/cal/"+pageId;
+	}
+	
+	
+	///////////////////// >> todoList 관련
+	// todoList 추가
+	@RequestMapping("/{pageId}/todoListAdd")
+	public String todoListAdd(HttpServletRequest request
+			, @PathVariable("pageId") String pageId) {
+
+		calenderService.todoListAdd(request, pageId);
+
+		return "redirect:/cal/"+pageId;
+	}
+	
+	
+	// todoList 삭제
+	@RequestMapping("/{pageId}/todoListDel")
+	public String todoListDel(HttpServletRequest request
+			, @PathVariable("pageId") String pageId) {
+
+		calenderService.todoListDel(request);
+
+		return "redirect:/cal/"+pageId;
+	}
+		
+	// todoList 삭제수정( 비우기)
+	@RequestMapping("/{pageId}/todoListMod")
+	public String todoListMod(HttpServletRequest request
+			, @PathVariable("pageId") String pageId) {
+
+		calenderService.todoListMod(request);
+
+		return "redirect:/cal/"+pageId;
+	}
+	
+	///////////////////// >> 친구검색 관련
+	//TODO
+	// 친구검색
+	@RequestMapping("/{pageId}/searchUser")
+	public String searchUser(RedirectAttributes rttr
+			, HttpServletRequest request
+			, @PathVariable("pageId") String pageId) {
+
+		System.out.println("친구 검색");
+		List<CalSearchMbDTO> serchMemberlist = calenderService.searchUser(request);
+		
+		rttr.addFlashAttribute("serchMemberlist", serchMemberlist);
+		
+		System.out.println(">>>>>>>>>보내는 serchMemberlist : "+ serchMemberlist);
+		return "redirect:/cal/"+pageId;
+	}
+	
+	
 	@RequestMapping("/pro_img.do")
 	void ProfileImg(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 경로 확보

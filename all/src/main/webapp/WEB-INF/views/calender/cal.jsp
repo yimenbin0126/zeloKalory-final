@@ -9,6 +9,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <% boolean mypage= (boolean)request.getAttribute("mypage");%>
+<% String pageId= (String)request.getAttribute("pageId");%>
 
 <% // >> 페이징 
 
@@ -207,7 +208,7 @@ function select_line_fn(){
 }
 
 </script>
-<script src="/all/calender/cal.js"></script>
+
 </head>
 <body>
 
@@ -259,8 +260,8 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 				<!-- 응원 메세지 div -->
 				<div id="yoo_chr_obj">
 				
-					<!-- 응원메세지 입력창과 버튼 -->
-					<form name="cheerMsgAdd_frm" action="" enctype="utf-8" method="post" onSubmit="return click_CheerMsgAdd(this)">
+					<!-- 응원메세지 입력창과 버튼 --> 
+					<form name="cheerMsgAdd_frm" action="<%=pageId%>/cheerMsgAdd" enctype="utf-8" method="post" onSubmit="return click_CheerMsgAdd(this)">
 						<div id="yoo_chr_input_btn">
 							<input id="yoo_chr_input" name="CHR_MSG" type="text" placeholder="응원메세지 남기기! 300자까지 입력 가능합니다!! " maxlength="300"><input id="yoo_chr_btn" type="submit" value="입력" >
 							<input type="hidden" name="command" value="cheerMsgAdd" />
@@ -303,7 +304,7 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 							<!-- 응원메세지 지우기 버튼 (내 페이지일 경우 또는 글쓴이)-->
 							<% if(mypage || (sessionUser.getMember_no()==cheerMsgDTO.getFr_member_no()) ){ %>
 								<!-- 지우기 버튼 눌렸을때 form -->
-								<form method="post" action="" encType="utf-8" class="chr_del_form">
+								<form method="post" action="<%=pageId%>/cheerMsgDel" encType="utf-8" class="chr_del_form">
 									<input class='yoo_chr_view_del_btn del_chr' type='submit' value='지우기'>
 									<input type="hidden" name="CHR_NO" value="<%= cheerMsgDTO.getChr_no()%>" />
 									<input type="hidden" name="command" value="cheerMsgDel" />
@@ -315,7 +316,7 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 							<%} %>
 							<br>
 							<!-- 응원 메세지 댓글 입력 -->
-							<form class="chr_rpl_form" name="chr_rpl_form"  action="" enctype="utf-8" method="post" onSubmit="return click_CheerMsgAdd(this)" >
+							<form class="chr_rpl_form" name="chr_rpl_form"  action="<%=pageId%>/cheerMsgAdd" enctype="utf-8" method="post" onSubmit="return click_CheerMsgAdd(this)" >
 								ㄴ><input type="text" class="chl_rpl_input" name="CHR_MSG" maxlength="300">
 								<input class='rpl_chr_btn ' type='submit' value='댓글입력' >
 								<input type="hidden" name="command" value="cheerMsgAdd" />
@@ -370,7 +371,7 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 				<!-- id로 친구 검색 div -->
 				<div id="yoo_find_obj">
 					<div id="yoo_find_input_btn"> 
-						<form name="member" method="post" action="" id="yoo_find_input_btn_frm"  onSubmit="return find_form(this)">
+						<form name="member" method="post" action="<%=pageId%>/searchUser" id="yoo_find_input_btn_frm"  onSubmit="return find_form(this)">
 							<input id="yoo_find_input" type="text" placeholder="Id를 입력하세요"name="serchID" maxlength="9"><input id="yoo_find_btn" type="submit" value="입력" > 
 	               			<input type="hidden" name="pageYear" value="<%=year%>"/> 
 							<input type="hidden" name="pageMonth" value="<%=month%>" /> 
@@ -503,20 +504,18 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 			    			<% if(mypage){ %>
 			    			
 			    				<!-- 운동 todolist 지우기 form -->
-				    			<form  action="" method="post" class="tdl_del_form" >
+				    			<form  action="<%=pageId%>/todoListDel" method="post" class="tdl_del_form" >
 				    				<!-- 삭제 버튼 -->
 					    			<button type="submit" class="button_del mod_hidden"><img src="/all/resources/calender/img/cancel_icon.png"  class="del_icon"></button>
 					    			<input type="hidden" name="tdl_no" value="${todoListlist[i2].tdl_no }"/>
-					    			<input type="hidden" name="command" value="tdl_contentsDel"/>
 					    			<input type="hidden" name="pageYear" value="<%=year%>"/> 
 									<input type="hidden" name="pageMonth" value="<%=month%>" /> 
 									<input type="hidden" name="pageDate" value="<%=date%>" /> 
 				    			</form>	
 						
 								<!-- 운동 todolist 수정 form -->
-						    	<form  action="" method="post" class= "tdl_mod_form" onSubmit="return tdl_contents_form(this)">
+						    	<form  action="<%=pageId%>/todoListMod" method="post" class= "tdl_mod_form" onSubmit="return tdl_contents_form(this)">
 						    		<input type="hidden" name="tdl_no" value="${todoListlist[i2].tdl_no }"/>
-						    		<input type="hidden" name="command" value="tdl_contentsMod"/>
 						    		<input type="hidden" name="tdl_category" value="운동"/>
 						    		<input type="hidden" name="pageYear" value="<%=year%>"/> 
 									<input type="hidden" name="pageMonth" value="<%=month%>" /> 
@@ -540,10 +539,9 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 				
 				<!-- 내 페이지라면 todolist 등록 버튼 보이게 -->
 				<% if(mypage){ %>
-				<form  action="" method="post" onSubmit="return tdl_contents_form(this)">	
+				<form  action="<%=pageId%>/todoListAdd" method="post" onSubmit="return tdl_contents_form(this)">	
 				    <input type="text" id="j_msg1" name="tdl_contents" maxlength="300">
 				    <input type="submit" id="j_app1" value="등록">
-				    <input type="hidden" name="command" value="tdl_contentsAdd"/>
 				    <input type="hidden" name="tdl_category" value="운동"/>
 				    <input type="hidden" name="pageYear" value="<%=year%>"/> 
 					<input type="hidden" name="pageMonth" value="<%=month%>" /> 
@@ -575,20 +573,18 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 			    			<% if(mypage){ %>
 			    			
 			    				<!-- 식단 todolist 지우기 form -->
-				    			<form  action="" method="post" class="tdl_del_form" >
+				    			<form  action="<%=pageId%>/todoListDel" method="post" class="tdl_del_form" >
 				    				<!-- 삭제 버튼 -->
 					    			<button type="submit" class="button_del mod_hidden"><img src="/all/resources/calender/img/cancel_icon.png"  class="del_icon"></button>
 					    			<input type="hidden" name="tdl_no" value="${todoListlist[i2].tdl_no }"/>
-					    			<input type="hidden" name="command" value="tdl_contentsDel"/>
 					    			<input type="hidden" name="pageYear" value="<%=year%>"/> 
 									<input type="hidden" name="pageMonth" value="<%=month%>" /> 
 									<input type="hidden" name="pageDate" value="<%=date%>" /> 
 				    			</form>	
 						
 								<!-- 식단 todolist 수정 form -->
-						    	<form  action="" method="post" class= "tdl_mod_form" onSubmit="return tdl_contents_form(this)">
+						    	<form  action="<%=pageId%>/todoListMod" method="post" class= "tdl_mod_form" onSubmit="return tdl_contents_form(this)">
 						    		<input type="hidden" name="tdl_no" value="${todoListlist[i2].tdl_no }"/>
-						    		<input type="hidden" name="command" value="tdl_contentsMod"/>
 						    		<input type="hidden" name="tdl_category" value="식단"/>
 						    		<input type="hidden" name="pageYear" value="<%=year%>"/> 
 									<input type="hidden" name="pageMonth" value="<%=month%>" /> 
@@ -613,10 +609,9 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 	   			<!-- 내 페이지라면 todolist 등록 버튼 보이게 -->
 				<% if(mypage){ %>
 				<!-- todolist 식단 등록 -->
-				<form  action="" method="post" onSubmit="return tdl_contents_form(this)">	
+				<form  action="<%=pageId%>/todoListAdd" method="post" onSubmit="return tdl_contents_form(this)">	
 				    <input type="text" id="j_msg1" name="tdl_contents" maxlength="300">
 				    <input type="submit" id="j_app1" value="등록">
-				    <input type="hidden" name="command" value="tdl_contentsAdd"/>
 				    <input type="hidden" name="tdl_category" value="식단"/>
 				    <input type="hidden" name="pageYear" value="<%=year%>"/> 
 					<input type="hidden" name="pageMonth" value="<%=month%>" /> 
