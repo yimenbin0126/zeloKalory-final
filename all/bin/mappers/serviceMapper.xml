@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="serviceMapper">
+
+	<!-- 타입별 게시물 번호들 불러오기 (sv_type) -->
+	<select id="board_bno_All" resultType="int">
+		SELECT bno 
+		FROM sv_board 
+		WHERE sv_type = #{sv_type}
+	</select>
+	
+	<!-- 특정 게시물 불러오기 - 번호 (bno) -->
+	<select id="board_one" resultType="eunbin.DTO.e_ServiceDTO">
+		SELECT * 
+		FROM sv_board 
+		WHERE bno = #{bno}
+	</select>
+	
+	<!-- 타입별 게시물 갯수 불러오기 (sv_type) -->
+	<select id="board_count_All" resultType="int">
+		SELECT count(*)
+		FROM sv_board 
+		WHERE sv_type = #{sv_type}
+	</select>
+	
+	<!-- 타입별 게시물 갯수 불러오기 (sv_type) - 내 게시물만 -->
+	<select id="myboard_count_All" resultType="int">
+		SELECT count(*)
+		FROM sv_board 
+		WHERE sv_type = #{sv_type}
+		AND member_no = #{member_no}
+	</select>
+	
+	<!-- 특정 게시물 묶음 불러오기 - 페이징 -->
+	<select id="board_paging" resultType="eunbin.DTO.e_ServiceDTO">
+		SELECT bno, sv_type, group_origin, group_order,
+		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+		from
+			(
+			SELECT
+			rownum r, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+			from (
+				SELECT rownum, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+				FROM sv_board
+				WHERE sv_type = #{sv_type}
+				ORDER BY bno desc
+			)
+		)
+		WHERE r
+		BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
+	</select>
+	
+	<!-- 게시물 번호 가져오기 - 개별 -->
+	<select id="board_bno" resultType="_int">
+		SELECT bno 
+		FROM sv_board 
+		WHERE sv_type = #{sv_type}
+		AND group_origin = #{group_origin}
+	</select>
+	
+	<!-- 게시물 원글+답글 묶음 불러오기 - 페이징 - 내 게시물만 -->
+	<select id="myboard_paging_origin_reply" resultType="eunbin.DTO.e_ServiceDTO">
+		SELECT bno, sv_type, group_origin, group_order,
+		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+		from
+			(
+			SELECT
+			rownum r, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+			from (
+				SELECT rownum, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+				FROM sv_board
+				WHERE sv_type = #{sv_type}
+				AND member_no = #{member_no}
+				ORDER BY group_origin DESC, bno
+				)
+			)
+		WHERE r
+		BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
+	</select>
+	
+	<!-- 게시물 원글+답글 묶음 불러오기 - 페이징 -->
+	<select id="board_paging_origin_reply" resultType="eunbin.DTO.e_ServiceDTO">
+		SELECT bno, sv_type, group_origin, group_order,
+		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+		from
+			(
+			SELECT
+			rownum r, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+			from (
+				SELECT rownum, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+				FROM sv_board
+				WHERE sv_type = #{sv_type}
+				ORDER BY group_origin DESC, bno
+				)
+			)
+		WHERE r
+		BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
+	</select>
+	
+	<!-- 글 작성 - bno 시퀀스 만들기 -->
+	<select id="board_write_bno" resultType="int">
+		SELECT sv_bno_sequence.nextval AS bno FROM dual
+	</select>
+	
+	<!-- 글 작성 - 최초 -->
+	<!-- group_order = 0 -->
+	<insert id="board_write">
+		INSERT INTO sv_board 
+		(bno
+		, sv_type
+		, group_origin
+		, group_order
+		, admin_type
+		, nickname
+		, title
+		, description
+		, create_time
+		, like_check
+		, dislike_check
+		, view_no
+		, member_no
+		)
+		VALUES
+		(#{bno}
+		, #{sv_type}
+		, #{bno}
+		, 0
+		, 'origin'
+		, #{nickname}
+		, #{title}
+		, #{description}
+		, #{create_time}
+		, 0
+		, 0
+		, 0
+		, #{member_no}
+		)
+	</insert>
+	
+	<!-- 글 작성 - 답글 group_order 시퀀스 만들기 -->
+	<select id="board_reply_group_order" resultType="int">
+		SELECT sv_group_order_SEQUENCE.nextval AS group_order FROM dual
+	</select>
+	
+	<!-- 글 작성 - 답글 -->
+	<!-- group_order = 1 -->
+	<insert id="board_reply">
+		INSERT INTO sv_board 
+		(bno
+		, sv_type
+		, group_origin
+		, group_order
+		, admin_type
+		, nickname
+		, title
+		, description
+		, create_time
+		, like_check
+		, dislike_check
+		, view_no
+		, member_no
+		)
+		VALUES
+		(#{bno}
+		, #{sv_type}
+		, #{group_origin}
+		, 0
+		, 'reply'
+		, #{nickname}
+		, #{title}
+		, #{description}
+		, #{create_time}
+		, 0
+		, 0
+		, 0
+		, #{member_no}
+		)
+	</insert>
+	
+	<!-- 첨부파일 작성 : 글과 함께 -->
+	<insert id="board_write_file">
+		INSERT INTO sv_file 
+		(bno
+		, file_order
+		, filename
+		, f_path
+		, file_date
+		)
+		VALUES
+		(#{bno}
+		, sv_f_file_order_SEQUENCE.nextval
+		, #{filename}
+		, #{f_path}
+		, #{file_date}
+		)
+	</insert>
+	
+	<!-- 첨부파일 전부 불러오기 -->
+	<select id="board_load_file" resultType="eunbin.DTO.e_SvFileDTO">
+		SELECT * 
+		FROM sv_file 
+		WHERE bno = #{bno}
+		ORDER BY file_order
+	</select>
+	
+	<!-- 첨부파일 부분 불러오기 -->
+	<select id="board_load_file_one" resultType="eunbin.DTO.e_SvFileDTO">
+		SELECT * 
+		FROM sv_file 
+		WHERE file_order = #{file_order}
+	</select>
+	
+	
+	<!-- 첨부파일 전체 삭제 : 게시물과 연관된 -->
+	<delete id="board_delete_file">
+		DELETE
+		FROM sv_file 
+		WHERE bno = #{bno}
+	</delete>
+	
+	<!-- 첨부파일 부분 삭제 : 게시물과 연관된 -->
+	<delete id="board_delete_file_one">
+		DELETE
+		FROM sv_file 
+		WHERE bno = #{bno}
+		AND file_order = #{file_order}
+	</delete>
+	
+	<!-- 글 삭제 -->
+	<delete id="board_delete">
+		DELETE
+		FROM sv_board 
+		WHERE bno = #{bno}
+	</delete>
+	
+	<!-- 글 수정 -->
+	<update id="board_fix">
+		UPDATE sv_board
+		SET title = #{title},
+		description = #{description}
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 부수적인 기능 (조회수, 좋아요) -->
+	<!-- 조회수 -->
+	<!-- 조회수 증가 -->
+	<update id="board_viewUp">
+		UPDATE sv_board
+		SET view_no = #{view_no}
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 조회수 증가 가능 여부 체크 -->
+	<!-- 테이블이 존재하는지 확인 : member_no -->
+	<select id="view_alive_mNo" resultType="_int">
+		SELECT count(*) 
+		FROM sv_viewcheck 
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</select>
+	
+	<!-- 테이블이 존재하는지 확인 : member_ip -->
+	<select id="view_alive_mIp" resultType="_int">
+		SELECT count(*) 
+		FROM sv_viewcheck 
+		WHERE bno = #{bno}
+		AND member_ip = #{member_ip}
+	</select>
+	
+	<!-- 테이블 없을 시 생성 : member_no -->
+	<insert id="view_insert_mNo">
+		INSERT INTO sv_viewcheck 
+		(bno
+		, view_time
+		, member_ip
+		, member_no
+		)
+		VALUES
+		(#{bno}
+		, to_char(sysdate, 'yyyymmdd')
+		, 'none'
+		, #{member_no}
+		)
+	</insert>
+	
+	<!-- 테이블 없을 시 생성 : member_ip -->
+	<insert id="view_insert_mIp">
+		INSERT INTO sv_viewcheck 
+		(bno
+		, view_time
+		, member_ip
+		, member_no
+		)
+		VALUES
+		(#{bno}
+		, to_char(sysdate, 'yyyymmdd')
+		, #{member_ip}
+		, 0
+		)
+	</insert>
+	
+	<!-- 테이블 불러오기 : member_no -->
+	<select id="view_load_mNo" resultType="eunbin.DTO.e_SvViewcheckDTO">
+		SELECT * 
+		FROM sv_viewcheck  
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</select>
+	
+	<!-- 테이블 불러오기 : member_ip -->
+	<select id="view_load_mIp" resultType="eunbin.DTO.e_SvViewcheckDTO">
+		SELECT * 
+		FROM sv_viewcheck  
+		WHERE bno = #{bno}
+		AND member_ip = #{member_ip}
+	</select>
+	
+	<!-- 테이블 날짜 저장하기 : member_no -->
+	<update id="view_save_mNo">
+		UPDATE sv_viewcheck
+		SET view_time = to_char(sysdate, 'yyyymmdd')
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</update>
+	
+	<!-- 테이블 날짜 저장하기 : member_ip -->
+	<update id="view_save_mIp">
+		UPDATE sv_viewcheck
+		SET view_time = to_char(sysdate, 'yyyymmdd')
+		WHERE bno = #{bno}
+		AND member_ip = #{member_ip}
+	</update>
+	
+	<!-- 이미 있는 테이블에서 날짜 체크 -->
+	<select id="view_dateCheck" resultType="_int">
+		SELECT
+		TO_CHAR(SYSDATE, 'YYYYMMDD')
+		 - TO_CHAR(#{view_time}, 'YYYYMMDD') 
+		FROM DUAL
+	</select>
+	
+	<!-- 조회수 테이블 삭제 -->
+	<delete id="view_delete">
+		DELETE
+		FROM sv_viewcheck 
+		WHERE bno = #{bno}
+	</delete>
+	
+	<!-- 좋아요 -->
+	<!-- 좋아요 : 좋아요만 있는 경우 -->
+	<!-- 테이블 생성 : 좋아요 증가 -->
+	<insert id="like_insert_one">
+		INSERT INTO sv_likecheck 
+		(bno
+		, like_check
+		, dislike_check
+		, member_no
+		)
+		VALUES
+		(#{bno}
+		, 1
+		, 0
+		, #{member_no}
+		)
+	</insert>
+	
+	<!-- 좋아요 증가 -->
+	<update id="like_up">
+		UPDATE sv_likecheck
+		SET like_check = 1
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</update>
+
+	<!-- 좋아요 감소 -->
+	<update id="like_down">
+		UPDATE sv_likecheck
+		SET like_check = 0
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</update>
+	
+	<!-- 좋아요 업데이트 -->
+	<update id="like_update">
+		UPDATE sv_board
+		SET like_check = #{like_check}
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 좋아요 불러오기 : 회원별 -->
+	<select id="like_load" resultType="eunbin.DTO.e_SvLikecheckDTO">
+		SELECT *
+		FROM sv_likecheck
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</select>
+	
+	<!-- 좋아요 테이블 삭제 -->
+	<delete id="like_delete">
+		DELETE
+		FROM sv_likecheck 
+		WHERE bno = #{bno}
+	</delete>
+	
+	<!-- 싫어요 -->
+	<!-- 테이블 생성 : 싫어요 증가 -->
+	<insert id="dislike_insert_one">
+		INSERT INTO sv_likecheck 
+		(bno
+		, like_check
+		, dislike_check
+		, member_no
+		)
+		VALUES
+		(#{bno}
+		, 0
+		, 1
+		, #{member_no}
+		)
+	</insert>
+	
+	<!-- 싫어요 증가 -->
+	<update id="dislike_up">
+		UPDATE sv_likecheck
+		SET dislike_check = 1
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</update>
+
+	<!-- 싫어요 감소 -->
+	<update id="dislike_down">
+		UPDATE sv_likecheck
+		SET dislike_check = 0
+		WHERE bno = #{bno}
+		AND member_no = #{member_no}
+	</update>
+	
+	<!-- 싫어요 업데이트 -->
+	<update id="dislike_update">
+		UPDATE sv_board
+		SET dislike_check = #{dislike_check}
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 검색 -->
+	<!-- question-member, question-guide -->
+	<!-- 검색한 게시물 갯수 가져오기 -->
+	<select id="board_search_count_All" resultType="int">
+		SELECT count(*)
+		FROM sv_board 
+		<where>
+			sv_type = #{sv_type}
+			<!-- 검색 타입 -->
+			<choose>
+				<!-- 제목 + 내용 -->
+				<when test="search_content != '' and search_type == 'title_content' and search_type != null">
+					AND (
+					instr(title, #{search_content}) > 0
+					OR instr(description, #{search_content}) > 0
+					)
+				</when>
+				<!-- 제목 -->
+				<when test="search_content != '' and search_type == 'title' and search_type != null">
+					AND instr(title, #{search_content}) > 0
+				</when>
+				<!-- 글 작성자 -->
+				<when test="search_content != '' and search_type == 'writer' and search_type != null">
+					AND instr(nickname, #{search_content}) > 0
+				</when>
+			</choose>
+			<!-- 검색 기간 -->
+			<choose>
+				<!-- 1일 -->
+				<when test="search_time == 'one_day' and search_time != null">
+					AND create_time BETWEEN SYSDATE-1 AND SYSDATE
+				</when>
+				<!-- 1주일 -->
+				<when test="search_time == 'one_week' and search_time != null">
+					AND create_time BETWEEN SYSDATE-7 AND SYSDATE
+				</when>
+				<!-- 1개월 -->
+				<when test="search_time == 'one_month' and search_time != null">
+					AND create_time BETWEEN to_date(add_months(sysdate, -1)) and sysdate
+				</when>
+			</choose>
+		</where>
+	</select>
+	
+	
+	
+	<!-- 검색한 게시물 전체 가져오기 : 페이징 적용 -->
+	<select id="board_search_All" resultType="eunbin.DTO.e_ServiceDTO">
+		SELECT bno, sv_type, group_origin, group_order,
+		admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+		from
+			(
+			SELECT
+			rownum r, bno, sv_type, group_origin, group_order,
+				admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+			from
+				(
+				SELECT rownum, bno, sv_type, group_origin, group_order,
+						admin_type, nickname, title, description, create_time, like_check, dislike_check, view_no, member_no
+				FROM sv_board 
+				<where>
+					sv_type = #{sv_type}
+					<!-- 검색 타입 -->
+					<choose>
+						<!-- 제목 + 내용 -->
+						<when test="search_content != '' and search_type == 'title_content' and search_type != null">
+							AND (
+							instr(title, #{search_content}) > 0
+							OR instr(description, #{search_content}) > 0
+							)
+						</when>
+						<!-- 제목 -->
+						<when test="search_content != '' and search_type == 'title' and search_type != null">
+							AND instr(title, #{search_content}) > 0
+						</when>
+						<!-- 글 작성자 -->
+						<when test="search_content != '' and search_type == 'writer' and search_type != null">
+							AND instr(nickname, #{search_content}) > 0
+						</when>
+					</choose>
+					<!-- 검색 기간 -->
+					<choose>
+						<!-- 1일 -->
+						<when test="search_time == 'one_day' and search_time != null">
+							AND create_time BETWEEN SYSDATE-1 AND SYSDATE
+						</when>
+						<!-- 1주일 -->
+						<when test="search_time == 'one_week' and search_time != null">
+							AND create_time BETWEEN SYSDATE-7 AND SYSDATE
+						</when>
+						<!-- 1개월 -->
+						<when test="search_time == 'one_month' and search_time != null">
+							AND create_time BETWEEN to_date(add_months(sysdate, -1)) and sysdate
+						</when>
+					</choose>
+				</where>
+				ORDER BY bno desc
+				)
+		)
+		WHERE r
+		BETWEEN #{board_NowStartBno} AND #{board_NowEndBno} 
+	</select>
+	
+</mapper>

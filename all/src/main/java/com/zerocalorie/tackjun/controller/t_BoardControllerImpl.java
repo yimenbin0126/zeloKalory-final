@@ -86,7 +86,6 @@ public class t_BoardControllerImpl implements t_BoardController{
 	@GetMapping("/community/articleForm")
 	public String addNewArticle_get(
 			HttpServletResponse request) throws Exception {
-		System.out.println("출력");
 		return "/community/articleForm";
 	}
 	
@@ -95,6 +94,7 @@ public class t_BoardControllerImpl implements t_BoardController{
 	@ResponseBody
 	public ResponseEntity addNewArticle(MultipartHttpServletRequest multipartRequest, 
 	HttpServletResponse response) throws Exception {
+		System.out.println("dddd");
 		multipartRequest.setCharacterEncoding("utf-8");
 		Map<String,Object> articleMap = new HashMap<String, Object>();
 		Enumeration enu=multipartRequest.getParameterNames();
@@ -103,7 +103,7 @@ public class t_BoardControllerImpl implements t_BoardController{
 			String value=multipartRequest.getParameter(name);
 			articleMap.put(name,value);
 		}
-		
+
 		String imageFileName= upload(multipartRequest);
 		HttpSession session = multipartRequest.getSession();
 		e_MemberDTO memberVO = (e_MemberDTO) session.getAttribute("user");
@@ -111,7 +111,7 @@ public class t_BoardControllerImpl implements t_BoardController{
 		articleMap.put("parentNO", 0);
 		articleMap.put("member_no", member_no);
 		articleMap.put("imageFileName", imageFileName);
-		
+
 		String message;
 		ResponseEntity resEnt=null;
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -124,7 +124,7 @@ public class t_BoardControllerImpl implements t_BoardController{
 				File destDir = new File(ARTICLE_IMAGE_REPO+"\\"+articleNO);
 				FileUtils.moveFileToDirectory(srcFile, destDir,true);
 			}
-	
+
 			message = "<script>";
 			message += " alert('새글을 추가했습니다.');";
 			message += " location.href='"+multipartRequest.getContextPath()+"/community/listArticles.do'; ";
