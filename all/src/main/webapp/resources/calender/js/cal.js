@@ -2,8 +2,9 @@
 // 기본 달력 날짜 그려주기
 function yoo_drawCalendar(year, month) {
 	
+	let now = new Date();
+	
 	// 시작요일 
-    let now = new Date();
     let monthStartDay = new Date(year, month, 1);
     let start_day = monthStartDay.getDay();
     
@@ -53,7 +54,6 @@ function yoo_drawCalendar(year, month) {
 		console.log("ksdjfl");
 		document.querySelector("#yoo_tr_06").classList.add("hide");
 	}else{
-		console.log("여기");
 		document.querySelector("#yoo_tr_06").classList.remove("hide");
 	}
       

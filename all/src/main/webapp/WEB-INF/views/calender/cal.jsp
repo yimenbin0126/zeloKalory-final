@@ -69,6 +69,9 @@ if( lastNo > lastPage ){ lastNo = lastPage; }
 	
 		// 기본 달력 날짜 그려주기
 		yoo_drawCalendar(year, month);
+		
+		//오늘 날짜 셀만 표시
+		today_mark(year, month);
 				
 		// 달력에 받아온 데이터값 넣기 
 		yoo_addDataCal();
@@ -205,6 +208,19 @@ function select_line_fn(){
 	let selectLine = document.querySelector("select option:checked").value;
 	document.querySelector("#countPerPage").setAttribute("value",selectLine );
 	document.select_line_frm.submit();   
+}
+
+//오늘 날짜 셀 표시
+function today_mark(year, month) {
+	let now = new Date();
+
+	// 연도, 월이 일치하면 해당컬럼에 표시
+	if(year==now.getFullYear()){
+		if(month ==now.getMonth()){
+			
+			$(".cursor_hand[data-calnum="+ now.getDate()+"]").css("background-color","white");	
+		}
+	}
 }
 
 </script>
