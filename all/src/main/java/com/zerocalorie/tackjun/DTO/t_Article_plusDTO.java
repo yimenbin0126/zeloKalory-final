@@ -1,4 +1,4 @@
-package tackjun.DTO;
+package com.zerocalorie.tackjun.DTO;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

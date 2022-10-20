@@ -1,4 +1,4 @@
-package tackjun.controller;
+package com.zerocalorie.tackjun.controller;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,12 +25,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import eunbin.DTO.e_MemberDTO;
-import eunbin.service.e_MemberService;
-import tackjun.DTO.t_ArticleDTO;
-import tackjun.DTO.t_Article_plusDTO;
-import tackjun.DTO.t_MemberDTO;
-import tackjun.service.t_BoardService;
+import com.zerocalorie.member.dto.e_MemberDTO;
+import com.zerocalorie.member.service.e_MemberService;
+import com.zerocalorie.tackjun.DTO.t_ArticleDTO;
+import com.zerocalorie.tackjun.DTO.t_Article_plusDTO;
+import com.zerocalorie.tackjun.service.t_BoardService;
 
 @Controller
 public class t_BoardControllerImpl implements t_BoardController{

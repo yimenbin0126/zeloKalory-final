@@ -1,4 +1,4 @@
-package tackjun.DTO;
+package com.zerocalorie.tackjun.DTO;
 
 import java.sql.Date;
 

@@ -1,9 +1,9 @@
-package tackjun.service;
+package com.zerocalorie.tackjun.service;
 
 import java.util.List;
 import java.util.Map;
 
-import tackjun.DTO.*;
+import com.zerocalorie.tackjun.DTO.*;
 
 public interface t_BoardService<t_ArticleDTO> {
 	public List<t_ArticleDTO> listArticles() throws Exception;

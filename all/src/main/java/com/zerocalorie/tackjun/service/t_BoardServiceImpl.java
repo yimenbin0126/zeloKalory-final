@@ -1,4 +1,4 @@
-package tackjun.service;
+package com.zerocalorie.tackjun.service;
 
 import java.util.List;
 import java.util.Map;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import tackjun.DAO.t_BoardDAO;
-import tackjun.DTO.t_ArticleDTO;
+import com.zerocalorie.tackjun.DAO.t_BoardDAO;
+import com.zerocalorie.tackjun.DTO.t_ArticleDTO;
 
 
 @Service("t_BoardService")

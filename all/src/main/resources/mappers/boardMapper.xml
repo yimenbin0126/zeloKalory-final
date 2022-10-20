@@ -6,7 +6,7 @@
 <mapper namespace="mapper.board">
   
 
-  <select id="selectAllArticlesList" resultType="tackjun.DTO.t_ArticleDTO"   >
+  <select id="selectAllArticlesList" resultType="com.zerocalorie.tackjun.DTO.t_ArticleDTO"   >
     <![CDATA[
       SELECT *
       from t_board
@@ -30,7 +30,7 @@
 		]]>
 	</select>
 	
-  <select id="selectArticle" resultType="tackjun.DTO.t_ArticleDTO" parameterType="int">
+  <select id="selectArticle" resultType="com.zerocalorie.tackjun.DTO.t_ArticleDTO" parameterType="int">
     <![CDATA[
       SELECT * from t_board
       where articleNO = #{articleNO}		

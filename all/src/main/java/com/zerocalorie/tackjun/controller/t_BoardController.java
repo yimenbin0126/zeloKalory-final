@@ -1,4 +1,4 @@
-package tackjun.controller;
+package com.zerocalorie.tackjun.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
