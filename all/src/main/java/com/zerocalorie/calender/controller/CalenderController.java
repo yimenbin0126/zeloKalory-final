@@ -15,9 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,6 +45,9 @@ public class CalenderController {
 											HttpServletResponse response
 			//, @RequestParam(value = "command", required = false) String command) 
 			//, @PathVariable("pageId") String pageId
+			, @RequestParam(value = "pageYear", required = false) String pageYear
+			, @RequestParam(value = "pageMonth", required = false) String pageMonth
+			, @RequestParam(value = "pageDate", required = false) String pageDate
 			, @ModelAttribute (value = "serchMemberlist") ArrayList<CalSearchMbDTO> serchMemberlist
 			) throws Exception {
 				
@@ -84,7 +89,8 @@ public class CalenderController {
 		mypage = calenderService.checkMyPage(pageId, sessionUserDTO);
 
 		// JSP(뷰)에서 가져온 pageYear, pageMonth 있는지확인 후 있으면 해당날짜 돌려주고, 없으면 오늘날짜 세팅
-		pageDateInfo = calenderService.setPageDate(request);
+		//pageDateInfo = calenderService.setPageDate(request);
+		pageDateInfo = calenderService.setPageDate(pageYear, pageMonth, pageDate);
 
 
 		//////////////// 창 새로고침 되면서 기본적으로 조회되는 것들	
@@ -116,9 +122,7 @@ public class CalenderController {
 		mav.addObject("todoListlist", todoListlist);
 		mav.addObject("calTodolist", calTodolist);
 		mav.addObject("serchMemberlist", serchMemberlist);
-		
-		
-		
+
 		mav.setViewName("calender/cal");
 		return mav;
 	}
@@ -131,7 +135,7 @@ public class CalenderController {
 			, @PathVariable("pageId") String pageId) {
 
 		calenderService.cheerMsgAdd(request, pageId);
-		
+
 		//return "forward:/cal/"+pageId;
 		return "redirect:/cal/"+pageId;
 	}
@@ -150,29 +154,56 @@ public class CalenderController {
 	///////////////////// >> todoList 관련
 	// todoList 추가
 	@RequestMapping("/{pageId}/todoListAdd")
-	public String todoListAdd(HttpServletRequest request
+	public String todoListAdd(Model model
+			, HttpServletRequest request
+			, @RequestParam(value = "pageYear", required = false) String pageYear
+			, @RequestParam(value = "pageMonth", required = false) String pageMonth
+			, @RequestParam(value = "pageDate", required = false) String pageDate
 			, @PathVariable("pageId") String pageId) {
 
 		calenderService.todoListAdd(request, pageId);
+		
+		model.addAttribute("pageYear", pageYear);
+		model.addAttribute("pageMonth", pageMonth);
+		model.addAttribute("pageDate", pageDate);
+		
 		return "redirect:/cal/"+pageId;
 	}
 	
 	
 	// todoList 삭제
 	@RequestMapping("/{pageId}/todoListDel")
-	public String todoListDel(HttpServletRequest request
+	public String todoListDel(Model model
+			, HttpServletRequest request
+			, @RequestParam(value = "pageYear", required = false) String pageYear
+			, @RequestParam(value = "pageMonth", required = false) String pageMonth
+			, @RequestParam(value = "pageDate", required = false) String pageDate
 			, @PathVariable("pageId") String pageId) {
 
 		calenderService.todoListDel(request);
+		
+		model.addAttribute("pageYear", pageYear);
+		model.addAttribute("pageMonth", pageMonth);
+		model.addAttribute("pageDate", pageDate);
+		
 		return "redirect:/cal/"+pageId;
 	}
 		
-	// todoList 삭제수정( 비우기)
+	// todoList 수정
 	@RequestMapping("/{pageId}/todoListMod")
-	public String todoListMod(HttpServletRequest request
+	public String todoListMod(Model model
+			, HttpServletRequest request
+			, @RequestParam(value = "pageYear", required = false) String pageYear
+			, @RequestParam(value = "pageMonth", required = false) String pageMonth
+			, @RequestParam(value = "pageDate", required = false) String pageDate
 			, @PathVariable("pageId") String pageId) {
+System.out.println("pageYear"+ pageYear);
 
 		calenderService.todoListMod(request);
+		
+		model.addAttribute("pageYear", pageYear);
+		model.addAttribute("pageMonth", pageMonth);
+		model.addAttribute("pageDate", pageDate);
 
 		return "redirect:/cal/"+pageId;
 	}

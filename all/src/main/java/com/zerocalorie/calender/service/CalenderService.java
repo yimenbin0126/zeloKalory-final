@@ -27,8 +27,8 @@ public interface CalenderService {
 	public boolean checkMyPage(String pageId ,e_MemberDTO sessionUserDTO );
 	
 	// JSP(뷰)에서 가져온 pageYear, pageMonth 있는지확인 후 있으면 해당날짜 돌려주고, 없으면 오늘날짜 세팅
-	public Map setPageDate(HttpServletRequest request);
-	
+	//public Map setPageDate(HttpServletRequest request);
+	public Map setPageDate(String pageYear, String pageMonth, String pageDate);
 	
 	// >>> 페이징 관련
 	public Map paging(HttpServletRequest request, HttpServletResponse response, CalPageMbDTO calPageMbDTO);

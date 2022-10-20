@@ -91,14 +91,14 @@ public class CalenderServiceImple implements CalenderService {
 	
 	// JSP(뷰)에서 가져온 pageYear, pageMonth 있는지확인 후 있으면 해당날짜 돌려주고, 없으면 오늘날짜 세팅
 	@Override
-	public Map setPageDate(HttpServletRequest request) {
+	public Map setPageDate(String pageYear, String pageMonth, String pageDate) {
 		Map<String, Integer> pageDateInfo = new HashMap<String, Integer>();
 
 		// JSP(뷰)에서 가져온 날짜가 있으면 그대로 돌려줌 ( 클릭>새로고침 되도 페이지 이어짐을 위해)
-		if ((request.getParameter("pageYear") != null)) {
-			pageDateInfo.put("pageYear", Integer.parseInt(request.getParameter("pageYear")));
-			pageDateInfo.put("pageMonth", Integer.parseInt(request.getParameter("pageMonth")));
-			pageDateInfo.put("pageDate", Integer.parseInt(request.getParameter("pageDate")));
+		if (pageYear != null) {
+			pageDateInfo.put("pageYear", Integer.parseInt(pageYear));
+			pageDateInfo.put("pageMonth", Integer.parseInt(pageMonth));
+			pageDateInfo.put("pageDate", Integer.parseInt(pageDate));
 
 			System.out.println("JSP에서 가져온 날짜 : "+pageDateInfo.get("pageYear")+", "+pageDateInfo.get("pageMonth")+", "+pageDateInfo.get("pageDate"));
 		
