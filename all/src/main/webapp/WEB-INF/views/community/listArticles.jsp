@@ -137,7 +137,7 @@ request.setCharacterEncoding("UTF-8");
 										<td width="10%"><fmt:formatDate
 												value="<%=a_vo.getWriteDate()%>" /></td>
 										
-										<td align='center' width="3%"></td>
+										<td align='center' width="3%"><%=a_vo.getReccount()%></td>
 									
 									
 									</tr>

@@ -7,13 +7,33 @@
   
 
   <select id="selectAllArticlesList" resultType="com.zerocalorie.community.DTO.t_ArticleDTO"   >
-    <![CDATA[
-      SELECT *
-      from t_board
-      START WITH  parentNO=0
-      CONNECT BY PRIOR articleNO=parentNO 
-      ORDER SIBLINGS BY articleNO DESC		
-    ]]>
+<!--     <![CDATA[ -->
+<!--       SELECT * -->
+<!--       from t_board -->
+<!--       START WITH  parentNO=0 -->
+<!--       CONNECT BY PRIOR articleNO=parentNO  -->
+<!--       ORDER SIBLINGS BY articleNO DESC		 -->
+<!--     ]]> -->
+			WITH WT_REC AS (
+				SELECT
+					count(*) AS RECCOUNT
+					, SEQ
+				FROM
+					TB_REC
+				GROUP BY SEQ
+			)
+			SELECT
+				B.TITLE
+				, R.RECCOUNT
+				, B.WRITEDATE
+				, B.MEMBER_NO
+				, B.ARTICLENO
+			FROM
+				WT_REC R, T_BOARD B
+			WHERE
+				B.ARTICLENO = R.SEQ(+)
+			ORDER BY
+				B.ARTICLENO DESC
   </select>
   
 	<!--단일이미지 추가  -->
@@ -31,10 +51,32 @@
 	</select>
 	
   <select id="selectArticle" resultType="com.zerocalorie.community.DTO.t_ArticleDTO" parameterType="int">
-    <![CDATA[
+<!--     <![CDATA[
       SELECT * from t_board
       where articleNO = #{articleNO}		
-    ]]>
+    ]]> -->
+  	WITH WT_REC AS (
+		SELECT
+			count(*) AS RECCOUNT
+			, SEQ
+		FROM
+			TB_REC
+		GROUP BY SEQ
+	)
+	SELECT
+		B.TITLE 
+		, B.CONTENT
+		, R.RECCOUNT
+		, B.WRITEDATE
+		, B.MEMBER_NO
+		, B.ARTICLENO
+	FROM
+		WT_REC R, T_BOARD B
+	WHERE
+		B.ARTICLENO = R.SEQ(+)
+		AND B.ARTICLENO = #{articleNO}
+	ORDER BY
+		B.ARTICLENO DESC
   </select>
   
   <!-- 글 수정 -->

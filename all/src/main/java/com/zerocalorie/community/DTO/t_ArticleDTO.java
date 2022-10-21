@@ -17,6 +17,7 @@ public class t_ArticleDTO {
 	private String imageFileName;
 	private int member_no;
 	private Date writeDate;
+	private int reccount;
 	
 	public t_ArticleDTO() {
 		
@@ -122,6 +123,16 @@ public class t_ArticleDTO {
 		return "t_ArticleDTO [articleNO=" + articleNO + ", parentNO=" + parentNO + ", title=" + title + ", content="
 				+ content + ", imageFileName=" + imageFileName + ", member_no=" + member_no + ", writeDate=" + writeDate
 				+ "]";
+	}
+
+
+	public int getReccount() {
+		return reccount;
+	}
+
+
+	public void setReccount(int reccount) {
+		this.reccount = reccount;
 	}
 	
 	

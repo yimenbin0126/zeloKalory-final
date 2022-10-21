@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="mapper.rec">
+
+<select id="getRecCount" parameterType="com.zerocalorie.community.DTO.RecDTO" resultType="com.zerocalorie.community.DTO.RecDTO">
+	SELECT
+		count(*) AS reccount
+	FROM
+		TB_REC
+	WHERE
+		SEQ = #{articleno}
+	<if test="member_no != null"> /* 추천인 시퀀스 */
+		AND MEMBER_NO = #{member_no}
+	</if>
+</select>
+
+<select id="getRecTop5" resultType="String">
+	WITH WT AS (
+		SELECT
+			count(*) AS reccount
+			, seq
+		FROM
+			TB_REC
+		GROUP BY seq
+		ORDER BY reccount DESC
+	)
+	SELECT
+		WT.reccount
+		, B.TITLE
+	FROM
+		WT, THREE.T_BOARD B
+	WHERE
+		WT.SEQ = B.ARTICLENO
+		AND ROWNUM <![CDATA[ <= 5 ]]>
+</select>
+
+<insert id="setRecommend" parameterType="com.zerocalorie.community.DTO.RecDTO">
+	INSERT INTO THREE.TB_REC(SEQ,MEMBER_NO) VALUES(#{articleno}, #{member_no})
+</insert>
+
+</mapper>

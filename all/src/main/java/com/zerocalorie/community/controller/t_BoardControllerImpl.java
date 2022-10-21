@@ -82,6 +82,8 @@ public class t_BoardControllerImpl implements t_BoardController{
 			articleDTO_plus.setTitle(articleDTO.getTitle());
 			articleDTO_plus.setWriteDate(articleDTO.getWriteDate());
 			articleDTO_plus.setNickname(nick);
+			articleDTO_plus.setReccount(articleDTO.getReccount());
+			
 			articlesList_Plus.add(articleDTO_plus);
 		}
 		mav.addObject("articlesList_Plus", articlesList_Plus);
@@ -180,6 +182,7 @@ public class t_BoardControllerImpl implements t_BoardController{
 		articleDTO_plus.setTitle(articleDTO.getTitle());
 		articleDTO_plus.setWriteDate(articleDTO.getWriteDate());
 		articleDTO_plus.setNickname(nick);
+		articleDTO_plus.setReccount(articleDTO.getReccount());
 		mav.addObject("article", articleDTO_plus);
 		return mav;
 	}

@@ -14,6 +14,7 @@ public class t_Article_plusDTO {
 	private int member_no;
 	private Date writeDate;
 	private String nickname;
+	private int reccount;
 	
 	public t_Article_plusDTO() {
 		
@@ -131,6 +132,16 @@ public class t_Article_plusDTO {
 		return "t_Article_plusDTO [articleNO=" + articleNO + ", parentNO=" + parentNO + ", title=" + title
 				+ ", content=" + content + ", imageFileName=" + imageFileName + ", member_no=" + member_no
 				+ ", writeDate=" + writeDate + ", nickname=" + nickname + "]";
+	}
+
+
+	public int getReccount() {
+		return reccount;
+	}
+
+
+	public void setReccount(int reccount) {
+		this.reccount = reccount;
 	}
 	
 	

@@ -217,7 +217,7 @@
 					}
 			  %>
 				    <input type=button value="리스트로 돌아가기" onClick="backToList(this.form)" class="back_btn">
-				    <input type=button value="추천 ( ${article.writeDate} )"  class="get_btn">
+				    <input type=button value="추천 ( ${article.reccount} )"  class="get_btn" id="recommend">
 			   </td>
 			  </tr>
 			 </table>
@@ -228,6 +228,29 @@
 			</div>
 		</div>
 	</section>
- 
+ <script type="text/javascript">
+   		document.getElementById("recommend").addEventListener("click", function(){
+   			// 추천하기 버튼 클릭
+   			var result = '';
+   			
+   			fetch("http://localhost:8080/all/rec/recommend", {
+			  method: "POST",
+			  headers: {
+			    "Content-Type": "application/json",
+			  },
+			  body: JSON.stringify({
+				articleno: ${article.articleNO},
+			    member_no: <%=m_dto.getMember_no()%>
+			  })
+			}).then(response => {
+				if(response.ok) {
+					alert("추천하였습니다!");
+					location.reload();
+				} else if(response.status == 406) {
+					alert("이미 추천하였습니다.");
+				}
+	    	});
+   		});
+   </script>
 </body>
 </html>
