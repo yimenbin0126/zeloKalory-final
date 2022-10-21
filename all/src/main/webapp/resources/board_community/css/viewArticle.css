@@ -45,12 +45,11 @@
 	display: inline-block;
 }
 
-
 #btn_update, #btn_no {
 	/*font-weight: bold;*/
 	width: 120px;
 	height: 40px;
-	margin: 20px;
+	margin: 5px;
 	font-size: 15px;
 	border: none;
 	color: white;

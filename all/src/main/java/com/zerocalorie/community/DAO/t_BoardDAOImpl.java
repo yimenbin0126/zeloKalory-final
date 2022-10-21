@@ -1,4 +1,4 @@
-package com.zerocalorie.tackjun.DAO;
+package com.zerocalorie.community.DAO;
 
 import java.util.ArrayList;
 import java.util.List;

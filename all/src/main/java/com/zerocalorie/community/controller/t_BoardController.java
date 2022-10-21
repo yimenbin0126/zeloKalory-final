@@ -1,4 +1,4 @@
-package com.zerocalorie.tackjun.controller;
+package com.zerocalorie.community.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

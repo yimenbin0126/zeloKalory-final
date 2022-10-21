@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     isELIgnored="false"
-    import="com.zerocalorie.member.dto.e_MemberDTO,com.zerocalorie.tackjun.DAO.t_MemberDAO,com.zerocalorie.tackjun.DTO.t_Article_plusDTO" %>
+    import="com.zerocalorie.member.dto.e_MemberDTO,com.zerocalorie.community.DAO.t_MemberDAO,com.zerocalorie.community.DTO.t_Article_plusDTO" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
@@ -83,39 +83,37 @@
     <div id="j_hi">
         <!-- <img src="./img/logo.png" id="j_logo"> -->
 
-		<%
-		// 데이터 불러오기 위한 선언
-		e_MemberDTO m_dto = new e_MemberDTO();
-		e_MemberDTO m_dao = new e_MemberDTO();
-
-		// 로그인 유무
-		if ((e_MemberDTO) session.getAttribute("user") != null) {
-			m_dto = (e_MemberDTO) session.getAttribute("user");
-		%>
-		<ul id="j_list">
+      <%
+             e_MemberDTO m_dto = new e_MemberDTO();
+              
+           // 로그인 유무
+              if((e_MemberDTO)session.getAttribute("user") !=null){
+                 m_dto = (e_MemberDTO)session.getAttribute("user");
+        %>
+      <ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
             <li class="j_menu2 j_menu" onclick="location.href='/all/community/listArticles.do'">커뮤니티</li>
             <li class="j_menu3 j_menu">공지사항</li>
             <li class="j_menu5 j_menu" onclick="location.href='/all/service/allService'">고객센터</li>
         </ul>
         <div id = e_nav>
-        	<div id="e_welcome">
-        		<%=m_dto.getNickname()%>님 환영합니다.
-        	</div>
-        	<form name="e_nav_btn">
-	        	<input type ="hidden" name="e_logout" value="Y">                   
-        	</form>
-        	<!-- null 오류 방지용 시작 -->
-        	<input type ='hidden' class = "j_btn1 j_btn" onclick="location.href='/all/login'" value="로그인">
-            <input type ='hidden' class = "j_btn2 j_btn" onclick="location.href='/all/join'" value="회원가입">
+           <div id="e_welcome">
+              <%=m_dto.getNickname()%>님 환영합니다.
+           </div>
+           <form name="e_nav_btn">
+              <input type ="hidden" name="e_logout" value="Y">                   
+           </form>
+           <!-- null 오류 방지용 시작 -->
+           <input type ='hidden' class = "j_btn1 j_btn" onclick="location.href='/all/member/login'" value="로그인">
+            <input type ='hidden' class = "j_btn2 j_btn" onclick="location.href='/all/member/join'" value="회원가입">
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
-            <input type ='button' class = "e_btn e_btn" onclick="location.href='/all/logout'" value="로그아웃">
-            <input type ='button' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">
+            <input type ='button' class = "e_btn e_btn" onclick="location.href='/all/member/logout'" value="로그아웃">
+            <input type ='button' class = "e_btn2 e_btn" onclick="location.href='/all/mypage/mypage'" value="마이페이지">
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
-        	} else {
+           } else {
         %>
         <ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
@@ -124,17 +122,17 @@
             <li class="j_menu5 j_menu" onclick="location.href='/all/service/allService'">고객센터</li>
         </ul>
         <div id = j_nav>
-        	<!-- null 오류 방지용 시작 -->
-            <input type ='hidden' class = "e_btn e_btn" onclick="location.href='/all/logout'" value="로그아웃">
-            <input type ='hidden' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">               
+           <!-- null 오류 방지용 시작 -->
+            <input type ='hidden' class = "e_btn e_btn" onclick="location.href='/all/member/logout'" value="로그아웃">
+            <input type ='hidden' class = "e_btn2 e_btn" onclick="location.href='/all/mypage/mypage'" value="마이페이지">               
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
-            <input type ='button' class = "j_btn1 j_btn" onclick="location.href='/all/login'" value="로그인">
-            <input type ='button' class = "j_btn2 j_btn" onclick="location.href='/all/join'" value="회원가입">
+            <input type ='button' class = "j_btn1 j_btn" onclick="location.href='/all/member/login'" value="로그인">
+            <input type ='button' class = "j_btn2 j_btn" onclick="location.href='/all/member/join'" value="회원가입">
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
-        	}
+           }
         %>
     </div>
     <!-- 헤더 끝 -->
@@ -179,11 +177,11 @@
 			     <input type="hidden" name="originalFileName" value="${article.imageFileName }" />
 			    <img src="${contextPath}/download_t.do?articleNO=${article.articleNO}&imageFileName=${article.imageFileName}" id="preview"  /><br>
 			       
-			   </td>   
+			   </td>
 			  </tr>  
 			  <tr>
 			    <td>
-			       <input type="file" name="imageFileName" id="i_imageFileName" disabled   onchange="readURL(this);"   />
+			       <input type="file" name="imageFileName" id="i_imageFileName" disabled onchange="readURL(this);"   />
 			    </td>
 			  </tr>
 			 </c:if>
@@ -196,7 +194,7 @@
 				   </td>   
 			  </tr>
 			  <tr id="tr_btn_modify">
-				   <td colspan="3"   align="center" >
+				   <td colspan="3" align="center" id="btn">
 				        <input type=button id="btn_update" value="수정반영하기" onClick="fn_modify_article(frmArticle)"  >
 			            <input type=button id="btn_no" value="취소" onClick="backToList(frmArticle)">
 				   		<input type="hidden" name="articleNO" value="${article.articleNO}">
@@ -219,7 +217,7 @@
 					}
 			  %>
 				    <input type=button value="리스트로 돌아가기" onClick="backToList(this.form)" class="back_btn">
-				    <input type=button value="추천 (${article.writeDate})" class="get_btn">
+				    <input type=button value="추천 ( ${article.writeDate} )"  class="get_btn">
 			   </td>
 			  </tr>
 			 </table>

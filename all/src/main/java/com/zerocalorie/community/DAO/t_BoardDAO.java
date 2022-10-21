@@ -1,9 +1,9 @@
-package com.zerocalorie.tackjun.DAO;
+package com.zerocalorie.community.DAO;
 
 import java.util.List;
 import java.util.Map;
 
-import com.zerocalorie.tackjun.DTO.*;
+import com.zerocalorie.community.DTO.*;
 
 
 public interface t_BoardDAO<t_ArticleDTO> {

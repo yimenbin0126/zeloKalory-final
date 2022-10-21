@@ -1,11 +1,15 @@
-package com.zerocalorie.tackjun.DTO;
+package com.zerocalorie.community.DTO;
 
 import java.io.UnsupportedEncodingException;
+
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.sql.Date;
 
-public class t_Article_plusDTO {
+import org.springframework.stereotype.Component;
+
+@Component
+public class t_ArticleDTO {
 	private int articleNO;
 	private int parentNO;
 	private String title;
@@ -13,15 +17,14 @@ public class t_Article_plusDTO {
 	private String imageFileName;
 	private int member_no;
 	private Date writeDate;
-	private String nickname;
 	
-	public t_Article_plusDTO() {
+	public t_ArticleDTO() {
 		
 	}
 
 
-	public t_Article_plusDTO(int articleNO, int parentNO, String title, String content, String imageFileName,
-			int member_no, String nickname) {
+	public t_ArticleDTO(int articleNO, int parentNO, String title, String content, String imageFileName,
+			int member_no) {
 		super();
 		this.articleNO = articleNO;
 		this.parentNO = parentNO;
@@ -29,7 +32,6 @@ public class t_Article_plusDTO {
 		this.content = content;
 		this.imageFileName = imageFileName;
 		this.member_no = member_no;
-		this.nickname = nickname;
 	}
 
 
@@ -96,16 +98,6 @@ public class t_Article_plusDTO {
 
 
 
-	public String getNickname() {
-		return nickname;
-	}
-
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-
 	public int getMember_no() {
 		return member_no;
 	}
@@ -124,15 +116,13 @@ public class t_Article_plusDTO {
 	public void setWriteDate(Date writeDate) {
 		this.writeDate = writeDate;
 	}
-
-
+	
 	@Override
 	public String toString() {
-		return "t_Article_plusDTO [articleNO=" + articleNO + ", parentNO=" + parentNO + ", title=" + title
-				+ ", content=" + content + ", imageFileName=" + imageFileName + ", member_no=" + member_no
-				+ ", writeDate=" + writeDate + ", nickname=" + nickname + "]";
+		return "t_ArticleDTO [articleNO=" + articleNO + ", parentNO=" + parentNO + ", title=" + title + ", content="
+				+ content + ", imageFileName=" + imageFileName + ", member_no=" + member_no + ", writeDate=" + writeDate
+				+ "]";
 	}
-	
 	
 	
 	

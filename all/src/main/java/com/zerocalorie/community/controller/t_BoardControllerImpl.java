@@ -1,9 +1,11 @@
-package com.zerocalorie.tackjun.controller;
+package com.zerocalorie.community.controller;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,20 +24,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.zerocalorie.community.DTO.t_ArticleDTO;
+import com.zerocalorie.community.DTO.t_Article_plusDTO;
 import com.zerocalorie.member.dto.e_MemberDTO;
 import com.zerocalorie.member.service.e_MemberService;
-import com.zerocalorie.tackjun.DTO.t_ArticleDTO;
-import com.zerocalorie.tackjun.DTO.t_Article_plusDTO;
-import com.zerocalorie.tackjun.service.t_BoardService;
+import com.zerocalorie.community.service.t_BoardService;
 
 @Controller
 public class t_BoardControllerImpl implements t_BoardController{
-	private static final String CURR_IMAGE_REPO_PATH = "C://zerokalory_file";
 
-	private static final String ARTICLE_IMAGE_REPO = null;
+	private static final String ARTICLE_IMAGE_REPO = "C://zerokalory_file";
 	
 	@Autowired
 	e_MemberService m_service;
@@ -82,46 +84,64 @@ public class t_BoardControllerImpl implements t_BoardController{
 		
 	}
 	
-	 //한 개 이미지 글쓰기
+	//한 개 이미지 글쓰기
 	@GetMapping("/community/articleForm")
-	public String addNewArticle_get(
-			HttpServletResponse request) throws Exception {
-		return "/community/articleForm";
+	public String getQuestion_write(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		System.out.println("ServiceController - getQuestion_write");
+		
+		// 세션 생성
+		HttpSession session = request.getSession();
+		if (session.getAttribute("user") == null) {
+			// 응답 - 한글 처리
+			response.setContentType("text/html;charset=UTF-8");
+			// 로그인 안했을 때 - 잘못된 접근
+			// 뒤로가기
+			PrintWriter out = response.getWriter();
+			out.println("<script language ='javascript'>window.history.back();</script>");
+			out.flush();
+		} else {
+			// 로그인 되있을 때 - 정상 접근
+			// 게시물 쓰기 뷰
+			return "/community/articleForm";
+		}
+		return null;
 	}
 	
 	@Override
 	@RequestMapping(value="/community/addArticle.do" ,method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity addNewArticle(MultipartHttpServletRequest multipartRequest, 
-	HttpServletResponse response) throws Exception {
-		System.out.println("dddd");
+			HttpServletResponse response) throws Exception {
 		multipartRequest.setCharacterEncoding("utf-8");
 		Map<String,Object> articleMap = new HashMap<String, Object>();
 		Enumeration enu=multipartRequest.getParameterNames();
+		
 		while(enu.hasMoreElements()){
 			String name=(String)enu.nextElement();
 			String value=multipartRequest.getParameter(name);
 			articleMap.put(name,value);
 		}
-
-		String imageFileName= upload(multipartRequest);
+		String imageFileName = upload(multipartRequest);
 		HttpSession session = multipartRequest.getSession();
 		e_MemberDTO memberVO = (e_MemberDTO) session.getAttribute("user");
 		int member_no = memberVO.getMember_no();
 		articleMap.put("parentNO", 0);
 		articleMap.put("member_no", member_no);
 		articleMap.put("imageFileName", imageFileName);
-
+		
+		System.out.println("이미지"+imageFileName);
+		
 		String message;
-		ResponseEntity resEnt=null;
+		ResponseEntity resEnt = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
 		try {
 			int articleNO = t_boardService.addNewArticle(articleMap);
 			if(imageFileName!=null && imageFileName.length()!=0) {
 				File srcFile = new 
-				File(ARTICLE_IMAGE_REPO+ "\\" + "temp"+ "\\" + imageFileName);
-				File destDir = new File(ARTICLE_IMAGE_REPO+"\\"+articleNO);
+				File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName);
+				File destDir = new File(ARTICLE_IMAGE_REPO + "\\" + articleNO);
 				FileUtils.moveFileToDirectory(srcFile, destDir,true);
 			}
 
@@ -142,7 +162,8 @@ public class t_BoardControllerImpl implements t_BoardController{
 			e.printStackTrace();
 		}
 		return resEnt;
-	}	
+	}
+	
 	
 	//한개의 이미지 보여주기
 	@RequestMapping(value="/community/viewArticle.do" ,method = RequestMethod.GET)
@@ -185,7 +206,6 @@ public class t_BoardControllerImpl implements t_BoardController{
 			String value=multipartRequest.getParameter(name);
 			articleMap.put(name,value);
 		}
-		
 		String imageFileName= upload(multipartRequest);
 		articleMap.put("imageFileName", imageFileName);
 		
@@ -222,11 +242,27 @@ public class t_BoardControllerImpl implements t_BoardController{
 	    return resEnt;
 	  }
 	  
-	  private String upload(MultipartHttpServletRequest multipartRequest) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	  //사진업로드
+	  private String upload(MultipartHttpServletRequest multipartRequest) throws Exception{
+			String imageFileName= null;
+			Iterator<String> fileNames = multipartRequest.getFileNames();
+			
+			while(fileNames.hasNext()){
+				String fileName = fileNames.next();
+				MultipartFile mFile = multipartRequest.getFile(fileName);
+				imageFileName=mFile.getOriginalFilename();
+				File file = new File(ARTICLE_IMAGE_REPO +"\\"+"temp"+"\\" + fileName);
+				if(mFile.getSize()!=0){
+					if(!file.exists()){
+						file.getParentFile().mkdirs();
+						mFile.transferTo(new File(ARTICLE_IMAGE_REPO +"\\"+"temp"+ "\\"+imageFileName));
+					}
+				}
+				
+			}
+			return imageFileName;
+		}
+	  
 	@Override
 	  @RequestMapping(value="/community/removeArticle.do" ,method = RequestMethod.POST)
 	  @ResponseBody
