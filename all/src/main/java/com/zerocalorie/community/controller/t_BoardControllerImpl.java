@@ -1,6 +1,8 @@
 package com.zerocalorie.community.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -28,10 +30,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import com.zerocalorie.community.DTO.t_ArticleDTO;
 import com.zerocalorie.community.DTO.t_Article_plusDTO;
 import com.zerocalorie.member.dto.e_MemberDTO;
 import com.zerocalorie.member.service.e_MemberService;
+import com.zerocalorie.svservice.dto.e_SvFileDTO;
 import com.zerocalorie.community.service.t_BoardService;
 
 @Controller
@@ -111,57 +116,43 @@ public class t_BoardControllerImpl implements t_BoardController{
 	@Override
 	@RequestMapping(value="/community/addArticle.do" ,method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity addNewArticle(MultipartHttpServletRequest multipartRequest, 
+	public void addNewArticle(HttpServletRequest request, 
 			HttpServletResponse response) throws Exception {
-		multipartRequest.setCharacterEncoding("utf-8");
+		HttpSession session = request.getSession();
+		// 첨부 파일 불러오기 - (1)
+		request.setCharacterEncoding("utf-8");
+		// 파일 경로
+		String savePath = "C:\\zerokalory_file";
+		// 파일 크기 15MB
+		int sizeLimit = 1024 * 1024 * 15;
+		// 파라미터를 전달해줌 (같은 이름의 파일명 방지)
+		MultipartRequest multi = new MultipartRequest(request, savePath, sizeLimit, "utf-8",
+				new DefaultFileRenamePolicy());
+				
+		// 추가
+		Enumeration enumeration = multi.getFileNames();
 		Map<String,Object> articleMap = new HashMap<String, Object>();
-		Enumeration enu=multipartRequest.getParameterNames();
-		
-		while(enu.hasMoreElements()){
-			String name=(String)enu.nextElement();
-			String value=multipartRequest.getParameter(name);
-			articleMap.put(name,value);
+		String fileName = "";
+		// 데이터가 있을때, 불러오기
+		while(enumeration.hasMoreElements()){
+			// 파일 객체 불러오기
+			fileName = multi.getFilesystemName((String) enumeration.nextElement());
 		}
-		String imageFileName = upload(multipartRequest);
-		HttpSession session = multipartRequest.getSession();
+		
 		e_MemberDTO memberVO = (e_MemberDTO) session.getAttribute("user");
 		int member_no = memberVO.getMember_no();
-		articleMap.put("parentNO", 0);
+		articleMap.put("title", multi.getParameter("title"));
+		articleMap.put("content", multi.getParameter("content"));
 		articleMap.put("member_no", member_no);
-		articleMap.put("imageFileName", imageFileName);
+		articleMap.put("parentNO", 0);
+		articleMap.put("imageFileName", fileName);
+		int articleNO = t_boardService.addNewArticle(articleMap);
+		System.out.println("이미지"+fileName);
 		
-		System.out.println("이미지"+imageFileName);
-		
-		String message;
-		ResponseEntity resEnt = null;
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
-		try {
-			int articleNO = t_boardService.addNewArticle(articleMap);
-			if(imageFileName!=null && imageFileName.length()!=0) {
-				File srcFile = new 
-				File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName);
-				File destDir = new File(ARTICLE_IMAGE_REPO + "\\" + articleNO);
-				FileUtils.moveFileToDirectory(srcFile, destDir,true);
-			}
-
-			message = "<script>";
-			message += " alert('새글을 추가했습니다.');";
-			message += " location.href='"+multipartRequest.getContextPath()+"/community/listArticles.do'; ";
-			message +=" </script>";
-		    resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
-		}catch(Exception e) {
-			File srcFile = new File(ARTICLE_IMAGE_REPO+"\\"+"temp"+"\\"+imageFileName);
-			srcFile.delete();
-			
-			message = " <script>";
-			message +=" alert('오류가 발생했습니다. 다시 시도해 주세요');');";
-			message +=" location.href='"+multipartRequest.getContextPath()+"/community/articleForm.do'; ";
-			message +=" </script>";
-			resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
-			e.printStackTrace();
-		}
-		return resEnt;
+		response.setContentType("text/html;charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println("<script language ='javascript'>alert('새글을 추가했습니다.'); location.href='/all/community/listArticles.do'; </script>");
+		out.flush();
 	}
 	
 	
@@ -193,53 +184,91 @@ public class t_BoardControllerImpl implements t_BoardController{
 		return mav;
 	}
 	
+	@GetMapping("/community/load-proimg")
+	public void getLoad_proimg(
+			HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String fileName
+			)
+			throws Exception {
+		System.out.println("ServiceController - getFileDownload - 첨부파일 다운로드");
+		
+		// 객체에서 정보 가져오기 (이름, 경로)
+		String filePath = "C:\\zerokalory_file";
+		// 파일 객체 선언 (파일 경로, 파일 이름)
+        File file = new File(filePath, fileName);
+        int fileLength = (int)file.length();
+        
+        if (fileLength > 0) {
+        	// 파일 학장자 체크
+        	if (file.getName().endsWith(".jpg") || file.getName().endsWith(".jpeg")) {
+        		response.setContentType("image/jpeg");
+        		} else if (file.getName().endsWith(".png")) {
+        		response.setContentType("image/png");
+        		} 
+        	response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\";");
+            response.setHeader("Content-Transfer-Encoding", "binary");
+            response.setHeader("Content-Length", "" + fileLength);
+            response.setHeader("Pragma", "no-cache;");
+            response.setHeader("Expires", "-1;");
+            
+            // FileInputStream : 파일을 바이트 스트림으로 읽어줌
+			try (FileInputStream fis = new FileInputStream(file);
+					OutputStream out = response.getOutputStream();) {
+				int readCount = 0;
+				byte[] buffer = new byte[1024];
+				// fis.read(buffer) : 파일 바이트 타입으로 읽기
+				// -1 : 파일 다 읽었을 때
+				// write : 읽어들인 파일의 바이트를 출력
+				while ((readCount = fis.read(buffer)) != -1) {
+					out.write(buffer, 0, readCount);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
+	}
+	
 	//한 개 이미지 수정 기능
 	  @RequestMapping(value="/community/modArticle.do" ,method = RequestMethod.POST)
 	  @ResponseBody
-	  public ResponseEntity modArticle(MultipartHttpServletRequest multipartRequest,  
-	    HttpServletResponse response) throws Exception{
-	    multipartRequest.setCharacterEncoding("utf-8");
+	  public void modArticle(HttpServletRequest request, 
+				HttpServletResponse response) throws Exception{
+		HttpSession session = request.getSession();
+		// 첨부 파일 불러오기 - (1)
+		request.setCharacterEncoding("utf-8");
+		// 파일 경로
+		String savePath = "C:\\zerokalory_file";
+		// 파일 크기 15MB
+		int sizeLimit = 1024 * 1024 * 15;
+		// 파라미터를 전달해줌 (같은 이름의 파일명 방지)
+		MultipartRequest multi = new MultipartRequest(request, savePath, sizeLimit, "utf-8",
+				new DefaultFileRenamePolicy());
+				
+		// 추가
+		Enumeration enumeration = multi.getFileNames();
 		Map<String,Object> articleMap = new HashMap<String, Object>();
-		Enumeration enu=multipartRequest.getParameterNames();
-		while(enu.hasMoreElements()){
-			String name=(String)enu.nextElement();
-			String value=multipartRequest.getParameter(name);
-			articleMap.put(name,value);
+		String fileName = "";
+		// 데이터가 있을때, 불러오기
+		while(enumeration.hasMoreElements()){
+			// 파일 객체 불러오기
+			fileName = multi.getFilesystemName((String) enumeration.nextElement());
 		}
-		String imageFileName= upload(multipartRequest);
-		articleMap.put("imageFileName", imageFileName);
 		
-		String articleNO=(String)articleMap.get("articleNO");
-		String message;
-		ResponseEntity resEnt=null;
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
-	    try {
-	       t_boardService.modArticle(articleMap);
-	       if(imageFileName!=null && imageFileName.length()!=0) {
-	         File srcFile = new File(ARTICLE_IMAGE_REPO+"\\"+"temp"+"\\"+imageFileName);
-	         File destDir = new File(ARTICLE_IMAGE_REPO+"\\"+articleNO);
-	         FileUtils.moveFileToDirectory(srcFile, destDir, true);
-	         
-	         String originalFileName = (String)articleMap.get("originalFileName");
-	         File oldFile = new File(ARTICLE_IMAGE_REPO+"\\"+articleNO+"\\"+originalFileName);
-	         oldFile.delete();
-	       }	
-	       message = "<script>";
-		   message += " alert('글을 수정했습니다.');";
-		   message += " location.href='"+multipartRequest.getContextPath()+"/community/viewArticle.do?articleNO="+articleNO+"';";
-		   message +=" </script>";
-	       resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
-	    }catch(Exception e) {
-	      File srcFile = new File(ARTICLE_IMAGE_REPO+"\\"+"temp"+"\\"+imageFileName);
-	      srcFile.delete();
-	      message = "<script>";
-		  message += " alert('오류가 발생했습니다.다시 수정해주세요');";
-		  message += " location.href='"+multipartRequest.getContextPath()+"/community/viewArticle.do?articleNO="+articleNO+"';";
-		  message +=" </script>";
-	      resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
-	    }
-	    return resEnt;
+		e_MemberDTO memberVO = (e_MemberDTO) session.getAttribute("user");
+		int member_no = memberVO.getMember_no();
+		articleMap.put("title", multi.getParameter("title"));
+		articleMap.put("content", multi.getParameter("content"));
+		articleMap.put("imageFileName", fileName);
+		int articleNO = Integer.valueOf(multi.getParameter("articleNO"));
+		articleMap.put("articleNO", articleNO);
+		System.out.println("이미지"+fileName);
+		t_boardService.modArticle(articleMap);
+		
+		response.setContentType("text/html;charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println("<script language ='javascript'>alert('글을 수정했습니다.'); location.href='/all/community/viewArticle.do?articleNO="+articleNO+"'; </script>");
+		out.flush();
+		  
 	  }
 	  
 	  //사진업로드

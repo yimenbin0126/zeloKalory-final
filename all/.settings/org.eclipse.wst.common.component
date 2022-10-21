@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-<<<<<<< Updated upstream
-                                            	
-=======
                                                 	
->>>>>>> Stashed changes
     
     
     
@@ -14,15 +10,10 @@
     
     
     
-<<<<<<< Updated upstream
-    <wb-module deploy-name="all-1.0.0-BUILD-SNAPSHOT">
-                                                                                                
-=======
     
     <wb-module deploy-name="all-1.0.0-BUILD-SNAPSHOT">
                                                                                                         
         
->>>>>>> Stashed changes
         
         
         
@@ -34,12 +25,8 @@
         
         
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-<<<<<<< Updated upstream
-                                                                                        		
-=======
                                                                                                 		
         
->>>>>>> Stashed changes
         
         
         
@@ -51,12 +38,8 @@
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-<<<<<<< Updated upstream
-                                                                                        		
-=======
                                                                                                 		
         
->>>>>>> Stashed changes
         
         
         
@@ -68,12 +51,8 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-<<<<<<< Updated upstream
-                                                                                        		
-=======
                                                                                                 		
         
->>>>>>> Stashed changes
         
         
         
@@ -85,12 +64,8 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-<<<<<<< Updated upstream
-                                                                                        		
-=======
                                                                                                 		
         
->>>>>>> Stashed changes
         
         
         
@@ -102,15 +77,11 @@
         
         
         <property name="java-output-path" value="target/classes"/>
-<<<<<<< Updated upstream
-                
+                        
+        
         <property name="context-root" value="all"/>
-                                                                                        	
-=======
-        <property name="context-root" value="all_origin"/>
                                                                                                 	
     
->>>>>>> Stashed changes
     
     
     
@@ -122,12 +93,8 @@
     
     
     </wb-module>
-<<<<<<< Updated upstream
-                                            
-=======
                                                 
 
->>>>>>> Stashed changes
 
 
 

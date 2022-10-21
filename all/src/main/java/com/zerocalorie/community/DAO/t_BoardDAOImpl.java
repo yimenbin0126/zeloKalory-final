@@ -49,6 +49,9 @@ public class t_BoardDAOImpl<t_ArticleDTO> implements t_BoardDAO {
 	@Override
 	public void modArticle(Map articleMap) throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println(articleMap.keySet());
+		System.out.println(articleMap.values());
+		System.out.println("t_BoardDAOImpl - modArticle");
 		sqlSession.update("mapper.board.updateArticle", articleMap);
 	}
 

@@ -175,13 +175,13 @@
 			   </td>
 			   <td>
 			     <input type="hidden" name="originalFileName" value="${article.imageFileName }" />
-			    <img src="${contextPath}/download_t.do?articleNO=${article.articleNO}&imageFileName=${article.imageFileName}" id="preview"  /><br>
+			    <img width="100" height="100" src="/all/community/load-proimg?fileName=${article.imageFileName}" id="preview"  /><br>
 			       
 			   </td>
 			  </tr>  
 			  <tr>
 			    <td>
-			       <input type="file" name="imageFileName" id="i_imageFileName" disabled onchange="readURL(this);"   />
+			       <input type="file" name="imageFileName" id="i_imageFileName" onchange="readURL(this);"   />
 			    </td>
 			  </tr>
 			 </c:if>
