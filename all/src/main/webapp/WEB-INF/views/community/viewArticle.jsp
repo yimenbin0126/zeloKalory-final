@@ -219,7 +219,7 @@
 					}
 			  %>
 				    <input type=button value="리스트로 돌아가기" onClick="backToList(this.form)" class="back_btn">
-				    <input type=button value="추천" clss="get_btn">
+				    <input type=button value="추천 (${article.writeDate})" class="get_btn">
 			   </td>
 			  </tr>
 			 </table>
