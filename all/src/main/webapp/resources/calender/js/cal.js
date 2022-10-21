@@ -102,7 +102,30 @@ function yoo_drawCalendar(year, month) {
 	});
 }*/
 
-
+// 달력 안에 cell 눌렀을때
+function click_cell(){
+	// td가 눌렸을때 내용물이 존재하면 2022-11-16 형식으로 돌려준다
+	$("td").off("click").on("click",function(){
+		console.log( $(this).text() ); // day
+	    
+		if($(this).attr("data-calnum")){
+			let clickDate = '';
+			clickDate += $('#yoo_h5_year').text();
+			clickDate += '-'+$('#yoo_h3_cal').text();
+			clickDate += '-'+$(this).attr("data-calnum");
+			console.log(clickDate);	
+		
+			document.querySelector("#clickDatehidden").setAttribute("value", clickDate);	//숫자 눌렀을때
+			document.querySelector("#pageYearhidden").setAttribute("value", $('#yoo_h5_year').text()); // year
+			document.querySelector("#pageMonthhidden").setAttribute("value", ($('#yoo_h3_cal').text()-1)); // month
+			document.querySelector("#pageDatehidden").setAttribute("value", ($(this).attr("data-calnum"))); // date
+			
+			document.sendPageDateInfo.method = "post";
+			document.sendPageDateInfo.action = "";
+			document.sendPageDateInfo.submit();
+		}
+	});
+}
 
 // 수정 버튼 눌렀을때
 function update_contents(){
@@ -221,9 +244,6 @@ function find_form(form){
 	
 	// 그렇지 않을경우 입력 전달
 	}else{
-	 		$(".pageYearhidden").attr("value",$('#yoo_h5_year').text() );// year
-			$(".pageMonthhidden").attr("value",($('#yoo_h3_cal').text()-1) );// month
-			$(".pageDatehidden").attr("value",clicked_date );// date 
 		return true;
 	}	
 }

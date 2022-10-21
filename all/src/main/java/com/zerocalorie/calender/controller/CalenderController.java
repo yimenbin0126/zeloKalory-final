@@ -222,7 +222,7 @@ System.out.println("pageYear"+ pageYear);
 		List<CalSearchMbDTO> serchMemberlist = calenderService.searchUser(request);
 		
 		rttr.addFlashAttribute("serchMemberlist", serchMemberlist);
-
+		
 		System.out.println(">>>>>>>>>보내는 serchMemberlist : "+ serchMemberlist);
 		return "redirect:/cal/"+pageId;
 	}
@@ -272,7 +272,7 @@ System.out.println("pageYear"+ pageYear);
 		out.close();
 	}
 	
-	// calenderJSON
+	// calenderJSON 부분
 	@RequestMapping("/{pageId}/calenderJSON")
 	@ResponseBody
 	public List calenderJSON( 
@@ -295,7 +295,5 @@ System.out.println("pageYear"+ pageYear);
 		}
 		return list;
 	}
-	
-	
 
 }
