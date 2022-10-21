@@ -1,6 +1,8 @@
 .classpath
 classes/
 target/
-.setting/
+org.eclipse.wst.common.component
+.settings
+.settings/
 .project
 .gitignore
