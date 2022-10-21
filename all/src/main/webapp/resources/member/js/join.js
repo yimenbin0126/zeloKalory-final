@@ -55,11 +55,13 @@ function id_pass() {
     const regex_ip = [(/^[a-z0-9]{5,9}$/), (/^[a-zA-Z0-9!@#*]{5,9}$/)]
     // 아이디, 비밀번호 입력 확인 (2) - 필수 단어, 비밀번호 특수문자 포함여부
     const regex_ip2 = [(/[a-z]*[0-9]/), (/[a-z]*[A-Z]*[0-9]*[@!#*]/)]
+    const regex_ip3 = [(/[a-z]+/),(/[A-Z]+/),(/[0-9]+/),(/[@!#*]+/)]
 
     // 유효성 검사 - 아이디
     contents[0].addEventListener('focus', function () {
         contents[0].addEventListener('keyup', function () {
-            if (regex_ip[0].test(contents[0].value) == true && regex_ip2[0].test(contents[0].value) == true) {
+            if (regex_ip[0].test(contents[0].value) == true && regex_ip2[0].test(contents[0].value) == true
+            && regex_ip3[0].test(contents[1].value) == true && regex_ip3[2].test(contents[1].value) == true) {
                 confirms[0].style.display = "none";
             } else {
                 confirms[0].style.display = "block";
@@ -70,7 +72,9 @@ function id_pass() {
     // 유효성 검사 - 비밀번호
     contents[1].addEventListener('focus', function () {
         contents[1].addEventListener('keyup', function () {
-            if (regex_ip[1].test(contents[1].value) == true && regex_ip2[1].test(contents[1].value) == true) {
+            if (regex_ip[1].test(contents[1].value) == true && regex_ip2[1].test(contents[1].value) == true
+            && regex_ip3[0].test(contents[1].value) == true && regex_ip3[1].test(contents[1].value) == true
+            && regex_ip3[2].test(contents[1].value) == true && regex_ip3[3].test(contents[1].value) == true) {
                 confirms[1].style.display = "none";
             } else {
                 confirms[1].style.display = "block";

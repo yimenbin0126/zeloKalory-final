@@ -22,16 +22,15 @@
         <!-- <img src="./img/logo.png" id="j_logo"> -->
 
 		<%
-		e_MemberDTO m_dto = new e_MemberDTO();
-		        		
-		        	// 로그인 유무
-		           	if((e_MemberDTO)session.getAttribute("user") !=null){
-		           		m_dto = (e_MemberDTO)session.getAttribute("user");
-		%>
+       		e_MemberDTO m_dto = new e_MemberDTO();
+        		
+        	// 로그인 유무
+           	if((e_MemberDTO)session.getAttribute("user") !=null){
+           		m_dto = (e_MemberDTO)session.getAttribute("user");
+        %>
 		<ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
             <li class="j_menu2 j_menu" onclick="location.href='/all/community/listArticles.do'">커뮤니티</li>
-            <li class="j_menu3 j_menu">공지사항</li>
             <li class="j_menu5 j_menu" onclick="location.href='/all/service/allService'">고객센터</li>
         </ul>
         <div id = e_nav>
@@ -47,22 +46,21 @@
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
             <input type ='button' class = "e_btn e_btn" onclick="location.href='/all/member/logout'" value="로그아웃">
-            <input type ='button' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">
+            <input type ='button' class = "e_btn2 e_btn" onclick="location.href='/all/mypage/mypage'" value="마이페이지">
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
-        } else {
+        	} else {
         %>
         <ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
             <li class="j_menu2 j_menu" onclick="location.href='/all/community/listArticles.do'">커뮤니티</li>
-            <li class="j_menu3 j_menu">공지사항</li>
             <li class="j_menu5 j_menu" onclick="location.href='/all/service/allService'">고객센터</li>
         </ul>
         <div id = j_nav>
         	<!-- null 오류 방지용 시작 -->
             <input type ='hidden' class = "e_btn e_btn" onclick="location.href='/all/member/logout'" value="로그아웃">
-            <input type ='hidden' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">               
+            <input type ='hidden' class = "e_btn2 e_btn" onclick="location.href='/all/mypage/mypage'" value="마이페이지">               
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
             <input type ='button' class = "j_btn1 j_btn" onclick="location.href='/all/member/login'" value="로그인">
@@ -70,7 +68,7 @@
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
-        }
+        	}
         %>
     </div>
     <!-- 헤더 끝 -->
@@ -247,8 +245,7 @@
 								// 클릭 가능 여부
 								if (s_page.isPage_prev()){
 							%>
-							<div onclick="location.href='/all/service/question-public?page_NowBno=<%=s_page.getPage_StartBno()-5%>
-							&standard=<%=s_page.getStandard()%>'"
+							<div onclick="location.href='/all/service/question-public?page_NowBno=<%=s_page.getPage_StartBno()-5%>&standard=<%=s_page.getStandard()%>'"
 							 class="e_paging_btnleft" id="e_paging_btnleft_yes">&lt;</div>
 							<%
 								} else {
@@ -284,8 +281,7 @@
 								// 클릭 가능 여부
 								if (s_page.isPage_next()){
 							%>
-							<div onclick="location.href='/all/service/question-public?page_NowBno=<%=s_page.getPage_EndBno()+1%>
-							&standard=<%=s_page.getStandard()%>'"
+							<div onclick="location.href='/all/service/question-public?page_NowBno=<%=s_page.getPage_EndBno()+1%>&standard=<%=s_page.getStandard()%>'"
 							class="e_paging_btnright" id="e_paging_btnright_yes">&gt;</div>
 							<%
 								} else {

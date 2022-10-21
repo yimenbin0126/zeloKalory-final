@@ -3,6 +3,7 @@ window.onload = function(){
 	form();
 	del();
 	search();
+	type();
 }
 
 // 전체 선택
@@ -115,4 +116,23 @@ function search(){
 		
 		location.href= url;
 	});
+}
+
+// 나열 타입 정하기
+function type(){
+	if (document.querySelector('#e_con_choice')) { 
+		// 원래 값
+		var origin_type = $('#e_con_choice option:selected').val();
+		// 셀렉트 클릭시
+		
+		document.querySelector('#e_con_choice').addEventListener('click', ()=>{
+			var result_type = $('#e_con_choice option:selected').val();
+			// 값이 다르면 실행
+			if (origin_type != result_type){
+				var url = "/all/service/question-public-myboard?";
+				url += "standard="+ result_type;
+				location.href=url;
+			}
+		});
+	}
 }

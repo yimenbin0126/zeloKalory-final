@@ -309,7 +309,7 @@ public class e_ServiceController {
 	// 자주하는 질문 - 상세보기 - 좋아요 체크
 	@ResponseBody
 	@PostMapping("/question-detail")
-	public e_ServiceDTO postQuestion_detail(
+	public String postQuestion_detail(
 			HttpServletRequest request,
 			@RequestParam(value = "e_bno", required = false) int e_bno,
 			@RequestParam(value = "e_heart_check", required = false) String e_heart_check)
@@ -330,11 +330,36 @@ public class e_ServiceController {
 		s_likeDTO.setMember_no(m_dto.getMember_no());
 		// 좋아요 증가 / 감소
 		if (e_heart_check.equals("Y")) {
-			s_service.board_like_up(s_likeDTO);
+			// 좋아요수 증가했는지 확인
+			// 테이블 유무
+			if (s_service.board_like_load(s_likeDTO)!=null) {
+				s_likeDTO = s_service.board_like_load(s_likeDTO);
+				if(s_likeDTO.getLike_check()==1) {
+					return "X";
+				} else {
+					s_service.board_like_up(s_likeDTO);
+					return "O";
+				}
+			} else {
+				s_service.board_like_up(s_likeDTO);
+				return "O";
+			}
 		} else if (e_heart_check.equals("N")) {
-			s_service.board_like_down(s_likeDTO);
+			// 좋아요수 감소했는지 확인
+			if (s_service.board_like_load(s_likeDTO)!=null) {
+				s_likeDTO = s_service.board_like_load(s_likeDTO);
+				if(s_likeDTO.getLike_check()==0) {
+					return "X";
+				} else {
+					s_service.board_like_down(s_likeDTO);
+					return "O";
+				}
+			} else {
+				s_service.board_like_down(s_likeDTO);
+				return "O";
+			}
 		}
-		return s_dto;
+		return "X";
 	}
 	
 	// 자주하는 질문 - 상세보기 - 수정/삭제/뒤로가기 이동
@@ -713,6 +738,7 @@ public class e_ServiceController {
 	public ModelAndView getQuestion_public_myboard(
 			HttpServletRequest request,
 			ModelAndView mv,
+			@RequestParam(value="standard", defaultValue="new") String standard,
 			@RequestParam(value="page_NowBno", defaultValue="1") int page_NowBno)
 			throws Exception {
 		System.out.println("ServiceController - getQuestion_public_myboard");
@@ -740,6 +766,7 @@ public class e_ServiceController {
 			s_page.setSv_type("question_public");
 			// 페이지 내 게시물 목록 불러오기
 			s_page.setMember_no(m_dto.getMember_no());
+			s_page.setStandard(standard);
 			s_dto_list = s_service.myboard_paging_origin_reply(s_page);
 			// 댓글 갯수 가져오기
 			List<Integer> comment_List = new ArrayList<Integer>();
@@ -884,7 +911,7 @@ public class e_ServiceController {
 	// 공개 건의함 - 상세보기 - 좋아요, 싫어요 체크
 	@ResponseBody
 	@PostMapping("/question-public-detail")
-	public e_ServiceDTO postQuestion_public_detail(
+	public String postQuestion_public_detail(
 			HttpServletRequest request,
 			@RequestParam(value = "e_bno", required = false) int e_bno,
 			@RequestParam(value = "e_heart_check", required = false) String e_heart_check)
@@ -905,16 +932,65 @@ public class e_ServiceController {
 		s_likeDTO.setMember_no(m_dto.getMember_no());
 		// 좋아요 증가 / 감소
 		if (e_heart_check.equals("like_Y")) {
-			s_service.board_like_up(s_likeDTO);
+			// 좋아요수 증가했는지 확인
+			// 테이블 유무
+			if (s_service.board_like_load(s_likeDTO)!=null) {
+				s_likeDTO = s_service.board_like_load(s_likeDTO);
+				if(s_likeDTO.getLike_check()==1) {
+					return "X";
+				} else {
+					s_service.board_like_up(s_likeDTO);
+					return "O";
+				}
+			} else {
+				s_service.board_like_up(s_likeDTO);
+				return "O";
+			}
 		} else if (e_heart_check.equals("like_N")) {
-			s_service.board_like_down(s_likeDTO);
+			// 좋아요수 감소했는지 확인
+			if (s_service.board_like_load(s_likeDTO)!=null) {
+				s_likeDTO = s_service.board_like_load(s_likeDTO);
+				if(s_likeDTO.getLike_check()==0) {
+					return "X";
+				} else {
+					s_service.board_like_down(s_likeDTO);
+					return "O";
+				}
+			} else {
+				s_service.board_like_down(s_likeDTO);
+				return "O";
+			}
 			// 싫어요 증가 / 감소
 		} else if (e_heart_check.equals("dislike_Y")) {
-			s_service.board_dislike_up(s_likeDTO);
+			// 싫어요수 증가했는지 확인
+			s_likeDTO = s_service.board_like_load(s_likeDTO);
+			if (s_service.board_like_load(s_likeDTO)!=null) {
+				if(s_likeDTO.getDislike_check()==1) {
+					return "X";
+				} else {
+					s_service.board_dislike_up(s_likeDTO);
+					return "O";
+				}
+			} else {
+				s_service.board_dislike_up(s_likeDTO);
+				return "O";
+			}
 		} else if (e_heart_check.equals("dislike_N")) {
-			s_service.board_dislike_down(s_likeDTO);
+			// 싫어요수 증가했는지 확인
+			s_likeDTO = s_service.board_like_load(s_likeDTO);
+			if (s_service.board_like_load(s_likeDTO)!=null) {
+				if(s_likeDTO.getDislike_check()==0) {
+					return "X";
+				} else {
+					s_service.board_dislike_down(s_likeDTO);
+					return "O";
+				}
+			} else {
+				s_service.board_dislike_down(s_likeDTO);
+				return "O";
+			}
 		}
-		return s_dto;
+		return "X";
 	}
 	
 	// 공개 건의함 - 상세보기 - 수정/삭제/뒤로가기 이동
@@ -1192,7 +1268,7 @@ public class e_ServiceController {
 		// 파일 경로
 		String savePath = "C:\\zerokalory_file";
 		// 파일 크기 15MB
-		int sizeLimit = 1024 * 1024 * 15;
+		int sizeLimit = 1024 * 1024 * 100;
 		// 파라미터를 전달해줌 (같은 이름의 파일명 방지)
 		MultipartRequest multi = new MultipartRequest(request, savePath, sizeLimit, "utf-8",
 				new DefaultFileRenamePolicy());

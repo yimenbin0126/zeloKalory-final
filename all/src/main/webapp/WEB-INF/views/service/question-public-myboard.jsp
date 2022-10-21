@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
 	import="com.zerocalorie.member.dto.e_MemberDTO,com.zerocalorie.svservice.dto.e_ServiceDTO,com.zerocalorie.svservice.dto.e_SvPagingViewDTO,com.zerocalorie.svservice.service.e_ServiceService,com.zerocalorie.svservice.service.e_ServiceServiceimpl,java.util.List,java.util.ArrayList" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="java.net.URLEncoder" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,16 +22,15 @@
         <!-- <img src="./img/logo.png" id="j_logo"> -->
 
 		<%
-		e_MemberDTO m_dto = new e_MemberDTO();
-		        		
-		        	// 로그인 유무
-		           	if((e_MemberDTO)session.getAttribute("user") !=null){
-		           		m_dto = (e_MemberDTO)session.getAttribute("user");
-		%>
+       		e_MemberDTO m_dto = new e_MemberDTO();
+        		
+        	// 로그인 유무
+           	if((e_MemberDTO)session.getAttribute("user") !=null){
+           		m_dto = (e_MemberDTO)session.getAttribute("user");
+        %>
 		<ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
             <li class="j_menu2 j_menu" onclick="location.href='/all/community/listArticles.do'">커뮤니티</li>
-            <li class="j_menu3 j_menu">공지사항</li>
             <li class="j_menu5 j_menu" onclick="location.href='/all/service/allService'">고객센터</li>
         </ul>
         <div id = e_nav>
@@ -45,22 +46,21 @@
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
             <input type ='button' class = "e_btn e_btn" onclick="location.href='/all/member/logout'" value="로그아웃">
-            <input type ='button' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">
+            <input type ='button' class = "e_btn2 e_btn" onclick="location.href='/all/mypage/mypage'" value="마이페이지">
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
-        } else {
+        	} else {
         %>
         <ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
             <li class="j_menu2 j_menu" onclick="location.href='/all/community/listArticles.do'">커뮤니티</li>
-            <li class="j_menu3 j_menu">공지사항</li>
             <li class="j_menu5 j_menu" onclick="location.href='/all/service/allService'">고객센터</li>
         </ul>
         <div id = j_nav>
         	<!-- null 오류 방지용 시작 -->
             <input type ='hidden' class = "e_btn e_btn" onclick="location.href='/all/member/logout'" value="로그아웃">
-            <input type ='hidden' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">               
+            <input type ='hidden' class = "e_btn2 e_btn" onclick="location.href='/all/mypage/mypage'" value="마이페이지">               
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
             <input type ='button' class = "j_btn1 j_btn" onclick="location.href='/all/member/login'" value="로그인">
@@ -68,7 +68,7 @@
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
-        }
+        	}
         %>
     </div>
     <!-- 헤더 끝 -->
@@ -98,6 +98,16 @@
 
 					<!-- 오른쪽 내용 -->
 					<div class="e_right">
+					<%
+
+							// 댓글 갯수
+							List<Integer> comment_List = new ArrayList<Integer>();
+							// 게시물 리스트 객체 생성
+							List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
+							e_SvPagingViewDTO s_page = new e_SvPagingViewDTO();
+							s_page = (e_SvPagingViewDTO)request.getAttribute("s_page");
+							System.out.println(s_page.toString());
+					%>
 						<!-- 상단 -->
 						<div class="e_hd_top">고객센터 &gt; 공개 건의함 &gt; 내가 작성한 글</div>
 						<div class="e_header">
@@ -115,9 +125,10 @@
 							<!-- 게시물 타입 -->
 							<div class="e_content_choice">
 								<select id="e_con_choice">
-									<option value="new">최신순</option>
-									<option value="view">조회수순</option>
-									<option value="like">좋아요순</option>
+									<c:set var="standard" value="<%=s_page.getStandard()%>" />
+									<option value="new" <c:if test="${standard == 'new'}">selected</c:if>>최신순</option>
+									<option value="view" <c:if test="${standard == 'view'}">selected</c:if>>조회수순</option>
+									<option value="like" <c:if test="${standard == 'like'}">selected</c:if>>좋아요순</option>
 								</select>
 							</div>
 							<!-- 게시물 번호 보내기 - 상세보기 -->
@@ -135,14 +146,6 @@
 									<li>좋아요</li>
 								</ul>
 								<%
-
-									// 댓글 갯수
-									List<Integer> comment_List = new ArrayList<Integer>();
-									// 게시물 리스트 객체 생성
-									List<e_ServiceDTO> s_dto_list = new ArrayList<e_ServiceDTO>();
-									e_SvPagingViewDTO s_page = new e_SvPagingViewDTO();
-									s_page = (e_SvPagingViewDTO)request.getAttribute("s_page");
-									System.out.println(s_page.toString());
 									// 게시물들 불러오기
 									if((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")!=null
 									&& ((ArrayList<e_ServiceDTO>)request.getAttribute("s_dto_list")).size()!=0
@@ -260,7 +263,7 @@
 							<%
 									} else {
 							%>
-								<div onclick="location.href='/all/service/question-public-myboard?page_NowBno=<%=i%>'"
+								<div onclick="location.href='/all/service/question-public-myboard?page_NowBno=<%=i%>&standard=<%=s_page.getStandard()%>'"
 								class="page_Bno" id="page_Bno<%=i%>"><%=i%></div>
 							<%
 									}

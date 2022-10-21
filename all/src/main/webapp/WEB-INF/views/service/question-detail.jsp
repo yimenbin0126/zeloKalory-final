@@ -30,7 +30,6 @@
 		<ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
             <li class="j_menu2 j_menu" onclick="location.href='/all/community/listArticles.do'">커뮤니티</li>
-            <li class="j_menu3 j_menu">공지사항</li>
             <li class="j_menu5 j_menu" onclick="location.href='/all/service/allService'">고객센터</li>
         </ul>
         <div id = e_nav>
@@ -46,7 +45,7 @@
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
             <input type ='button' class = "e_btn e_btn" onclick="location.href='/all/member/logout'" value="로그아웃">
-            <input type ='button' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">
+            <input type ='button' class = "e_btn2 e_btn" onclick="location.href='/all/mypage/mypage'" value="마이페이지">
             <!-- 나타나는 부분 끝 -->
         </div>
         <%
@@ -55,13 +54,12 @@
         <ul id="j_list">
             <li class="j_menu1 j_menu" onclick="location.href='/all/cal/<%=m_dto.getId()%>'">캘린더</li>
             <li class="j_menu2 j_menu" onclick="location.href='/all/community/listArticles.do'">커뮤니티</li>
-            <li class="j_menu3 j_menu">공지사항</li>
             <li class="j_menu5 j_menu" onclick="location.href='/all/service/allService'">고객센터</li>
         </ul>
         <div id = j_nav>
         	<!-- null 오류 방지용 시작 -->
             <input type ='hidden' class = "e_btn e_btn" onclick="location.href='/all/member/logout'" value="로그아웃">
-            <input type ='hidden' class = "e_btn2 e_btn" onclick="location.href='/all/mypage'" value="마이페이지">               
+            <input type ='hidden' class = "e_btn2 e_btn" onclick="location.href='/all/mypage/mypage'" value="마이페이지">               
             <!-- null 오류 방지용 끝 -->
             <!-- 나타나는 부분 시작 -->
             <input type ='button' class = "j_btn1 j_btn" onclick="location.href='/all/member/login'" value="로그인">
@@ -205,17 +203,9 @@
 								if(m_dto.getId().equals("admin")){
 							// 게시물 수정, 삭제 버튼 보이기 여부
 						%>
-							<input type="hidden" id="e_hidden_YN" value="Y">
-						<%
-								}
-								} else {
-						%>
-							<input type="hidden" id="e_hidden_YN" value="N">
-						<%
-							}
-						%>
+						
 							<!-- 게시물 수정, 삭제 버튼 -->
-							<div class="e_hidden" id="e_hidden_fix">
+							<div id="e_hidden_fix">
 								<form name="e_btn_fix_form">
 									<!-- 게시판 데이터 보내기 -->
 									<input type="hidden" name="e_btn" value="fix">
@@ -223,13 +213,17 @@
 									<input type="submit" id="e_btn_fix" class="e_btn_css" value="글 수정">
 								</form>
 							</div>
-							<div class="e_hidden" id="e_hidden_del">
+							<div id="e_hidden_del">
 								<form name="e_btn_delete_form">
 									<input type="hidden" name="e_btn" value="delete">
 									<input type="hidden" name="e_bno" value="<%=s_dto.getBno()%>">
 									<input type="submit" id="e_btn_delete" class="e_btn_css" value="글 삭제">
 								</form>
 							</div>
+						<%
+								}
+							}
+						%>
 							
 							<!-- 뒤로 가기 -->
 							<div class="e_btn_css" onclick="window.history.back();">뒤로 가기</div>

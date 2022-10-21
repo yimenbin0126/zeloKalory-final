@@ -142,8 +142,7 @@ public class t_BoardControllerImpl implements t_BoardController{
 			e.printStackTrace();
 		}
 		return resEnt;
-	}
-	
+	}	
 	
 	//한개의 이미지 보여주기
 	@RequestMapping(value="/community/viewArticle.do" ,method = RequestMethod.GET)

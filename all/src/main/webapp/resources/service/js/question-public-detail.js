@@ -18,14 +18,18 @@ function form() {
                     e_bno: document.querySelector('#e_bno_value').value
                 },
                 success: function (data) {
-                    // 객체 값 가져오기
-                    // 하트 칠하기
-                    document.querySelector('#e_like_heart_n').style.display = "none";
-                    document.querySelector('#e_like_heart_y').style.display = "block";
-                    // 숫자 증가
-                    var heart_num = document.querySelector('.e_like_num').innerText;
-                    document.querySelector('.e_like_num').innerText = parseInt(heart_num) + 1;
-                },
+                	if (data=="O"){
+	                    // 객체 값 가져오기
+	                    // 하트 칠하기
+	                    document.querySelector('#e_like_heart_n').style.display = "none";
+	                    document.querySelector('#e_like_heart_y').style.display = "block";
+	                    // 숫자 증가
+	                    var heart_num = document.querySelector('.e_like_num').innerText;
+	                    document.querySelector('.e_like_num').innerText = parseInt(heart_num) + 1;
+                	} else {
+                		alert('좋아요는 한번만 누를 수 있습니다.');
+                	}
+                }
             });
         });
     }
@@ -41,13 +45,17 @@ function form() {
                     e_bno: document.querySelector('#e_bno_value').value
                 },
                 success: function (data) {
-                    // 하트 칠하기
-                    document.querySelector('#e_like_heart_n').style.display = "block";
-                    document.querySelector('#e_like_heart_y').style.display = "none";
-                    // 숫자 감소
-                    var heart_num = document.querySelector('.e_like_num').innerText;
-                    document.querySelector('.e_like_num').innerText = parseInt(heart_num) - 1;
-                },
+                	if (data=="O"){
+	                    // 하트 칠하기
+	                    document.querySelector('#e_like_heart_n').style.display = "block";
+	                    document.querySelector('#e_like_heart_y').style.display = "none";
+	                    // 숫자 감소
+	                    var heart_num = document.querySelector('.e_like_num').innerText;
+	                    document.querySelector('.e_like_num').innerText = parseInt(heart_num) - 1;
+                    } else {
+                		alert('좋아요는 한번만 누를 수 있습니다.');
+                	}
+                }
             });
         });
     }
@@ -64,14 +72,18 @@ function form() {
                     e_bno: document.querySelector('#e_bno_value').value
                 },
                 success: function (data) {
-                    // 객체 값 가져오기
-                    // 하트 칠하기
-                    document.querySelector('#e_dislike_heart_n').style.display = "none";
-                    document.querySelector('#e_dislike_heart_y').style.display = "block";
-                    // 숫자 증가
-                    var heart_num = document.querySelector('.e_dislike_num').innerText;
-                    document.querySelector('.e_dislike_num').innerText = parseInt(heart_num) + 1;
-                },
+                	if (data=="O"){
+                		// 객체 값 가져오기
+                    	// 하트 칠하기
+                    	document.querySelector('#e_dislike_heart_n').style.display = "none";
+                    	document.querySelector('#e_dislike_heart_y').style.display = "block";
+                    	// 숫자 증가
+                    	var heart_num = document.querySelector('.e_dislike_num').innerText;
+                    	document.querySelector('.e_dislike_num').innerText = parseInt(heart_num) + 1;
+					} else {
+                		alert('싫어요는 한번만 누를 수 있습니다.');
+                	}
+                }
             });
         });
     }
@@ -87,13 +99,17 @@ function form() {
                     e_bno: document.querySelector('#e_bno_value').value
                 },
                 success: function (data) {
-                    // 하트 칠하기
-                    document.querySelector('#e_dislike_heart_n').style.display = "block";
-                    document.querySelector('#e_dislike_heart_y').style.display = "none";
-                    // 숫자 감소
-                    var heart_num = document.querySelector('.e_dislike_num').innerText;
-                    document.querySelector('.e_dislike_num').innerText = parseInt(heart_num) - 1;
-                },
+                	if (data=="O"){
+                		// 하트 칠하기
+                    	document.querySelector('#e_dislike_heart_n').style.display = "block";
+                    	document.querySelector('#e_dislike_heart_y').style.display = "none";
+                    	// 숫자 감소
+                    	var heart_num = document.querySelector('.e_dislike_num').innerText;
+                    	document.querySelector('.e_dislike_num').innerText = parseInt(heart_num) - 1;
+					} else {
+                		alert('싫어요는 한번만 누를 수 있습니다.');
+                	}
+                }
             });
         });
     }

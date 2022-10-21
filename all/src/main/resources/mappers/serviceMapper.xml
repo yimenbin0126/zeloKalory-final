@@ -85,7 +85,19 @@
 				FROM sv_board
 				WHERE sv_type = #{sv_type}
 				AND member_no = #{member_no}
-				ORDER BY group_origin DESC, bno
+				ORDER BY
+				<!-- 순번 기준 -->
+				<choose>
+					<when test="standard == 'new'">
+						bno DESC
+					</when>
+					<when test="standard == 'view'">
+						view_no DESC
+					</when>
+					<when test="standard == 'like'">
+						like_check DESC
+					</when>
+				</choose>
 				)
 			)
 		WHERE r
