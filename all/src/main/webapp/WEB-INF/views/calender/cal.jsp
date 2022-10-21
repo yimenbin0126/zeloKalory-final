@@ -67,20 +67,23 @@ if( lastNo > lastPage ){ lastNo = lastPage; }
 		let year = <%=year%>;
 		let month = <%=month%> ;
 	
+		
+		ajax_bind(year, month);
+		
 		// 기본 달력 날짜 그려주기
-		yoo_drawCalendar(year, month);
+		//yoo_drawCalendar(year, month);
 		
 		//오늘 날짜 셀만 표시
-		today_mark(year, month);
+		//today_mark(year, month);
 				
 		// 달력에 받아온 데이터값 넣기 
-		yoo_addDataCal();
+		//yoo_addDataCal();
 	
 		// 이전달 버튼 눌렸을 때 
-		yoo_click_pre_month(year,month);
+		//yoo_click_pre_month(year,month);
 		
 		// 다음달 버튼 눌렸을 때 
-		yoo_click_next_month(year,month);
+		//yoo_click_next_month(year,month);
 		
 		// 달력 안에 cell 눌렀을때
 		click_cell();
@@ -103,7 +106,7 @@ if( lastNo > lastPage ){ lastNo = lastPage; }
 
 // 이전달 버튼 눌렸을 때 
 function yoo_click_pre_month(year,month){
-	document.querySelector("#pre_month").addEventListener("click",function() {
+	$("#pre_month").off("click").on("click",function(){
 		
 		month -= 1;
 		
@@ -123,15 +126,17 @@ function yoo_click_pre_month(year,month){
 		document.querySelector("#pageMonthhidden").setAttribute("value", month);
 		document.querySelector("#pageDatehidden").setAttribute("value", <%=date%>);
 
-		document.sendPageDateInfo.method = "post";
-		document.sendPageDateInfo.action = "";
-		document.sendPageDateInfo.submit();
+//		document.sendPageDateInfo.method = "post";
+//		document.sendPageDateInfo.action = "";
+//		document.sendPageDateInfo.submit();
+
+		ajax_bind(year, month);
 	});
 }
 
 //다음달 버튼 눌렸을 때 
 function yoo_click_next_month(year,month){
-	document.querySelector("#next_month").addEventListener("click",function() {
+		$("#next_month").off("click").on("click",function(){
 		
 		month += 1;
 		// 12월([11]) 넘어가면
@@ -150,13 +155,15 @@ function yoo_click_next_month(year,month){
 		document.querySelector("#pageMonthhidden").setAttribute("value", month);
 		document.querySelector("#pageDatehidden").setAttribute("value", <%=date%>);
 
-		document.sendPageDateInfo.method = "post";
-		document.sendPageDateInfo.action = "";
-		document.sendPageDateInfo.submit();
+//		document.sendPageDateInfo.method = "post";
+//		document.sendPageDateInfo.action = "";
+//		document.sendPageDateInfo.submit();
+
+		ajax_bind(year, month);
 	});
 }
 	
-//달력에 받아온 데이터값 넣기 
+//달력에 받아온 데이터값 넣기 form
 function yoo_addDataCal() {
 	
 	<%List<TodoListDTO> calTodolist = (ArrayList)request.getAttribute("calTodolist");%>
@@ -196,6 +203,99 @@ function yoo_addDataCal() {
 	}); 
 }
 
+// 캘린더 데이터 받아옴 ajax
+function ajax_bind(year, month) {
+
+		
+		let option = {
+			url: "/all/cal/${pageId}/calenderJSON.do",
+			type: "get",
+			dataType: 'json',
+			data: {'pageYear': year, 'pageMonth': month },
+			success: function (data) {
+				try {
+					// console.log(data);
+					console.log("year : ", year, ", month : ", month);
+					
+					// 기본 달력 날짜 그려주기
+					yoo_drawCalendar(year, month);
+					
+					//달력에 받아온 ajax 데이터값 넣기 
+					yoo_addDataCal_ajax(data);
+					
+					//오늘 날짜 셀만 표시
+					today_mark(year, month);
+					
+					// 다음달 버튼 눌렀을때
+					yoo_click_next_month(year,month);
+
+					// 이전달 버튼 눌렸을 때 
+					yoo_click_pre_month(year,month);				
+
+				
+				} catch (err) {
+					console.log("ERR", err);
+				}
+			},
+			error: function (err) { 
+				console.log("ERR view click", err);
+			},
+			complete: function (data) {
+				console.log("완료", data);
+			}
+		}
+		$.ajax(option);
+		return 1;
+	}
+	
+
+
+//달력에 받아온 ajax 데이터값 넣기 
+function yoo_addDataCal_ajax(data) {
+
+	console.log(" data.length : ",data.length);
+
+
+		// data
+		
+		// cursor_hand : 숫자가표시된 hover 되는 cell만 검색
+		document.querySelectorAll(".cursor_hand").forEach(function(item, index){
+			
+			// todolist 하나씩 꺼내온다
+			for(let i = 0; i<data.length; i++){
+				//console.log(" data[i].tdl_category : ",data[i].tdl_category, ", i :",i);
+				//console.log(" data[i].tdl_date.substring(8,11) : ",data[i].tdl_date.substring(8,11), ", i :",i);
+				
+				
+				// 날짜와 = 클릭가능한 달력 index(0부터)가 같으면 내용 입력
+				if(data[i].tdl_date.substring(8,11) == (index-1)) {
+					let ctl = document.createElement("li");
+					
+					// 카테고리 색 바꾸는 부분
+					let setCtgColor="green";
+					if( data[i].tdl_category=="운동"){setCtgColor="red"; }
+					else if( data[i].tdl_category=="식단"){setCtgColor="blueviolet"; }
+					
+					// 카테고리명과 컨텐츠
+					let m = '<a style="color: '+setCtgColor+'; text-decoration: none;">';
+						m+= data[i].tdl_category+'</a> ';
+						m+= data[i].tdl_contents;
+					
+					ctl.innerHTML= m;
+					
+					// ul에 li로 추가
+					item.querySelector("ul").appendChild(ctl);
+
+					// title 부분
+					item.setAttribute("title", item.querySelector("ul").innerText);			
+				}
+			}
+		}); 
+}			
+	
+	
+
+
 // 페이징 select selected 설정
 function selected_fn() {
 
@@ -213,12 +313,17 @@ function select_line_fn(){
 //오늘 날짜 셀 표시
 function today_mark(year, month) {
 	let now = new Date();
-
+	
+	// 모든 셀에 표시 지우고 시작
+	$(".cell").removeClass("today_mark");	
+	//console.log(">>> getDate : ", now.getDate());
+	
 	// 연도, 월이 일치하면 해당컬럼에 표시
 	if(year==now.getFullYear()){
+		//console.log(">>>year : ", year, ", getFullYear : ", now.getFullYear());
 		if(month ==now.getMonth()){
-			
-			$(".cursor_hand[data-calnum="+ now.getDate()+"]").css("background-color","white");	
+			//console.log(">>>month : ", month, ", getMonth : ", now.getMonth());
+			$(".cursor_hand[data-calnum="+ now.getDate()+"]").addClass("today_mark");	
 		}
 	}
 }

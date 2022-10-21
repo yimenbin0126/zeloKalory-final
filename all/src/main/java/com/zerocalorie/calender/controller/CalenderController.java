@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,6 +29,7 @@ import com.zerocalorie.calender.dto.CalSearchMbDTO;
 import com.zerocalorie.calender.dto.TodoListDTO;
 import com.zerocalorie.calender.service.CalenderService;
 import com.zerocalorie.member.dto.e_MemberDTO;
+import com.zerocalorie.mypage.dto.MypageChartDTO;
 
 
 
@@ -268,7 +270,30 @@ System.out.println("pageYear"+ pageYear);
 		
 		in.close();
 		out.close();
+	}
+	
+	// calenderJSON 부분
+	@RequestMapping("/{pageId}/calenderJSON")
+	@ResponseBody
+	public List calenderJSON( 
+			@RequestParam(value = "pageYear", required = false) String pageYear
+			, @RequestParam(value = "pageMonth", required = false) String pageMonth
+			, @PathVariable("pageId") String pageId){
+		
+		System.out.println("MypageController > MypageChartJSON");
 
+		List<TodoListDTO> calenderJSON = calenderService.calTodoReadJSON(
+				pageYear, pageMonth, pageId);
+		
+		
+		
+		List list = new ArrayList();
+		for(int i = 0; i<calenderJSON.size(); i++) {
+			TodoListDTO vo = new TodoListDTO();
+			vo = calenderJSON.get(i);
+			list.add(vo);
+		}
+		return list;
 	}
 
 }

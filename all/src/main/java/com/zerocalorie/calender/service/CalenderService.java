@@ -41,6 +41,9 @@ public interface CalenderService {
 	// >>>>> todolist 조회
 	public List<TodoListDTO> TodoListRead(HttpServletRequest request, CalPageMbDTO calPageMbDTO, Map pageDateInfo);
 
+	// json용 todolist 조회
+	public List<TodoListDTO> calTodoReadJSON(String pageYear, String pageMonth,String pageId);
+	
 	// 친구 검색
 	public List<CalSearchMbDTO> searchUser(HttpServletRequest request);
 	

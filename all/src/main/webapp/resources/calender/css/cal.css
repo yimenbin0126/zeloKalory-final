@@ -542,3 +542,8 @@ padding : 15px 0px 15px 0px;
 	
 }
 
+/* 오늘 날짜 표시 */
+.today_mark{
+	background-color: white;	
+}
+

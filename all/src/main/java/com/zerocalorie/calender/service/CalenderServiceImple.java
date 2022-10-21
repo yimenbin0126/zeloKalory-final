@@ -219,6 +219,34 @@ public Map getPagingList(CalPageMbDTO calPageMbDTO, int pageNum, int countPage, 
 	// System.out.println("TodoListlist 읽기 성공");
 	return calTodolist;
 }
+	
+	//calTodoRead 달력에 월간 정보 조회
+	public List<TodoListDTO> calTodoReadJSON(String pageYear, String pageMonth,String pageId) {
+		
+		CalPageMbDTO calPageMbDTO = idToMbNo(pageId);
+		
+		List<TodoListDTO> calTodolist = new ArrayList<TodoListDTO>();
+
+		String dateMonth = "" + pageYear + "-"
+				+ (Integer.parseInt(pageMonth) + 1);
+		TodoListDTO todoListDTO = new TodoListDTO();
+		todoListDTO.setTdl_date(dateMonth); // 날짜세팅
+		todoListDTO.setMember_no(calPageMbDTO.getMember_no()); // 페이지회원의id
+
+
+		calTodolist = todoListDAO.readMonth(todoListDTO);
+		for (int i = 0; i < calTodolist.size(); i++) {
+			TodoListDTO vo = calTodolist.get(i);
+
+		/*	System.out.println(" vo.tdl_no : "+ vo.getTdl_no() + 
+								", vo.tdl_date : "+ vo.getTdl_date() +
+								", vo.tdl_contents : "+ vo.getTdl_contents() +
+								", vo.tdl_category : "+ vo.getTdl_category() +
+								", vo.member_no : "+ vo.getMember_no() ); */
+	}
+	// System.out.println("TodoListlist 읽기 성공");
+	return calTodolist;
+}
 
 	// >>>>> todolist 조회
 	@Override
