@@ -49,8 +49,7 @@ if( lastNo > lastPage ){ lastNo = lastPage; }
 	window.onload=function(){
 
 	<%  Map<String, Integer> pageDateInfo = new HashMap();
-
-		// 날짜 정보 받아옴
+			// 날짜 정보 받아옴
 		pageDateInfo = (Map) request.getAttribute("pageDateInfo");
 		
 		int year =(int) pageDateInfo.get("pageYear");
@@ -66,9 +65,12 @@ if( lastNo > lastPage ){ lastNo = lastPage; }
 		// 받아온 날짜 세팅
 		let year = <%=year%>;
 		let month = <%=month%> ;
-	
 		
-		ajax_bind(year, month);
+		let date = <%=date%> ;
+		
+		$("#todo_date").text(year+'-'+(month+1)+'-'+date);
+		
+		let data = ajax_bind(year, month);
 		
 		// 기본 달력 날짜 그려주기
 		//yoo_drawCalendar(year, month);
@@ -86,7 +88,7 @@ if( lastNo > lastPage ){ lastNo = lastPage; }
 		//yoo_click_next_month(year,month);
 		
 		// 달력 안에 cell 눌렀을때
-		click_cell();
+		// click_cell(data);
 		
 		// 수정 버튼 눌렀을때
 		update_contents();
@@ -122,9 +124,9 @@ function yoo_click_pre_month(year,month){
 		console.log(clickDate);
 					         
 		// 날짜값 전송			        
-		document.querySelector("#pageYearhidden").setAttribute("value", year);
-		document.querySelector("#pageMonthhidden").setAttribute("value", month);
-		document.querySelector("#pageDatehidden").setAttribute("value", <%=date%>);
+		document.querySelector(".pageYearhidden").setAttribute("value", year);
+		document.querySelector(".pageMonthhidden").setAttribute("value", month);
+		document.querySelector(".pageDatehidden").setAttribute("value", <%=date%>);
 
 //		document.sendPageDateInfo.method = "post";
 //		document.sendPageDateInfo.action = "";
@@ -151,9 +153,9 @@ function yoo_click_next_month(year,month){
 		console.log(clickDate);
 					         
 		// 날짜값 전송			        
-		document.querySelector("#pageYearhidden").setAttribute("value", year);
-		document.querySelector("#pageMonthhidden").setAttribute("value", month);
-		document.querySelector("#pageDatehidden").setAttribute("value", <%=date%>);
+		document.querySelector(".pageYearhidden").setAttribute("value", year);
+		document.querySelector(".pageMonthhidden").setAttribute("value", month);
+		document.querySelector(".pageDatehidden").setAttribute("value", <%=date%>);
 
 //		document.sendPageDateInfo.method = "post";
 //		document.sendPageDateInfo.action = "";
@@ -178,7 +180,7 @@ function yoo_addDataCal() {
 			calTodoListDTO = (TodoListDTO)calTodolist.get(ii);%>
 	
 			// 날짜와 = 클릭가능한 달력 index(0부터)가 같으면 내용 입력
-			if(<%=calTodoListDTO.getTdl_date().substring(8,11)%> == (index-1)) {
+			if(<%=calTodoListDTO.getTdl_date().substring(8,10)%> == (index-1)) {
 				let ctl = document.createElement("li");
 				
 				<%// 카테고리 색 바꾸는 부분
@@ -204,7 +206,7 @@ function yoo_addDataCal() {
 }
 
 // 캘린더 데이터 받아옴 ajax
-function ajax_bind(year, month) {
+function ajax_bind(year, month, data) {
 
 		
 		let option = {
@@ -230,7 +232,10 @@ function ajax_bind(year, month) {
 					yoo_click_next_month(year,month);
 
 					// 이전달 버튼 눌렸을 때 
-					yoo_click_pre_month(year,month);				
+					yoo_click_pre_month(year,month);
+					
+					// 달력 안에 cell 눌렀을때
+					click_cell(data);
 
 				
 				} catch (err) {
@@ -245,8 +250,8 @@ function ajax_bind(year, month) {
 			}
 		}
 		$.ajax(option);
-		return 1;
-	}
+		return data;
+}
 	
 
 
@@ -254,45 +259,41 @@ function ajax_bind(year, month) {
 function yoo_addDataCal_ajax(data) {
 
 	console.log(" data.length : ",data.length);
-
-
-		// data
 		
-		// cursor_hand : 숫자가표시된 hover 되는 cell만 검색
-		document.querySelectorAll(".cursor_hand").forEach(function(item, index){
+	// cursor_hand : 숫자가표시된 hover 되는 cell만 검색
+	document.querySelectorAll(".cursor_hand").forEach(function(item, index){
 			
-			// todolist 하나씩 꺼내온다
-			for(let i = 0; i<data.length; i++){
-				//console.log(" data[i].tdl_category : ",data[i].tdl_category, ", i :",i);
-				//console.log(" data[i].tdl_date.substring(8,11) : ",data[i].tdl_date.substring(8,11), ", i :",i);
+		// todolist 하나씩 꺼내온다
+		for(let i = 0; i<data.length; i++){
+			//console.log(" data[i].tdl_category : ",data[i].tdl_category, ", i :",i);
+			//console.log(" data[i].tdl_date.substring(8,11) : ",data[i].tdl_date.substring(8,11), ", i :",i);
+			
+			
+			// 날짜와 = 클릭가능한 달력 index(0부터)가 같으면 내용 입력
+			if(data[i].tdl_date.substring(8,10) == (index-1)) {
+				let ctl = document.createElement("li");
 				
+				// 카테고리 색 바꾸는 부분
+				let setCtgColor="green";
+				if( data[i].tdl_category=="운동"){setCtgColor="red"; }
+				else if( data[i].tdl_category=="식단"){setCtgColor="blueviolet"; }
 				
-				// 날짜와 = 클릭가능한 달력 index(0부터)가 같으면 내용 입력
-				if(data[i].tdl_date.substring(8,11) == (index-1)) {
-					let ctl = document.createElement("li");
-					
-					// 카테고리 색 바꾸는 부분
-					let setCtgColor="green";
-					if( data[i].tdl_category=="운동"){setCtgColor="red"; }
-					else if( data[i].tdl_category=="식단"){setCtgColor="blueviolet"; }
-					
-					// 카테고리명과 컨텐츠
-					let m = '<a style="color: '+setCtgColor+'; text-decoration: none;">';
-						m+= data[i].tdl_category+'</a> ';
-						m+= data[i].tdl_contents;
-					
-					ctl.innerHTML= m;
-					
-					// ul에 li로 추가
-					item.querySelector("ul").appendChild(ctl);
+				// 카테고리명과 컨텐츠
+				let m = '<a style="color: '+setCtgColor+'; text-decoration: none;">';
+					m+= data[i].tdl_category+'</a> ';
+					m+= data[i].tdl_contents;
+				
+				ctl.innerHTML= m;
+				
+				// ul에 li로 추가
+				item.querySelector("ul").appendChild(ctl);
 
-					// title 부분
-					item.setAttribute("title", item.querySelector("ul").innerText);			
-				}
+				// title 부분
+				item.setAttribute("title", item.querySelector("ul").innerText);			
 			}
-		}); 
+		}
+	}); 
 }			
-	
 	
 
 
@@ -328,6 +329,113 @@ function today_mark(year, month) {
 	}
 }
 
+//달력 안에 cell 눌렀을때
+function click_cell(data){
+	// td가 눌렸을때 내용물이 존재하면 2022-11-16 형식으로 돌려준다
+	$("td").off("click").on("click",function(){
+		console.log( $(this).text()); // day
+
+		
+		let clicked_date = $(this).attr("data-calnum");
+		console.log("clicked_date : ",clicked_date);	
+		
+		// 값이 있는 cell을 클릭하면
+		if($(this).attr("data-calnum")){
+			let clickDate = '';
+			clickDate += $('#yoo_h5_year').text();
+			clickDate += '-'+$('#yoo_h3_cal').text();
+			clickDate += '-'+$(this).attr("data-calnum");
+			console.log("clickDate : ",clickDate);	
+			
+			// todo_date에 날짜 채우기
+			$("#todo_date").text(clickDate);
+			
+			
+			// document.querySelector("#clickDatehidden").setAttribute("value", clickDate);	//숫자 눌렀을때
+			$("#clickDatehidden").attr("value",clickDate );//숫자 눌렀을때
+
+			
+			//document.querySelector("#pageYearhidden").setAttribute("value", ); 
+			//document.querySelector("#pageMonthhidden").setAttribute("value", (); // month
+			//document.querySelector("#pageDatehidden").setAttribute("value", clicked_date); // date
+			
+ 			$(".pageYearhidden").attr("value",$('#yoo_h5_year').text() );// year
+			$(".pageMonthhidden").attr("value",($('#yoo_h3_cal').text()-1) );// month
+			$(".pageDatehidden").attr("value",clicked_date );// date 
+			
+
+			console.log(":::year", $('#yoo_h5_year').text() );
+			console.log(":::month", ($('#yoo_h3_cal').text()-1));
+			console.log(":::date", clicked_date);
+			
+			console.log("year", document.querySelector(".xxxy").value);
+			console.log("month", document.querySelector(".xxxm").value);
+			console.log("date", document.querySelector(".xxxd").value);
+//			document.sendPageDateInfo.method = "post";
+//			document.sendPageDateInfo.action = "";
+//			document.sendPageDateInfo.submit();
+	
+			// todolist에 값을 채워준다
+			filled_todolist_ajax(clicked_date, data );
+		}else{
+			
+			// todo_date에 날짜 지우기
+			$("#todo_date").text('');
+		}
+		
+	});
+}
+
+//ajax 값을 todolist에 표시
+function filled_todolist_ajax(clicked_date, data) {
+	
+
+	
+	//console.log("데이터오냐 : "+data);
+	clicked_date = String(clicked_date).padStart(2,"0");
+
+	let workout = document.querySelector(".workout");
+	let workout_contents ='' ;
+
+	let food = document.querySelector(".food");
+	let food_contents ='';
+	let mypage= <%=mypage%>;
+
+	// todolist 하나씩 꺼내온다
+	for(let i = 0; i<data.length; i++){
+		
+		// 날짜와 = 클릭가능한 달력 index(0부터)가 같으면 내용 입력
+		if(data[i].tdl_date.substring(8,10) == String(clicked_date).trim()) {
+			
+			console.log("같음");
+			console.log(">>(data[i].tdl_date.substring(8,10) : ", (data[i].tdl_date));
+			console.log(">>len : ", (data[i].tdl_date.substring(8,10)).length);
+			console.log(">>clicked_date : ",String( clicked_date));
+			console.log(">>len : ",String( clicked_date).length);
+			
+			if( data[i].tdl_category=="운동"){
+				workout_contents += '<li class="j_li"><span class="mod_hidden">';
+				workout_contents += data[i].tdl_contents+'</span>';
+		
+			}else if( data[i].tdl_category=="식단"){
+				food_contents += '<li class="j_li "><span class="mod_hidden">';
+				food_contents += data[i].tdl_contents+'</span>';
+	
+			}
+			
+		}
+
+	}
+	console.log("workout : ", workout_contents);
+	console.log("food : ", food_contents);
+	workout.innerHTML=workout_contents;
+	food.innerHTML=food_contents;
+}	
+
+
+
+
+
 </script>
 
 </head>
@@ -361,6 +469,7 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 	</div>
 
 	<div id="j_wrap">
+	
 		<!-- 내용 표시 div(하얀색) -->
 		<div id="j_box">
 		
@@ -494,9 +603,9 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 					<div id="yoo_find_input_btn"> 
 						<form name="member" method="post" action="<%=pageId%>/searchUser" id="yoo_find_input_btn_frm"  onSubmit="return find_form(this)">
 							<input id="yoo_find_input" type="text" placeholder="Id를 입력하세요"name="serchID" maxlength="9"><input id="yoo_find_btn" type="submit" value="입력" > 
-	               			<input type="hidden" name="pageYear" value="<%=year%>"/> 
-							<input type="hidden" name="pageMonth" value="<%=month%>" /> 
-							<input type="hidden" name="pageDate" value="<%=date%>" /> 
+	               			<input type="hidden" class="pageYearhidden" name="pageYear" value="<%=year%>"/> 
+							<input type="hidden" class="pageMonthhidden" name="pageMonth" value="<%=month%>" /> 
+							<input type="hidden" class="pageDatehidden" name="pageDate" value="<%=date%>" /> 
 	               		</form>
 	                </div>
 	                
@@ -556,10 +665,10 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 
 					<!-- 이전달, 다음달 눌렀을때 전송되는 년,월,일 form -->
 					<form name="sendPageDateInfo">
-						<input type="hidden" name="pageYear" id="pageYearhidden" /> 
-						<input type="hidden" name="pageMonth" id="pageMonthhidden" /> 
-						<input type="hidden" name="pageDate" id="pageDatehidden" /> 
-						<input type="hidden" name="tdl_date" id="clickDatehidden" />
+						<input type="hidden" name="pageYear" class="pageYearhidden" /> 
+						<input type="hidden" name="pageMonth" class="pageMonthhidden" /> 
+						<input type="hidden" name="pageDate" class="pageDatehidden" /> 
+						<input type="hidden" name="tdl_date" class="clickDatehidden" />
 					</form>
 				</div>
 
@@ -599,18 +708,22 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 			
 			<!-- todolist 부분 -->
 			<div class="j_todolist_wrap" >
+				
+				
 				<!-- todolist 받아온다 -->
 				<% List<TodoListDTO> todoListlist = (ArrayList)request.getAttribute("todoListlist"); %>
 				
+				<!-- todolist 날짜표시 -->
+				<h2 id="todo_date" class="todo_margin" ></h2>
+				
 				<!-- 운동 -->
-				<div id="j_workout" class="j_name">
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<div id="j_workout" class="j_name todo_margin">
 					운동
 				</div>
 				
 				<!-- 운동 todolist list -->	
 				
-				<ul class = "j_ul">
+				<ul class = "j_ul workout todo_margin">
 				
 		    		<% for(int i=0; i<todoListlist.size(); i++){ %>
 		    			<c:set var="i2" value="<%=i %>"/>
@@ -619,7 +732,7 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 		    			<c:if test = "${ todoListlist[i2].tdl_category == '운동' }" >
 		    			
 		    				<!-- li : tdl_contents -->
-			    			<li class="j_li"><span class="mod_hidden">${todoListlist[i2].tdl_contents }</span>
+			    			<li class="j_li "><span class="mod_hidden">${todoListlist[i2].tdl_contents}</span>
 			    			
 			    			<!--  내 페이지라면 지우기, 수정 버튼 보이게 -->
 			    			<% if(mypage){ %>
@@ -660,26 +773,25 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 				
 				<!-- 내 페이지라면 todolist 등록 버튼 보이게 -->
 				<% if(mypage){ %>
-				<form  action="<%=pageId%>/todoListAdd" method="post" onSubmit="return tdl_contents_form(this)">	
-				    <input type="text" id="j_msg1" name="tdl_contents" maxlength="300">
+				<form  action="<%=pageId%>/todoListAdd" class="todo_margin" method="post" onSubmit="return tdl_contents_form(this)">	
+				    <input type="text" id="j_msg1"  name="tdl_contents" maxlength="300">
 				    <input type="submit" id="j_app1" value="등록">
 				    <input type="hidden" name="tdl_category" value="운동"/>
-				    <input type="hidden" name="pageYear" value="<%=year%>"/> 
-					<input type="hidden" name="pageMonth" value="<%=month%>" /> 
-					<input type="hidden" name="pageDate" value="<%=date%>" /> 
+				    <input type="hidden" class="pageYearhidden" name="pageYear" value="<%=year%>"/> 
+					<input type="hidden" class="pageMonthhidden" name="pageMonth" value="<%=month%>" /> 
+					<input type="hidden" class="pageDatehidden" name="pageDate" value="<%=date%>" /> 
 				</form>	
 				<%} %>
 				
 				<!--/////////////////////////////////////////// -->
 				
 				<!-- 식단 -->
-	    		<div id="j_food" class="j_name">
-		    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	    		<div id="j_food" class="j_name todo_margin">
 		    		식단
 	    		</div>
 	    		
 	    		<!-- 식단 todolist list -->		
-				<ul class = "j_ul">
+				<ul class = "j_ul food todo_margin">
 				
 		    		<% for(int i=0; i<todoListlist.size(); i++){ %>
 		    			<c:set var="i2" value="<%=i %>"/>
@@ -698,18 +810,18 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 				    				<!-- 삭제 버튼 -->
 					    			<button type="submit" class="button_del mod_hidden"><img src="/all/resources/calender/img/cancel_icon.png"  class="del_icon"></button>
 					    			<input type="hidden" name="tdl_no" value="${todoListlist[i2].tdl_no }"/>
-					    			<input type="hidden" name="pageYear" value="<%=year%>"/> 
-									<input type="hidden" name="pageMonth" value="<%=month%>" /> 
-									<input type="hidden" name="pageDate" value="<%=date%>" /> 
+					    			<input type="hidden" class="pageYearhidden" name="pageYear" value="<%=year%>"/> 
+									<input type="hidden" class="pageMonthhidden" name="pageMonth" value="<%=month%>" /> 
+									<input type="hidden" class="pageDatehidden" name="pageDate" value="<%=date%>" /> 
 				    			</form>	
 						
 								<!-- 식단 todolist 수정 form -->
 						    	<form  action="<%=pageId%>/todoListMod" method="post" class= "tdl_mod_form" onSubmit="return tdl_contents_form(this)">
 						    		<input type="hidden" name="tdl_no" value="${todoListlist[i2].tdl_no }"/>
 						    		<input type="hidden" name="tdl_category" value="식단"/>
-						    		<input type="hidden" name="pageYear" value="<%=year%>"/> 
-									<input type="hidden" name="pageMonth" value="<%=month%>" /> 
-									<input type="hidden" name="pageDate" value="<%=date%>" /> 
+						    		<input type="hidden" class="pageYearhidden" name="pageYear" value="<%=year%>"/> 
+									<input type="hidden" class="pageMonthhidden" name="pageMonth" value="<%=month%>" /> 
+									<input type="hidden" class="pageDatehidden" name="pageDate" value="<%=date%>" /> 
 									
 									<!-- 수정하기 버튼  --> 
 						    		<button type="button" class="button_mod mod_hidden"><img src="/all/resources/calender/img/edit_icon.png" class="mod_icon"></button>
@@ -730,13 +842,15 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 	   			<!-- 내 페이지라면 todolist 등록 버튼 보이게 -->
 				<% if(mypage){ %>
 				<!-- todolist 식단 등록 -->
-				<form  action="<%=pageId%>/todoListAdd" method="post" onSubmit="return tdl_contents_form(this)">	
-				    <input type="text" id="j_msg1" name="tdl_contents" maxlength="300">
+				<form  action="<%=pageId%>/todoListAdd" class="todo_margin" method="post" onSubmit="return tdl_contents_form(this)">	
+				    <input type="text"  id="j_msg1" name="tdl_contents" maxlength="300">
 				    <input type="submit" id="j_app1" value="등록">
 				    <input type="hidden" name="tdl_category" value="식단"/>
-				    <input type="hidden" name="pageYear" value="<%=year%>"/> 
-					<input type="hidden" name="pageMonth" value="<%=month%>" /> 
-					<input type="hidden" name="pageDate" value="<%=date%>" /> 
+				    <input type="hidden"  class="pageYearhidden xxxy" name="pageYear" value="<%=year%>"/> 
+					<input type="hidden"  class="pageMonthhidden xxxm" name="pageMonth" value="<%=month%>" /> 
+					<input type="hidden" class="pageDatehidden xxxd" name="pageDate" value="<%=date%>" /> 
+
+					
 				</form>	
 				<%} %>
 			</div>
