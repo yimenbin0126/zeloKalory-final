@@ -5,18 +5,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.net.URLEncoder" %>
 <%@ page import="java.net.URLDecoder"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
 <title>고객센터</title>
 <link href="/all/resources/service/css/question-member-search.css" rel="stylesheet">
 <script src="/all/resources/service/js/question-member.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-</head>
-
-<body>
 		<%
        		e_MemberDTO m_dto = new e_MemberDTO();
         		
@@ -250,6 +243,3 @@
 			</div>
 		</div>
 	</section>
-
-</body>
-</html>

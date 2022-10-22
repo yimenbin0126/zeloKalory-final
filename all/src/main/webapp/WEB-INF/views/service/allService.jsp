@@ -1,18 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
 	import="com.zerocalorie.member.dto.e_MemberDTO"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>고객센터</title>
     <link href="/all/resources/service/css/allService.css" rel="stylesheet">
     <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-</head>
-<body>
 	<section>
 		<div id="j_wrap">
 			<div id="j_box">
@@ -70,6 +62,3 @@
 			</div>
 		</div>
 	</section>
-
-</body>
-</html>

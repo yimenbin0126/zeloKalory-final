@@ -8,19 +8,13 @@
 <%
 request.setCharacterEncoding("UTF-8");
 %>  
-<!DOCTYPE html>
-<html>
-<head>
   <link rel="stylesheet" href="/all/resources/board_community/css/listArticle.css">
  <style>
    .cls1 {text-decoration:none;}
    .h{text-align:center;}
   </style>
-  
   <meta charset="UTF-8">
   <title>게시판 글 목록</title>
-</head>
-<body>
 	<section>
 		<div id="j_wrap">
 			<div id="j_box">
@@ -103,6 +97,3 @@ request.setCharacterEncoding("UTF-8");
 			</div>
 		</div>
 	</section>
-	
-</body>
-</html>

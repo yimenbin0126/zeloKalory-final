@@ -8,8 +8,6 @@
 request.setCharacterEncoding("UTF-8");
 %> 
 <c:set var="contextPath" value="${pageContext.request.contextPath}"  /> 
-<head>
-<meta charset="UTF-8">
 <title>글쓰기창</title>
 <link rel="stylesheet" href="/all/resources/board_community/css/articleForm.css">
 <script
@@ -31,8 +29,6 @@ request.setCharacterEncoding("UTF-8");
   }
 </script>
  <title>새글 쓰기 창</title>
-</head>
-<body>
 	<section>
 		<div id="j_wrap">
 			<div id="j_box">
@@ -91,5 +87,3 @@ request.setCharacterEncoding("UTF-8");
 			</div>
 		</div>
 	</section>
-</body>
-</html>

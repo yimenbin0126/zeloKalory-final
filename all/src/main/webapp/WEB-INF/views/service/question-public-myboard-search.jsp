@@ -4,18 +4,11 @@
 	java.util.List, java.util.ArrayList,com.zerocalorie.svservice.dto.e_SvSearchDTO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.net.URLEncoder" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
 <title>고객센터</title>
 <link href="/all/resources/service/css/question-public-myboard-search.css" rel="stylesheet">
 <script src="/all/resources/service/js/question-public-myboard.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-</head>
-
-<body>
 	<section>
 		<div id="j_wrap">
 			<div id="j_box">
@@ -271,6 +264,3 @@
 			</div>
 		</div>
 	</section>
-
-</body>
-</html>

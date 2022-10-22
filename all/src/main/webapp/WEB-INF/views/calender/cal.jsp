@@ -31,15 +31,8 @@ int firstNo = ((sec_position-1) * section+1);
 int lastNo = firstNo +section -1;
 if( lastNo > lastPage ){ lastNo = lastPage; }
 %>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
 <!-- 이미지 아이콘 관련 -->
 <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>캘린더</title>
 <link rel="stylesheet" href="/all/resources/calender/css/cal.css">
 <script src="/all/resources/calender/js/cal.js"></script>
@@ -508,15 +501,7 @@ function filled_todolist_ajax(clicked_year, clicked_month, clicked_date, data ) 
 	update_contents();
 
 }	
-
-
-
-
-
 </script>
-
-</head>
-<body>
 <%
 e_MemberDTO sessionUser = new e_MemberDTO();
 	sessionUser = (e_MemberDTO)session.getAttribute("user");
@@ -756,9 +741,6 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 				
 			</div>
 
-
-
-			
 			<!-- todolist 부분 -->
 			<div class="j_todolist_wrap" >
 				
@@ -909,6 +891,3 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 			</div>
 		</div>
 	</div>
-
-</body>
-</html>

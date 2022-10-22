@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 <style>
 	.msg_div{
+		color:white;
 		display: block;
 		margin: 0px auto ;
 		margin-top: 130px ;
@@ -15,6 +16,7 @@
 		text-align: center;
 	}
 	h2{
+		color:white;
 		display: inline-block;
 	}
 

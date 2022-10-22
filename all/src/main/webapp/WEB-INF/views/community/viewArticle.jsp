@@ -8,15 +8,12 @@
   request.setCharacterEncoding("UTF-8");
 %> 
 <c:set var="contextPath" value="${pageContext.request.contextPath}"  />
-<head>
-   <meta charset="UTF-8">
    <title>글보기</title>
    <link rel="stylesheet" href="/all/resources/board_community/css/viewArticle.css">
    <style>
      #tr_btn_modify{
        display:none;
      }
-   
    </style>
    <script src="http://code.jquery.com/jquery-latest.min.js"></script> 
    <script type="text/javascript" >
@@ -77,8 +74,6 @@
 	     }
 	 }  
  </script>
-</head>
-<body>
 	<%
        	e_MemberDTO m_dto = new e_MemberDTO();
         		
@@ -201,5 +196,3 @@
 	    	});
    		});
    </script>
-</body>
-</html>

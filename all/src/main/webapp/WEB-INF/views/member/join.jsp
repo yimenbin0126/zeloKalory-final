@@ -1,19 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     isELIgnored="false" import="com.zerocalorie.member.dto.e_MemberDTO"%>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입</title>
     <link href="/all/resources/member/css/join.css" rel="stylesheet">
     <script src="/all/resources/member/js/join.js"></script>
     <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-</head>
-
-<body>
 	<section>
 		<!-- 프로필 파일 올릴때  -->
 		<form name="e_mainform" enctype="multipart/form-data" id="e_mainform">
@@ -177,7 +169,3 @@
 			</div>
 		</form>
 	</section>
-
-</body>
-
-</html>

@@ -2,18 +2,12 @@
 	pageEncoding="UTF-8"
 	import="com.zerocalorie.member.dto.e_MemberDTO,com.zerocalorie.svservice.dto.e_ServiceDTO,com.zerocalorie.svservice.dto.e_SvFileDTO,com.zerocalorie.svservice.service.e_ServiceService,com.zerocalorie.svservice.service.e_ServiceServiceimpl,
 	java.util.List, java.util.ArrayList" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
 <title>고객센터</title>
 <link href="/all/resources/service/css/question-detail.css" rel="stylesheet">
 <script src="/all/resources/service/js/question-detail.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
-
-<body>
 		<%
        		e_MemberDTO m_dto = new e_MemberDTO();
         		
@@ -184,6 +178,3 @@
 			</div>
 		</div>
 	</section>
-
-</body>
-</html>

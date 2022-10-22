@@ -2,18 +2,11 @@
 	pageEncoding="UTF-8"
 	import="com.zerocalorie.member.dto.e_MemberDTO,com.zerocalorie.svservice.dto.e_ServiceDTO,com.zerocalorie.svservice.service.e_ServiceService,com.zerocalorie.svservice.service.e_ServiceServiceimpl,
 	java.util.List, java.util.ArrayList" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
 <title>고객센터</title>
 <link href="/all/resources/service/css/question-public-write.css" rel="stylesheet">
 <script src="/all/resources/service/js/question-public-write.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-</head>
-
-<body>
 	<section>
 		<div id="j_wrap">
 			<div id="j_box">
@@ -101,6 +94,3 @@
 			</div>
 		</div>
 	</section>
-
-</body>
-</html>
