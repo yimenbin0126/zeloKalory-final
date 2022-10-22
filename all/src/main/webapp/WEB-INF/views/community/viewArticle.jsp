@@ -232,8 +232,7 @@
    		document.getElementById("recommend").addEventListener("click", function(){
    			// 추천하기 버튼 클릭
    			var result = '';
-   			
-   			fetch("http://localhost:8080/all/rec/recommend", {
+   			fetch("${pageContext.request.contextPath}/rec/recommend", {
 			  method: "POST",
 			  headers: {
 			    "Content-Type": "application/json",
