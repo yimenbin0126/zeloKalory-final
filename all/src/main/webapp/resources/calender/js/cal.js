@@ -106,7 +106,33 @@ function yoo_drawCalendar(year, month) {
 
 
 
-// 수정 버튼 눌렀을때
+// todolist 등록, 수정시 input text 관리 
+function tdl_contents_form(form){
+	// VARCHAR2(1000) 라서 편의상 한글로 계산 300자 제한
+	let Max_length = 300; 
+
+	// 날짜가 선택되지 않았으면 경고메세지
+	if($("#todo_date").text() ==""){
+		alert('입력을 원하는 날짜를 선택해주세요');
+			 return false;
+	}
+	// 입력창의 내용이 비었으면 경고 메세지
+	else if(form.tdl_contents.value ==""){
+		 alert(' todolist 내용을 입력해주세요');
+		 return false;
+	}
+	// 글자수 제한해서 받기 (Max_length)
+	else if(form.tdl_contents.value.length > Max_length){
+		alert(' 300자 이하로 적어주세요');
+		 return false;
+	
+	// 그렇지 않을경우 입력 전달
+	}else{
+		return true;
+	}	
+}
+
+// todolist 수정 버튼 눌렀을때
 function update_contents(){
 	$(".button_mod").off("click").on("click",function(){
 	
@@ -118,7 +144,7 @@ function update_contents(){
 	});	
 }
 
-// 수정 취소 버튼 눌렸을 때
+// todolist 수정 취소 버튼 눌렸을 때
 function update_contents_cancel(){
 	$(".button_mod_cancle").off("click").on("click",function(){
       
@@ -179,32 +205,6 @@ function click_CheerMsgAdd(form){
 	}	
 }
 
-// todolist 등록, 수정시 input text 관리 
-function tdl_contents_form(form){
-	// VARCHAR2(1000) 라서 편의상 한글로 계산 300자 제한
-	let Max_length = 300; 
-
-	// 날짜가 선택되지 않았으면 경고메세지
-	if($("#todo_date").text() ==""){
-		alert('입력을 원하는 날짜를 선택해주세요');
-			 return false;
-	}
-	// 입력창의 내용이 비었으면 경고 메세지
-	else if(form.tdl_contents.value ==""){
-		 alert(' todolist 내용을 입력해주세요');
-		 return false;
-	}
-	// 글자수 제한해서 받기 (Max_length)
-	else if(form.tdl_contents.value.length > Max_length){
-		alert(' 300자 이하로 적어주세요');
-		 return false;
-	
-	// 그렇지 않을경우 입력 전달
-	}else{
-		return true;
-	}	
-}
-
 
 function find_form(form){
 	// id 최대글자수가 9라서
@@ -218,7 +218,6 @@ function find_form(form){
 	if(! pattern.test(form.yoo_find_input.value)){
 		 alert(' 숫자 또는 영문소문자만 입력해 주세요 ');
 		 return false;
-		 
 	}
 	// 글자수 제한해서 받기 (Max_length)
 	else if(form.yoo_find_input.value.length > Max_length){

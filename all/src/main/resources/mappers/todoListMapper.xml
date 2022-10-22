@@ -7,7 +7,9 @@
 
 	<!-- 월간 todolist 읽기 (달력표시용) -->
 	<select id="readMonth" parameterType="com.zerocalorie.calender.dto.TodoListDTO" resultType="com.zerocalorie.calender.dto.TodoListDTO">
-		SELECT * FROM T_TODOLIST WHERE MEMBER_NO = #{member_no} AND TO_CHAR(TDL_DATE,'yyyy-fmmm')= #{tdl_date}
+		SELECT * FROM T_TODOLIST 
+		WHERE MEMBER_NO = #{member_no} AND TO_CHAR(TDL_DATE,'yyyy-fmmm')= #{tdl_date}
+		ORDER BY TDL_NO
 	</select>
 	
 	
@@ -15,6 +17,7 @@
 		SELECT * FROM T_TODOLIST 
 		WHERE MEMBER_NO = #{member_no}
 		AND TO_CHAR(TDL_DATE,'yyyy-fmmm-dd')= #{tdl_date}
+		ORDER BY TDL_NO
 	</select>
 	
 	

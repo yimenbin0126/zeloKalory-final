@@ -351,6 +351,7 @@ padding : 15px 0px 15px 0px;
 color: #14279B;
 border-bottom: 1px dotted #5C7AEA;
 display: inline-block;
+font-size: 14px;
 }
 
 
@@ -482,6 +483,7 @@ td{
 }
 
 
+
 .j_todolist_wrap{
    /* border: 1px solid red; */
    font-size : 13px;
@@ -542,4 +544,3 @@ padding : 15px 0px 15px 0px;
    padding-bottom : 5px;
    margin-left: 20px;
 }
-	

@@ -446,8 +446,8 @@ function filled_todolist_ajax(clicked_year, clicked_month, clicked_date, data ) 
 	               
 	               // 수정하기 버튼
 	               workout_contents += '<button type="button" class="button_mod mod_hidden"><img src="/all/resources/calender/img/edit_icon.png" class="mod_icon"></button>';
-	               workout_contents += '<input type="text" class="contents_hide contents_hide_text" name="tdl_contents" value='+data[i].tdl_contents+'maxlength="300"/>';
-	               
+	               workout_contents += '<input type="text" class="contents_hide contents_hide_text" name="tdl_contents" maxlength="300" value="'+data[i].tdl_contents+'"/>';
+
 	               // 수정 등록 버튼
 	               workout_contents += '<button type="submit" class="contents_hide contents_hide_btn"><img src="/all/resources/calender/img/check_icon.png" class="modCheck_icon"></button>';
 	                  
@@ -480,8 +480,8 @@ function filled_todolist_ajax(clicked_year, clicked_month, clicked_date, data ) 
 		               
 		               // 수정하기 버튼
 		               food_contents += '<button type="button" class="button_mod mod_hidden"><img src="/all/resources/calender/img/edit_icon.png" class="mod_icon"></button>';
-		               food_contents += '<input type="text" class="contents_hide contents_hide_text" name="tdl_contents" value='+data[i].tdl_contents+'maxlength="300"/>';
-		               
+		               food_contents += '<input type="text" class="contents_hide contents_hide_text" name="tdl_contents" maxlength="300" value="'+data[i].tdl_contents+'"/>';
+
 		               // 수정 등록 버튼
 		               food_contents += '<button type="submit" class="contents_hide contents_hide_btn"><img src="/all/resources/calender/img/check_icon.png" class="modCheck_icon"></button>';
 		                  
@@ -497,6 +497,16 @@ function filled_todolist_ajax(clicked_year, clicked_month, clicked_date, data ) 
 	console.log("food : ", food_contents);
 	workout.innerHTML=workout_contents;
 	food.innerHTML=food_contents;
+	
+	
+	//>>>>>> 늦게 생성되었기 때문에 todolist 관련 이벤트 붙여줌
+	
+	// todolist 수정 취소 버튼 눌렸을 때
+	update_contents_cancel();
+
+	// todolist 수정 버튼 눌렀을때
+	update_contents();
+
 }	
 
 
@@ -607,7 +617,7 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 					<!-- 페이징 번호 div -->
 					<div id="chr_paging_div">
 						<form id="select_line_frm" name="select_line_frm" action="" method="get" >
-						<span style="font-size: 12px;">표시 할 댓글 개수 : ${chrPagingMap.count} , 현재 페이지 : ${ chrPagingMap.pageNum}</span>
+						<span style="font-size: 12px;"> 전체 댓글 개수 : ${chrPagingMap.count} </span>
 							<select name="select_line" onchange="select_line_fn();" >
 								<option value="0">2 줄 보기</option>
 								<option value="1">3 줄 보기</option>
