@@ -507,33 +507,10 @@ function filled_todolist_ajax(clicked_year, clicked_month, clicked_date, data ) 
 
 </head>
 <body>
-
-
-
 <%
 e_MemberDTO sessionUser = new e_MemberDTO();
 	sessionUser = (e_MemberDTO)session.getAttribute("user");
 %>	
-       	
-
-	<div id="j_hi">
-		<ul id="j_list">
-			<li class=" j_menu" onclick="location.href='/all/cal/<%=sessionUser.getId()%>'">캘린더</li>
-			<li class=" j_menu" onclick="location.href='/all/community/listArticles.do'">커뮤니티</li>
-			<li class=" j_menu" onclick="location.href='/all/service/allService'" >고객센터</li>
-		</ul>
-
-		<div id=j_nav>
-			<div style="color: white; font-size: 13px;">
-        		<%=sessionUser.getNickname()%>님 환영합니다.
-        	</div>
-			<input type='button' class="j_btn3 j_btn"
-					onclick="location.href='/all/member/logout'"  value="로그아웃">
-			<input type='button' class="j_btn2 j_btn" 
-					onclick="location.href='/all/mypage/mypage'" value="마이페이지">
-		</div>
-	</div>
-
 	<div id="j_wrap">
 	
 		<!-- 내용 표시 div(하얀색) -->

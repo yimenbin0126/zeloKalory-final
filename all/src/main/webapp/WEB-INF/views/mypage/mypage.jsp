@@ -9,14 +9,6 @@
 
 <% // 소연
 	e_MemberDTO sessionUser = (e_MemberDTO)session.getAttribute("user"); %>	
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마이페이지</title>
     <link rel="stylesheet" href="/all/resources/mypage/css/mypage.css">
     
@@ -239,36 +231,6 @@
 		
 	}
 </script>
-
-
-</head>
-<body>
-   <!-- 헤더 시작 -->
-	<div id="j_hi">
-		<!-- <img src="./img/logo.png" id="j_logo"> -->
-
-
-		<ul id="j_list">
-			<li class=" j_menu"
-				onclick="location.href='/all/cal/<%=sessionUser.getId()%>'">캘린더</li>
-			<li class=" j_menu"
-				onclick="location.href='/all/community/listArticles.do'">커뮤니티</li>
-			<li class=" j_menu">공지사항</li>
-			<li class=" j_menu" onclick="location.href='/all/service/allService'">고객센터</li>
-		</ul>
-
-		<div id=j_nav>
-		<div style="color: white; font-size: 13px;">
-        		<%=sessionUser.getNickname()%>님 환영합니다.
-        	</div>
-		<input type='button' class="j_btn3 j_btn" onclick="location.href='/all/member/logout'"
-				value="로그아웃">
-		<input type='button' class="j_btn2 j_btn"
-				onclick="location.href='/all/mypage/mypage'" value="마이페이지"> 
-		</div>
-	</div>
-	<!-- 헤더 끝 -->
-    
     <div id="j_wrap">
         <div id="j_box">
         
@@ -322,6 +284,3 @@
 			</div>
         </div>
 	</div>
-
-</body>
-</html>

@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class e_MainController {
 
 	@GetMapping("/main")
-	public void getMain() throws Exception {
+	public String getMain() throws Exception {
 		System.out.println("MainController - getMain");
+		return "main/main";
 	}
 	
 	@PostMapping("/main")
-	public void postMain() throws Exception {
+	public String postMain() throws Exception {
 		System.out.println("MainController - postMain");
+		return "main/main";
 	}
 }

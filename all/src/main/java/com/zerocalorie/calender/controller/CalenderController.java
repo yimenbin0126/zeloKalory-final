@@ -29,7 +29,6 @@ import com.zerocalorie.calender.dto.CalSearchMbDTO;
 import com.zerocalorie.calender.dto.TodoListDTO;
 import com.zerocalorie.calender.service.CalenderService;
 import com.zerocalorie.member.dto.e_MemberDTO;
-import com.zerocalorie.mypage.dto.MypageChartDTO;
 
 
 

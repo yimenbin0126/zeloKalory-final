@@ -6,3 +6,4 @@ org.eclipse.wst.common.component
 .settings/
 .project
 .gitignore
+all/bin/

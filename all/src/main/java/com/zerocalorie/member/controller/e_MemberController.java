@@ -44,9 +44,9 @@ public class e_MemberController {
 		HttpSession session = request.getSession();
 		if(session.getAttribute("user")!=null) {
 			// 로그인 했을 때 - 비정상 접근
-			return "/main/main";
+			return "main/main";
 		} 
-		return "/member/login";
+		return "member/login";
 	}
 	
 	@ResponseBody
