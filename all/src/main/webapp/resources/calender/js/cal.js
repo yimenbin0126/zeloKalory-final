@@ -22,11 +22,13 @@ function yoo_drawCalendar(year, month) {
     // 이전에 그렸던거 지우고 시작함 
     $(".cell").empty();
     
-    // 이전에 셀 속성 손모양 지우고 시작함 
-	document.querySelectorAll(".cell").forEach(function(item, index){
-		item.classList.remove("cursor_hand");
-    });
+    // 이전에 셀 속성 손모양 지우고 시작함
+    $(".cell").removeClass("cursor_hand");
     
+    // 이전에 data-calnum 지우고 시작함
+    $(".cell").removeAttr("data-calnum");
+
+
     // 현재 달 표시
     document.querySelector("#yoo_h3_cal").innerHTML=(month+1);
     document.querySelector("#yoo_h5_year").innerHTML=year;
@@ -102,30 +104,7 @@ function yoo_drawCalendar(year, month) {
 	});
 }*/
 
-// 달력 안에 cell 눌렀을때
-function click_cell(){
-	// td가 눌렸을때 내용물이 존재하면 2022-11-16 형식으로 돌려준다
-	$("td").off("click").on("click",function(){
-		console.log( $(this).text() ); // day
-	    
-		if($(this).attr("data-calnum")){
-			let clickDate = '';
-			clickDate += $('#yoo_h5_year').text();
-			clickDate += '-'+$('#yoo_h3_cal').text();
-			clickDate += '-'+$(this).attr("data-calnum");
-			console.log(clickDate);	
-		
-			document.querySelector("#clickDatehidden").setAttribute("value", clickDate);	//숫자 눌렀을때
-			document.querySelector("#pageYearhidden").setAttribute("value", $('#yoo_h5_year').text()); // year
-			document.querySelector("#pageMonthhidden").setAttribute("value", ($('#yoo_h3_cal').text()-1)); // month
-			document.querySelector("#pageDatehidden").setAttribute("value", ($(this).attr("data-calnum"))); // date
-			
-			document.sendPageDateInfo.method = "post";
-			document.sendPageDateInfo.action = "";
-			document.sendPageDateInfo.submit();
-		}
-	});
-}
+
 
 // 수정 버튼 눌렀을때
 function update_contents(){
@@ -204,10 +183,14 @@ function click_CheerMsgAdd(form){
 function tdl_contents_form(form){
 	// VARCHAR2(1000) 라서 편의상 한글로 계산 300자 제한
 	let Max_length = 300; 
-	
-	
+
+	// 날짜가 선택되지 않았으면 경고메세지
+	if($("#todo_date").text() ==""){
+		alert('입력을 원하는 날짜를 선택해주세요');
+			 return false;
+	}
 	// 입력창의 내용이 비었으면 경고 메세지
-	if(form.tdl_contents.value ==""){
+	else if(form.tdl_contents.value ==""){
 		 alert(' todolist 내용을 입력해주세요');
 		 return false;
 	}
@@ -244,6 +227,9 @@ function find_form(form){
 	
 	// 그렇지 않을경우 입력 전달
 	}else{
+	 		$(".pageYearhidden").attr("value",$('#yoo_h5_year').text() );// year
+			$(".pageMonthhidden").attr("value",($('#yoo_h3_cal').text()-1) );// month
+			$(".pageDatehidden").attr("value",clicked_date );// date 
 		return true;
 	}	
 }
