@@ -262,6 +262,7 @@ function pro_file() {
 	
 	// 선언 - input 파일, 파일 이미지 뷰, 파일이름
 	var input_pro = document.querySelector('#e_input_pro_img');
+	var e_delete_file = document.querySelector('#e_delete_file');
 	var e_view = document.querySelector('.e_pro_img_view img');
 	var e_name = document.querySelector('.e_pro_img_name');
 	
@@ -275,13 +276,30 @@ function pro_file() {
 				e_name.innerHTML = "파일명 : "+input_pro.files[0].name;
 		      	e_view.src = e.target.result;
 		      	document.querySelector('#e_pro_img_confirm').style.display = "none";
+				e_view.style.width="100px";
+				e_view.style.height="100px";
 	    	};
 	    	reader.readAsDataURL(input_pro.files[0]);
 		  } else {
+		  		e_view.style.width="0px";
+				e_view.style.height="0px";
 		  		e_name.innerHTML = "";
 		    	e_view.src = "";
 		    	document.querySelector('#e_pro_img_confirm').style.display = "block";
 		  }	
+	});
+	
+	// 이미지 삭제
+	e_delete_file.addEventListener("click",()=>{
+		$('#e_input_pro_img').val('');
+		if (input_pro.files && input_pro.files[0]) {
+		} else {
+			e_view.style.width="0px";
+			e_view.style.height="0px";
+	  		e_name.innerHTML = "";
+	    	e_view.src = "";
+	    	document.querySelector('#e_pro_img_confirm').style.display = "block";
+		}
 	});
     
     // 삭제 시
