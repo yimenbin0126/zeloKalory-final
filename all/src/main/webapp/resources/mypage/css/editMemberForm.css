@@ -7,16 +7,16 @@
 }
 
 
-#j_box{
-    display: flex;
-    width: 1100px;
-    height: 1400px;
-    background-color: rgb(228, 234, 253);
-    display: inline-block;
-    margin-bottom: 30px;
-    margin-top: 20px;
-    padding-left: 0px;
-}
+/* #j_box{ */
+/*     display: flex; */
+/*     width: 1100px; */
+/*     height: 1400px; */
+/*     background-color: rgb(228, 234, 253); */
+/*     display: inline-block; */
+/*     margin-bottom: 30px; */
+/*     margin-top: 20px; */
+/*     padding-left: 0px; */
+/* } */
 
 #j_hi {
     margin-left: 30px;
@@ -97,23 +97,55 @@ h1 {
 
 }
 
-.k_profile_detail {
-    margin-left: 200px;
-    width: 500px;
+.profile{
+
+	margin-left : 200px;
+	float : left;
+	margin-bottom:50px;
 }
 
+
+.k_profile{
+    width: 100px;
+    height: 100px;
+    border-radius: 70%;
+    
+}
+
+.k_profile_detail {
+    margin-left: 200px;
+    width: 450px;
+}
+
+.k_change_profile {
+
+    /*position: relative;*/
+    display: inline-block;
+    left: 40px;
+    width: 73px;
+    bottom: 15px;
+    padding-top : 10px;
+
+}
 #k_save_btn {
     border: 0px;
     color: white;
-    background-color: black;
     width: 470px;
     height: 40px;
     background-color: rgb(39, 56, 104);
-    margin: 40px;
-    margin-left: 80px;
-
+    display: block;
 }
 
+.save_btn{
+
+	text-align : center;
+	margin: 50px 300px 0px 250px;
+}
+
+
+.save_box{
+	margin:20px;
+}
 .k_t_box .k_t_box2 {
     display: inline-block;
     position: relative;
@@ -121,11 +153,11 @@ h1 {
     text-align: center;
 }
 
-.k_t_box2 input {
+.k_t_box2 {
+	width : 590px;
+}
 
-    display: inline-block;
-    position: relative;
-    left: 20px;
+.k_t_box2 input {
     text-align: center;
     width: 198px;
     height: 23px;
@@ -134,7 +166,6 @@ h1 {
 }
 
 .k_t_box input {
-
     display: inline-block;
     position: relative;
     left: 10px;
@@ -156,31 +187,24 @@ h1 {
     position: relative;
     left: 70px;
 }
-#gender {
+#height{
     display: inline-block;
     position: relative;
-    left: 34px;
+    left: 50px;
 }
-#height {
+
+#height input{
+    margin-left: 10px;
+}
+
+#gender {
     display: inline-block;
     position: relative;
     left: 70px;
     margin-bottom: 10px;
 }
-#height input {
-    position: relative;
-    left: 27px;
-}
-#tel {
-    position: relative;
+
+#email,#birth,#tel {
     left: 50px;
-    margin-bottom: 10px;
-}
-#email {
-    position: relative;
-    left: 42px;
-}
-#email input {
-    position: relative;
-    left: 38px;
+    margin-bottom: 5px;
 }

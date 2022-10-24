@@ -27,6 +27,7 @@
 		set name = #{name},
 		nickname = #{nickname},
 		gender = #{gender},
+		birth = #{birth},
 		tel = #{tel},
 		email = #{email},
 		height = #{height}

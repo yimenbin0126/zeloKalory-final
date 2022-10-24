@@ -244,16 +244,15 @@
         %>
 	
 			<div class="k_back">
-					<form action="/all/mypage/upload.do" method="post" enctype="multipart/form-data" onSubmit="return profile_img(this)">
-
+					<form action="/all/mypage/upload.do" method="post" class="h1_name" enctype="multipart/form-data" onSubmit="return profile_img(this)">
 						<h1><%=m_dto.getNickname()%>님의 프로필</h1>
 						
-						<div class ="profile">
+<!-- 						<div class ="profile"> -->
 							<img class="k_profile" src="/all/mypage/download_k.do?fileName=<%= m_dto.getPro_img() %>"><br>
-							<input class="k_change_profile" type="file" accept="image/*" name="profileImg"><br>
- 							<input class="k_saveimg" type="submit" value="사진 저장">
-							<input type="hidden" name="memberId" id="memberId" value="<%=m_dto.getId()%>" /> 							
-						</div><!-- 얘 묶어 -->
+<!-- 							<input class="k_change_profile" type="file" accept="image/*" name="profileImg"><br> -->
+<!--  							<input class="k_saveimg" type="submit" value="사진 저장"> -->
+<%-- 							<input type="hidden" name="memberId" id="memberId" value="<%=m_dto.getId()%>" /> 							 --%>
+<!-- 						</div>얘 묶어 -->
 					</form>
 			
 					<div class="profile_detail">
@@ -277,14 +276,13 @@
 							</div>
 							
 							<div class="k_t_box2">
-								생년월일<input type="text" value="<%=m_dto.getBirth() %>" readonly="readonly">>
+								생년월일<input type="text" value="<%=m_dto.getBirth() %>" readonly="readonly">
 							</div>
-							<div class="k_t_box2">
-								이메일&nbsp;&nbsp;
-								<input type="text" value="<%=m_dto.getEmail()%>" readonly="readonly">>
+							<div class="k_t_box2 email">
+								이메일&nbsp;&nbsp;<input type="text" value="<%=m_dto.getEmail()%>" readonly="readonly">
 							</div>
-							<div class="k_t_box2">
-								전화번호<input type="text" value="<%=m_dto.getTel()%>" readonly="readonly">>
+							<div class="k_t_box2 tel">
+								전화번호<input type="text" value="<%=m_dto.getTel()%>" readonly="readonly">
 							</div>
 						</div>
 				

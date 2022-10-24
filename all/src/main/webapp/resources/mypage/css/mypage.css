@@ -117,13 +117,6 @@ li{
 
 /* 지수씨 기본 프로필 */
 
-.profile{
-
-	margin-left : 200px;
-	float : left;
-	margin-bottom:50px;
-}
-
 .profile_detail{
 	margin-left : 200px;
 	width : 500px;
@@ -139,17 +132,14 @@ li{
     width: 100px;
     height: 100px;
     border-radius: 70%;
+    float : left;
+    margin-left: 200px
 }
-.k_change_profile {
 
-    /*position: relative;*/
-    display: inline-block;
-    left: 40px;
-    width: 73px;
-    bottom: 15px;
-    padding-top : 10px;
-
+.h1_name{
+	height : 100px;
 }
+
 h1 {
 
     text-align: center;
@@ -179,11 +169,19 @@ h1 {
     border : 0px;
 }
 .k_t_box2,.k_t_box {
-
 	display: inline-block;
     position: relative;
     left: 17px;
 }
+
+.tel{
+	margin-left: 105px;	
+}
+
+.email{
+	margin-left: 10px;	
+}
+
 .k_t_box2 input {
 
 	display: inline-block;

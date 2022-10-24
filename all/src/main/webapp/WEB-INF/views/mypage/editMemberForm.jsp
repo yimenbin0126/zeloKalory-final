@@ -16,52 +16,51 @@
 	<div id="j_wrap">
 		<div id="j_box">
 			<div id="j_sec1">
-				<h1><%=m_dto.getNickname() %>님의 프로필 수정
-				</h1>
+				<h1><%=m_dto.getNickname() %>님의 프로필 수정</h1>
+				<form action="/all/mypage/upload.do" method="post" enctype="multipart/form-data" onSubmit="return profile_img(this)">					
+						<div class ="profile">
+							<img class="k_profile" src="/all/mypage/download_k.do?fileName=<%= m_dto.getPro_img() %>"><br>
+							<input class="k_change_profile" type="file" accept="image/*" name="profileImg"><br>
+ 							<input class="k_saveimg" type="submit" value="사진 저장">
+							<input type="hidden" name="memberId" id="memberId" value="<%=m_dto.getId()%>" /> 							
+						</div><!-- 얘 묶어 -->
+				</form>
+			
 				<form name="frmMember" action="/all/mypage/editMemberForm" method="post">
+				
 					<div class="k_profile_detail">
 						<div class="k_t_box">
-							<input type="hidden"
-								value="<%= m_dto.getId() %>" name="id">
+							<input type="hidden" value="<%= m_dto.getId() %>" name="id">
 							<div id="name">
-								이름 : <input type="text"
-									value="<%=m_dto.getName() %>" name="name">
+								이름<input type="text" value="<%=m_dto.getName() %>" name="name">
 							</div>
 							<div id="nickname">
-								닉네임 : <input type="text"
-									value="<%=m_dto.getNickname() %>"
-									name="nickname">
+							닉네임<input type="text" value="<%=m_dto.getNickname() %>" name="nickname">
 							</div>
 						</div>
 						<div class="k_t_box">
+							<div id="height"> 
+							&nbsp;키<input type="text" value="<%=m_dto.getHeight() %>" name="height">
+							</div>
 							<div id="gender">
-								성별 : <input type="text"
-									value="<%=m_dto.getGender() %>"
-									name="gender">
-							</div>
-							<div id="height">
-								키 : <input type="text"
-									value="<%=m_dto.getHeight() %>"
-									name="height">
+							&nbsp;성별&nbsp;&nbsp;<input type="text" value="<%=m_dto.getGender() %>" name="gender">
 							</div>
 						</div>
 						<div class="k_t_box2">
-							<div id="tel">
-								전화번호 : <input type="text"
-									value="<%=m_dto.getTel() %>" name="tel">
+							<div id="birth">
+								생년월일 <input type="text" value="<%=m_dto.getBirth() %>" name="birth"><br>
 							</div>
-						</div>
-						<div class="k_t_box2">
 							<div id="email">
-								이메일 : <input type="text"
-									value="<%=m_dto.getEmail() %>"
-									name="email">
+								이메일&nbsp;&nbsp; <input type="text" value="<%=m_dto.getEmail() %>" name="email"><br>
 							</div>
-						</div>
-						<div>
-							<input id="k_save_btn" type="submit" value="저장하기"> 
+							<div id="tel"> 
+							전화번호 <input type="text" value="<%=m_dto.getTel() %>" name="tel">
+							</div>
 						</div>
 					</div>
+				<div class="save_btn">
+					<input id="k_save_btn" type="submit" value="저장하기"> 
+				</div>
 				</form>
 			</div>
 		</div>
