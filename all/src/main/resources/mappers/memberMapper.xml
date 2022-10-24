@@ -104,5 +104,12 @@
 		WHERE email = #{email}
 		AND id = #{id}
 	</select>
+	
+	<!-- 프로필 사진 업데이트 -->
+	<update id="pro_img_update" parameterType="com.zerocalorie.member.dto.e_MemberDTO">
+		UPDATE T_member  
+		set pro_img = #{pro_img}
+		WHERE id = #{id}
+	</update>
 
 </mapper>

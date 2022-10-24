@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="mypageMbInfoMapper">	
+
+
+	<!-- 회원정보 불러오기 (아이디. 로그인용) -->
+	<select id="id_loadMember" resultType="com.zerocalorie.member.dto.e_MemberDTO">
+		SELECT *  
+		FROM T_member
+		WHERE id = #{id}
+	</select>
+
+
+ 	<!-- 회원정보 불러오기 (member_no 이용)  -->
+	<select id="member_no_loadMember" resultType="com.zerocalorie.member.dto.e_MemberDTO">
+		SELECT *  
+		FROM T_member
+		WHERE member_no = #{member_no}
+ 	</select> 
+	
+	<!-- 회원정보 변경 -->
+	<update id="id_updateMember" parameterType="com.zerocalorie.member.dto.e_MemberDTO">
+		UPDATE T_member  
+		set name = #{name},
+		nickname = #{nickname},
+		gender = #{gender},
+		tel = #{tel},
+		email = #{email},
+		height = #{height}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

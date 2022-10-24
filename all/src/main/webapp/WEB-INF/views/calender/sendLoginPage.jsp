@@ -11,7 +11,7 @@
 		display: block;
 		margin: 0px auto ;
 		margin-top: 130px ;
-		border: 1px dotted gray;
+		border: 1px dotted white;
 		width: 600px;
 		text-align: center;
 	}

@@ -1,15 +1,3 @@
-* {
-    padding : 0;
-    margin : 0;
-}
-
-body{
-    /*j*/
-    background-image: url('./img/back3.jpeg');
-    background-repeat: no-repeat;
-    background-size:cover;
-    color: rgb(39, 56, 104);
-}
 
 #j_wrap {
     text-align: center;

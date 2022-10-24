@@ -2,6 +2,7 @@
 	pageEncoding="utf-8" import="java.util.*"
 	import=" com.zerocalorie.calender.dto.*"
 	import="com.zerocalorie.member.dto.*"
+	import="com.zerocalorie.member.dao.*"	
 %>   
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -236,19 +237,64 @@
         
         	<!--  지수씨 부분 시작 -->    
 			<div id="j_sec1">
-			<!--//////////// 지수씨 파트 주석을 다 칠수 없어서 나머지는 일단 다른곳에 저장 해놓음 //////////////-->
-		<%	// 지수씨
-			// MemberDAO_e dao = new MemberDAO_e();%>
-		<%
-		/*
+<%
                 // 데이터 불러오기 위한 선언
-                MemberDTO_e m_dto = new MemberDTO_e();
-                MemberDAO_e m_dao = new MemberDAO_e();
-                m_dto = (MemberDTO_e)session.getAttribute("user");
-        */
+                e_MemberDTO m_dto = new e_MemberDTO();
+                m_dto = (e_MemberDTO)session.getAttribute("user");
         %>
-			
+	
+			<div class="k_back">
+					<form action="/all/mypage/upload.do" method="post" enctype="multipart/form-data" onSubmit="return profile_img(this)">
 
+						<h1><%=m_dto.getNickname()%>님의 프로필</h1>
+						
+						<div class ="profile">
+							<img class="k_profile" src="/all/mypage/download_k.do?fileName=<%= m_dto.getPro_img() %>"><br>
+							<input class="k_change_profile" type="file" accept="image/*" name="profileImg"><br>
+ 							<input class="k_saveimg" type="submit" value="사진 저장">
+							<input type="hidden" name="memberId" id="memberId" value="<%=m_dto.getId()%>" /> 							
+						</div><!-- 얘 묶어 -->
+					</form>
+			
+					<div class="profile_detail">
+							<div class="k_t_box">
+								<div class="k_inline1">이름
+									<input type="text" value="<%=m_dto.getName()%>" readonly="readonly">
+								</div>
+								<div class="k_inline2">닉네임
+									<input type="text" value="<%=m_dto.getNickname()%> " readonly="readonly">
+								</div>
+							</div><br>
+							
+							<!-- cm, kg등 기준은 이미지로 text박스 오른쪽에 -->
+							<div class="k_t_box">
+								<div class="k_inline1">&nbsp;키&nbsp;&nbsp;
+									<input type="text" value="<%=m_dto.getHeight()%>" readonly="readonly">
+								</div>
+								<div class="k_inline2">&nbsp;성별&nbsp;&nbsp;
+									<input type="text" value="<%=m_dto.getGender()%>" readonly="readonly"><br>
+								</div>
+							</div>
+							
+							<div class="k_t_box2">
+								생년월일<input type="text" value="<%=m_dto.getBirth() %>" readonly="readonly">>
+							</div>
+							<div class="k_t_box2">
+								이메일&nbsp;&nbsp;
+								<input type="text" value="<%=m_dto.getEmail()%>" readonly="readonly">>
+							</div>
+							<div class="k_t_box2">
+								전화번호<input type="text" value="<%=m_dto.getTel()%>" readonly="readonly">>
+							</div>
+						</div>
+				
+							<div class="edit_all">
+							<form method="get" action="/all/mypage/edit">
+								<input type="hidden" name="id" value="<%=m_dto.getId()%>">
+								<input class="k_btn_edit" type="submit" value="편집하기">
+							</form>
+							</div>
+				</div>
 			</div>
 			<!--  지수씨 부분 끝 -->
         
