@@ -14,6 +14,7 @@
 						ID = #{_parameter}
 					</when>
 			</choose>
+			AND ID != 'admin'
 		</where> 
 		ORDER BY MEMBER_NO
 	</select>
