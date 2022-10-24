@@ -15,6 +15,7 @@
 					</when>
 			</choose>
 		</where> 
+		ORDER BY MEMBER_NO
 	</select>
 	
 </mapper>
