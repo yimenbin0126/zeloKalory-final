@@ -4,11 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.zerocalorie.calender.dto.CalPageMbDTO;
 import com.zerocalorie.calender.dto.CalSearchMbDTO;
-import com.zerocalorie.calender.dto.TodoListDTO;
 import com.zerocalorie.member.dto.e_MemberDTO;
 
 
@@ -30,49 +28,7 @@ public interface CalenderService {
 	//public Map setPageDate(HttpServletRequest request);
 	public Map setPageDate(String pageYear, String pageMonth, String pageDate);
 	
-	// >>> 페이징 관련
-	public Map paging(HttpServletRequest request, HttpServletResponse response, CalPageMbDTO calPageMbDTO);
-	
-	public Map getPagingList(CalPageMbDTO calPageMbDTO, int pageNum, int countPage, int[] countPerPageArr);
-	
-	
-	public List<TodoListDTO> calTodoRead(HttpServletRequest request, Map pageDateInfo, CalPageMbDTO calPageMbDTO);
-	
-	// >>>>> todolist 조회
-	public List<TodoListDTO> TodoListRead(HttpServletRequest request, CalPageMbDTO calPageMbDTO, Map pageDateInfo);
-
-	// json용 todolist 조회
-	public List<TodoListDTO> calTodoReadJSON(String pageYear, String pageMonth,String pageId);
-	
 	// 친구 검색
 	public List<CalSearchMbDTO> searchUser(HttpServletRequest request);
-	
-
-	
-	// >> 응원 메세지
-	
-	// 응원 msg 추가 >> 했음
-	public void cheerMsgAdd(HttpServletRequest request, String pageId);
-	
-	// 응원 msg 삭제 또는 수정 >> 했음
-	public void cheerMsgDelnMod(HttpServletRequest request, String pageId);
-	
-	// 응원 msg db에서 삭제 >> cheerMsgDelnMod 했음
-	public void cheerMsgDel(HttpServletRequest request, List<Integer> pCHR_NOList);
-
-	// 응원 msg db에서 메세지만 비움 >> cheerMsgDelnMod 했음
-	public void cheerMsgEmpty(HttpServletRequest request);
-	
-	
-	// >> todolist
-	
-	// todoList 추가 >> 했음
-	public void todoListAdd(HttpServletRequest request, String pageId);
-	
-	// todoList 삭제 >> 했음
-	public void todoListDel(HttpServletRequest request);
-	
-	// todoList 수정 >> 했음
-	public void todoListMod(HttpServletRequest request);
 
 }

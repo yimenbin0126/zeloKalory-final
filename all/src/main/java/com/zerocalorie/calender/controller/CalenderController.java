@@ -27,6 +27,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.zerocalorie.calender.dto.CalPageMbDTO;
 import com.zerocalorie.calender.dto.CalSearchMbDTO;
 import com.zerocalorie.calender.dto.TodoListDTO;
+import com.zerocalorie.calender.service.CalCheerMsgService;
+import com.zerocalorie.calender.service.CalTodoListService;
 import com.zerocalorie.calender.service.CalenderService;
 import com.zerocalorie.member.dto.e_MemberDTO;
 
@@ -39,7 +41,13 @@ public class CalenderController {
 	@Autowired
 	CalenderService calenderService;
 
+	@Autowired
+	CalCheerMsgService calCheerMsgService;
 
+	@Autowired
+	CalTodoListService calTodoListService;
+	
+	
 	// calender 페이지
 	@RequestMapping("/*")
 	public ModelAndView calenderController(HttpServletRequest request, 
@@ -100,13 +108,13 @@ public class CalenderController {
 //		//List<CheerMsgVO> cheerMsglist = cheerMsgRead (calPageMbVO);
 		
 		// 페이징 (응원메세지 조회)
-		Map chrPagingMap = calenderService.paging(request,  response, calPageMbDTO);
+		Map chrPagingMap = calCheerMsgService.paging(request,  response, calPageMbDTO);
 		
 		// >>>>달력 db에서 조회 
-		List<TodoListDTO> calTodolist = calenderService.calTodoRead(request,  pageDateInfo, calPageMbDTO);
+		List<TodoListDTO> calTodolist = calTodoListService.calTodoRead(request,  pageDateInfo, calPageMbDTO);
 
 		// >>>>todolist 조회 
-		List<TodoListDTO> todoListlist = calenderService.TodoListRead(request, calPageMbDTO, pageDateInfo);
+		List<TodoListDTO> todoListlist = calTodoListService.TodoListRead(request, calPageMbDTO, pageDateInfo);
 		
 		// >>>> 회원 조회  
 		// List<CalSearchMbDTO> serchMemberlist = calenderService.searchUser(request);
@@ -135,7 +143,7 @@ public class CalenderController {
 	public String cheerMsgAdd(HttpServletRequest request
 			, @PathVariable("pageId") String pageId) {
 
-		calenderService.cheerMsgAdd(request, pageId);
+		calCheerMsgService.cheerMsgAdd(request, pageId);
 
 		//return "forward:/cal/"+pageId;
 		return "redirect:/cal/"+pageId;
@@ -146,7 +154,7 @@ public class CalenderController {
 	public String cheerMsgDel(HttpServletRequest request
 			, @PathVariable("pageId") String pageId) {
 
-		calenderService.cheerMsgDelnMod(request, pageId);
+		calCheerMsgService.cheerMsgDelnMod(request, pageId);
 
 		return "redirect:/cal/"+pageId;
 	}
@@ -162,7 +170,7 @@ public class CalenderController {
 			, @RequestParam(value = "pageDate", required = false) String pageDate
 			, @PathVariable("pageId") String pageId) {
 
-		calenderService.todoListAdd(request, pageId);
+		calTodoListService.todoListAdd(request, pageId);
 		
 		model.addAttribute("pageYear", pageYear);
 		model.addAttribute("pageMonth", pageMonth);
@@ -181,7 +189,7 @@ public class CalenderController {
 			, @RequestParam(value = "pageDate", required = false) String pageDate
 			, @PathVariable("pageId") String pageId) {
 
-		calenderService.todoListDel(request);
+		calTodoListService.todoListDel(request);
 		
 		model.addAttribute("pageYear", pageYear);
 		model.addAttribute("pageMonth", pageMonth);
@@ -198,9 +206,10 @@ public class CalenderController {
 			, @RequestParam(value = "pageMonth", required = false) String pageMonth
 			, @RequestParam(value = "pageDate", required = false) String pageDate
 			, @PathVariable("pageId") String pageId) {
-System.out.println("pageYear"+ pageYear);
-
-		calenderService.todoListMod(request);
+		
+		System.out.println("pageYear"+ pageYear);
+		
+		calTodoListService.todoListMod(request);
 		
 		model.addAttribute("pageYear", pageYear);
 		model.addAttribute("pageMonth", pageMonth);
@@ -281,11 +290,9 @@ System.out.println("pageYear"+ pageYear);
 		
 		System.out.println("MypageController > MypageChartJSON");
 
-		List<TodoListDTO> calenderJSON = calenderService.calTodoReadJSON(
+		List<TodoListDTO> calenderJSON = calTodoListService.calTodoReadJSON(
 				pageYear, pageMonth, pageId);
-		
-		
-		
+
 		List list = new ArrayList();
 		for(int i = 0; i<calenderJSON.size(); i++) {
 			TodoListDTO vo = new TodoListDTO();
