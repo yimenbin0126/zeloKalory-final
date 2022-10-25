@@ -1,7 +1,5 @@
 // 전체 유효성 검사
 window.onload = function () {
-    if(document.querySelector('#e_idCheck').style.display =="block"){
-    }
     id_pass();
     name();
     nickname();
@@ -61,7 +59,7 @@ function id_pass() {
     contents[0].addEventListener('focus', function () {
         contents[0].addEventListener('keyup', function () {
             if (regex_ip[0].test(contents[0].value) == true && regex_ip2[0].test(contents[0].value) == true
-            && regex_ip3[0].test(contents[1].value) == true && regex_ip3[2].test(contents[1].value) == true) {
+            && regex_ip3[0].test(contents[0].value) == true && regex_ip3[2].test(contents[0].value) == true) {
                 confirms[0].style.display = "none";
             } else {
                 confirms[0].style.display = "block";

@@ -158,10 +158,10 @@
 								// 클릭 가능 여부
 								if (s_page.isPage_prev()){
 							%>
-							<div onclick="location.href='/all/service/question-public-search?page_NowBno=<%=s_page.getPage_StartBno()-5%>
+							<a style="margin-right:10px;" href='/all/service/question-public-search?page_NowBno=<%=s_page.getPage_StartBno()-5%>
 							&search_time=<%=s_searchdto.getSearch_time()%>&search_type=<%=s_searchdto.getSearch_type()%>
-							&search_content=<%=URLEncoder.encode(s_searchdto.getSearch_content(), "UTF-8")%>'"
-							 class="e_paging_btnleft" id="e_paging_btnleft_yes">&lt;</div>
+							&search_content=<%=URLEncoder.encode(s_searchdto.getSearch_content(), "UTF-8")%>'
+							 class="e_paging_btnleft" id="e_paging_btnleft_yes">&lt;</a>
 							<%
 								} else {
 							%>
@@ -200,10 +200,10 @@
 								// 클릭 가능 여부
 								if (s_page.isPage_next()){
 							%>
-							<div onclick="location.href='/all/service/question-public-search?page_NowBno=<%=s_page.getPage_EndBno()+1%>
+							<a href='/all/service/question-public-search?page_NowBno=<%=s_page.getPage_EndBno()+1%>
 							&search_time=<%=s_searchdto.getSearch_time()%>&search_type=<%=s_searchdto.getSearch_type()%>
-							&search_content=<%=URLEncoder.encode(s_searchdto.getSearch_content(), "UTF-8")%>'"
-							class="e_paging_btnright" id="e_paging_btnright_yes">&gt;</div>
+							&search_content=<%=URLEncoder.encode(s_searchdto.getSearch_content(), "UTF-8")%>'
+							class="e_paging_btnright" id="e_paging_btnright_yes">&gt;</a>
 							<%
 								} else {
 							%>
