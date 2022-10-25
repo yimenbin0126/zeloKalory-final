@@ -39,12 +39,12 @@
 
 #title_detail {
 	/*width: 570px;*/
-	height: 100%;
 }
 
 #content_detail {
 	width: 800px;
-	height: 100%;
+	height: 630px;
+	resize: none;
 }
 
 .header_content {
