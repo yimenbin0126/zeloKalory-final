@@ -114,11 +114,10 @@
 - 메인 페이지, 글 상세보기, 글쓰기/수정/삭제. (모든 회원 권한이 주어짐)
 <br>
 <img width="900" alt="(7) 커뮤니티" src="https://user-images.githubusercontent.com/93369732/197949252-38684426-5294-4418-affa-31ce02fee4a8.png">
-
 <br>
+
 <b>글 상세보기</b>
 - 글 상세, 수정, 삭제
-<br>
 <br>
 
 <img width="900" alt="(7) 커뮤니티 글 상세보기" src="https://user-images.githubusercontent.com/93369732/197949377-cc6e292b-d951-45d4-accc-c571ecae7612.png">
