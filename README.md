@@ -61,8 +61,9 @@
 <b>마이페이지</b>
 - 회원정보 변경, 몸무게 차트 보여주기
 <br>
+
 <img width="900" alt="(2) 마이페이지 - 메인" src="https://user-images.githubusercontent.com/93369732/197948591-9846062f-356c-4e39-aa7e-0aa912ead4a7.png">
-<br>
+
 <img width="900" alt="(2) 마이페이지 - 회원정보 수정" src="https://user-images.githubusercontent.com/93369732/197948475-86c21d4f-4277-41a0-a3b5-5d9e7177dc1b.png">
 <br>
 <br>
@@ -86,7 +87,6 @@
 - 관리자 전용 글쓰기, 글 수정
 <br>
 <img width="900" alt="(6) 고객센터 - 자주하는 질문" src="https://user-images.githubusercontent.com/93369732/197950077-c09dd770-3de8-4225-a5a7-8bcbc1f46cf8.png">
-<br>
 
 <img width="900" alt="(6) 고객센터 - 자주하는 질문" src="https://user-images.githubusercontent.com/93369732/197949625-50a55dd9-222e-4d8b-a488-1f46aeed7a6b.png">
 <br>
@@ -103,7 +103,7 @@
 <img width="900" alt="(6) 고객센터 - 공개 건의함 - 내가 작성한 글" src="https://user-images.githubusercontent.com/93369732/197949973-91ff4864-84ef-4688-a9ca-39386c319e08.png">
 <br>
 
-<b>고객센터 - 글 상세보기<b>
+<b>고객센터 - 글 상세보기</b>
 - 관리자한테 수정/삭제 버튼이 보이고 권한이 주어짐
 <br>
 <img width="900" alt="(5) 고객센터 - 자주하는질문 - 상세보기" src="https://user-images.githubusercontent.com/93369732/197060479-b998ed7d-8084-48fa-aaad-1229bcd7f5ac.png">
@@ -115,12 +115,13 @@
 <br>
 <img width="900" alt="(7) 커뮤니티" src="https://user-images.githubusercontent.com/93369732/197949252-38684426-5294-4418-affa-31ce02fee4a8.png">
 
-<b>글 상세보기
+<br>
+<b>글 상세보기</b>
+- 글 상세, 수정, 삭제
 <br>
 <br>
 
 <img width="900" alt="(7) 커뮤니티 글 상세보기" src="https://user-images.githubusercontent.com/93369732/197949377-cc6e292b-d951-45d4-accc-c571ecae7612.png">
-글 수정하기
 <br>
 <br>
 
