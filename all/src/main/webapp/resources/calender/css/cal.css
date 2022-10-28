@@ -242,7 +242,7 @@ a:visited{
     width: 700px;
     text-align: center;
     margin: 30px auto;
-    margin-top: 50px;
+    margin-top: 30px;
    
 }
 
@@ -346,6 +346,7 @@ a:visited{
 }
 .paging_a:hover{
 	font-size: 23px;
+	
 	
 }
 
@@ -536,4 +537,17 @@ padding : 15px 0px 15px 0px;
    text-align : left;
    padding-bottom : 5px;
    margin-left: 20px;
+}
+
+
+#weather_div{
+	padding-right:50px;
+	text-align: right;
+	margin-top: 20px;
+}
+
+#my_loacation, #my_weather{
+	color : #5C7AEA;
+	font-style:italic;
+	font-weight: bold; 
 }

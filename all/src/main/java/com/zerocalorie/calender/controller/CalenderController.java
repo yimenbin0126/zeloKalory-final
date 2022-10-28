@@ -282,15 +282,20 @@ public class CalenderController {
 	@RequestMapping("/{pageId}/calenderJSON")
 	@ResponseBody
 	public List calenderJSON( 
+			// jsp에서 요청한 year
 			@RequestParam(value = "pageYear", required = false) String pageYear
+			// jsp에서 요청한 month
 			, @RequestParam(value = "pageMonth", required = false) String pageMonth
+			// 페이지 주인의 id
 			, @PathVariable("pageId") String pageId){
 		
 		System.out.println("MypageController > MypageChartJSON");
 
+		// 요청한 year, month에 해당하는 페이지 주인의 list 받음
 		List<TodoListDTO> calenderJSON = calTodoListService.calTodoReadJSON(
 				pageYear, pageMonth, pageId);
 
+		// json 형식으로 
 		List list = new ArrayList();
 		for(int i = 0; i<calenderJSON.size(); i++) {
 			TodoListDTO vo = new TodoListDTO();

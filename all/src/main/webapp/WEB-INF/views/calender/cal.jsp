@@ -35,6 +35,7 @@ if( lastNo > lastPage ){ lastNo = lastPage; }
 <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 <title>캘린더</title>
 <link rel="stylesheet" href="/all/resources/calender/css/cal.css">
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c8aa6c385f8c2a6200d1715e4b45d568&libraries=services"></script>
 <script src="/all/resources/calender/js/cal.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 
@@ -64,7 +65,7 @@ if( lastNo > lastPage ){ lastNo = lastPage; }
 		$("#todo_date").text(year+'-'+(month+1)+'-'+date);
 		
 		let data = ajax_bind(year, month);
-		
+
 		// 기본 달력 날짜 그려주기
 		//yoo_drawCalendar(year, month);
 		
@@ -97,7 +98,13 @@ if( lastNo > lastPage ){ lastNo = lastPage; }
 		
 		// 페이징 select 
 		selected_fn();
-}
+		
+		// 위치와 날씨 받아오기
+		location_weather();
+		
+	}
+	
+	
 
 // 이전달 버튼 눌렸을 때 
 function yoo_click_pre_month(year,month){
@@ -221,6 +228,7 @@ function ajax_bind(year, month, data) {
 			url: "/all/cal/${pageId}/calenderJSON.do",
 			type: "get",
 			dataType: 'json',
+			async : false,
 			data: {'pageYear': year, 'pageMonth': month },
 			success: function (data) {
 				try {
@@ -500,7 +508,62 @@ function filled_todolist_ajax(clicked_year, clicked_month, clicked_date, data ) 
 	// todolist 수정 버튼 눌렀을때
 	update_contents();
 
-}	
+}
+
+
+function location_weather() {
+
+    navigator.geolocation.getCurrentPosition((position)=>{
+        let lat = position.coords.latitude;
+        let lon = position.coords.longitude;
+        console.log(position);
+        console.log("위도",lat);
+        console.log("경도",lon);
+        
+        my_weather(lat, lon);
+        my_locate(lat, lon);
+        
+    })
+}
+
+function my_weather(lat, lon) {
+	let my_url = 'https://api.openweathermap.org/data/2.5/weather?lang=kr&lat='+lat+'&lon='+lon+'&appid=0c350e82b8f45443bc6f0a6e331e915e';
+
+    $.ajax({
+        //url:my_url2,
+        //data : JSON.stringify({'lang':'kr', 'lat': lat, 'lon': lon, 'lon': '0c350e82b8f45443bc6f0a6e331e915e'}),
+        //type : "post",
+        url:my_url,
+        data : {},
+        type:"get",
+        dataType : "json",
+        async : false,
+        success: function (weatherdata) {
+            console.log(weatherdata);
+            console.log(weatherdata.name, ':', weatherdata.weather[0].description );
+            $("#my_weather").text(weatherdata.weather[0].description);
+        },
+        error: function (err) { //json 자체가 실패했을떄
+            console.log("ERR view click", err);
+        }
+    })
+	
+}
+
+function my_locate(lat, lon){
+        let geocoder = new kakao.maps.services.Geocoder();
+
+        let coord = new kakao.maps.LatLng(lat, lon);
+        let callback = function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                // console.log(result);
+                $("#my_loacation").text(result[0].address.region_2depth_name+result[0].address.region_3depth_name);
+                console.log(result[0].address.region_2depth_name+result[0].address.region_3depth_name);
+            }
+        }
+        geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+}
+
 </script>
 <%
 e_MemberDTO sessionUser = new e_MemberDTO();
@@ -619,7 +682,7 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 							<c:forEach var = "i" begin="<%=firstNo %>" end="<%=lastNo %>"> 
 							
 								<c:if test="${chrPagingMap.pageNum eq i }" >
-									<a class="paging_a" href="<%=uri%>?pageNum=${i}&countPerPage=<%=countPerPage %>" style="color:#14279B; font-weight: bold;" > ${i } </a> &nbsp;
+									<a class="paging_a" href="<%=uri%>?pageNum=${i}&countPerPage=<%=countPerPage %>" style="color:#14279B; font-weight: bold; font-size: 23px;" > ${i } </a> &nbsp;
 								</c:if>
 								<c:if test="${ not (chrPagingMap.pageNum eq i) }" >
 									<a class="paging_a" href="<%=uri%>?pageNum=${i}&countPerPage=<%=countPerPage %>"> ${i } </a> &nbsp;
@@ -677,10 +740,12 @@ e_MemberDTO sessionUser = new e_MemberDTO();
 			
 			<!-- 달력 div -->
 			<div id="yoo_cal_obj">
-			
+				<div id=weather_div>
+					<span id ="my_loacation"></span> 현재 <span id ="my_weather"></span>
+				</div>
 				<!-- 년, 월 표시 div -->
 				<div id="disp_year_month">
-				
+					
 					<!-- 연도 표시부 h5 -->
 					<h5 id="yoo_h5_year"></h5>
 					
