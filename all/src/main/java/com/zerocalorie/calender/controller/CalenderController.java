@@ -242,12 +242,7 @@ public class CalenderController {
 		String fileName = (String) request.getParameter("fileName");
 		//파일에 대한 풀 경로(file full path) (윈도우라서 \\ 해줌)
 		String downFile = file_repo +"\\"+ fileName;
-		// 이러면 리눅스나 윈도우 상관없이 쓸수 있음
-		// String downFile = file_repo +System.getProperty("file.separator")+ fileName;
-		// String downFile = file_repo + File.separator+ fileName;
-//		System.out.println("폴더 구분자 1: "+System.getProperty("file.separator"));
-//		System.out.println("폴더 구분자 2: "+ File.separator);
-		
+
 		// 파일 그 자체
 		File f = new File(downFile);
 		
