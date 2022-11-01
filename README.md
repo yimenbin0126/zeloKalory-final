@@ -59,7 +59,8 @@
 
 <br><br>
 <b>마이페이지</b>
-- 회원정보 변경, 몸무게 차트 보여주기
+- 회원정보 수정 가능
+- 데일리 몸무게 입력, 수정, 기간별 몸무게 변화추이 차트로 보기 가능
 <br>
 
 <img width="900" alt="(2) 마이페이지 - 메인" src="https://user-images.githubusercontent.com/93369732/197948591-9846062f-356c-4e39-aa7e-0aa912ead4a7.png">
@@ -69,10 +70,13 @@
 <br>
 
 <b>캘린더</b>
-- 달력 형식으로 일정을 관리하는 시스템 (일정 추가/삭제/수정). 모든 회원이 관리 가능
+- 싸이월드 일촌평처럼 해당페이지의 회원에게 응원메세지 남기기 가능
+- 회원id검색 또는 전체보기가 가능하고 다른회원의 페이지 방문(이동) 가능
+- 현재 접속한 위치와 해당지역 날씨정보 보기 가능
+- todolist 입력, 수정, 삭제 가능하고 달력에서 간략하게 보기, 날짜에 마우스 오버시 내용 전체보기 가능
 
 <br>
-<img width="900" alt="(4) 캘린더" src="https://user-images.githubusercontent.com/93369732/197949015-f9cceed9-4d7e-4ba2-87a6-0adc021490e3.png">
+<img width="900" alt="(4) 캘린더" src="https://user-images.githubusercontent.com/112527742/199135517-2d21fe06-97ea-4aba-9996-fdfe25d0c94b.png">
 <br>
 <br>
 
