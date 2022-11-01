@@ -4,7 +4,7 @@
 - 3조 아시겠조
 - 프로젝트명 : 0칼로리
 - 기능 목표 : 스프링을 활용한 게시판 구현
-- 기술 스택 : Spring, Java, JSP, Ajax, Javascript, 외부라이브러리(jQuery, Chart.js), DBMS(Oracle),CSS
+- 기술 스택 : Spring, Java, JSP, Ajax, Javascript, 카카오맵API연동, 날씨공공데이터연동, 외부라이브러리( jQuery, Chart.js), DBMS(Oracle), CSS3, HTML5
 - 개발 환경 : Eclipse, JDK 11.0.15, Apache Tomcat 9.0, Maven
 - 설명 : 다이어트 관리 웹 기반 애플리케이션 구현
 
